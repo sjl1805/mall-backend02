@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -42,7 +42,7 @@ public class UserBehavior implements Serializable {
     /**
      * 行为时间
      */
-    private Date behaviorTime;
+    private LocalDateTime behaviorTime;
 
     /**
      * 停留时长（秒）
@@ -52,12 +52,12 @@ public class UserBehavior implements Serializable {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 行为权重

@@ -2,7 +2,9 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.UserQuery;
+import com.example.model.dto.users.UserPageDTO;
+import com.example.model.dto.users.UserLoginDTO;
+import com.example.model.dto.users.UserRegisterDTO;
 import com.example.model.entity.Users;
 
 import java.util.Map;
@@ -15,12 +17,17 @@ public interface UsersService extends IService<Users> {
     /**
      * 分页查询用户
      */
-    IPage<Users> listUsersByPage(UserQuery query);
+    IPage<Users> listUsersByPage(UserPageDTO queryDTO);
+
+    /**
+     * 登录
+     */
+    Users login(UserLoginDTO loginDTO);
 
     /**
      * 注册新用户
      */
-    Users registerUser(Users user);
+    Map<String, Object> registerUser(UserRegisterDTO registerDTO);
 
     /**
      * 更新用户状态

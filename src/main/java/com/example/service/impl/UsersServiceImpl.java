@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.UsersMapper;
-import com.example.model.dto.UserQuery;
+import com.example.model.dto.users.UserPageDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.users.UserRegisterDTO;
+import com.example.model.dto.users.UserLoginDTO;
 
 /**
 * @author 31815
@@ -36,23 +38,41 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
-    public IPage<Users> listUsersByPage(UserQuery query) {
-        Page<Users> page = new Page<>(query.getPage(), query.getSize());
-        return usersMapper.selectUserPage(page, query);
+    public IPage<Users> listUsersByPage(UserPageDTO queryDTO) {
+        Page<Users> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
+        return usersMapper.selectUserPage(page, queryDTO);
+    }
+
+    @Override
+    @Cacheable(key = "#loginDTO.account")
+    public Users login(UserLoginDTO loginDTO) {
+        Users user = usersMapper.selectByUsernameOrPhone(loginDTO.getAccount());
+        if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new RuntimeException("用户名或密码错误");
+        }
+        return user;
     }
 
     @Override
     @CacheEvict(allEntries = true) // 注册时清空缓存
-    public Users registerUser(Users user) {
+    public Map<String, Object> registerUser(UserRegisterDTO registerDTO) {
         // 检查用户名是否已存在
-        if (lambdaQuery().eq(Users::getUsername, user.getUsername()).exists()) {
+        if (lambdaQuery().eq(Users::getUsername, registerDTO.getUsername()).exists()) {
             throw new RuntimeException("用户名已存在");
         }
         
         // 加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        save(user);
-        return user;
+        registerDTO.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        //save(registerDTO);
+
+        // 生成token
+        String token = "100";
+
+        // 返回用户信息和token
+        Map<String, Object> result = new HashMap<>();
+        result.put("user", registerDTO);
+        result.put("token", token);
+        return result;
     }
 
     @Override

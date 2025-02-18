@@ -1,0 +1,49 @@
+package com.example.model.dto.users;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import jakarta.validation.constraints.*;
+
+@Data
+@Schema(description = "用户信息传输对象")
+public class UserDTO {
+    @Schema(description = "用户ID（更新时必填）")
+    private Long id;
+
+    @NotBlank(message = "用户名不能为空")
+    @Size(min = 4, max = 20, message = "用户名长度4-20位")
+    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String username;
+
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 20, message = "密码长度6-20位")
+    @Schema(description = "密码（创建时必填）")
+    private String password;
+
+    @NotBlank(message = "手机号不能为空")
+    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
+    @Schema(description = "手机号", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String phone;
+
+    @Email(message = "邮箱格式不正确")
+    @Schema(description = "邮箱")
+    private String email;
+
+    @Schema(description = "头像地址")
+    private String avatar;
+
+    @Min(value = 0, message = "性别参数错误")
+    @Max(value = 2, message = "性别参数错误")
+    @Schema(description = "性别：0-未知 1-男 2-女")
+    private Integer gender;
+
+    @Min(value = 0, message = "状态参数错误")
+    @Max(value = 1, message = "状态参数错误")
+    @Schema(description = "状态：0-禁用 1-启用")
+    private Integer status;
+
+    @Min(value = 0, message = "角色参数错误")
+    @Max(value = 2, message = "角色参数错误")
+    @Schema(description = "角色：0-游客 0-普通用户 2-商户  9-管理员")
+    private Integer role;
+} 

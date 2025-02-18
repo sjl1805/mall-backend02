@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -46,22 +46,22 @@ public class UserCoupon implements Serializable {
     /**
      * 领取时间
      */
-    private Date getTime;
+    private LocalDateTime getTime;
 
     /**
      * 使用时间
      */
-    private Date useTime;
+    private LocalDateTime useTime;
 
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

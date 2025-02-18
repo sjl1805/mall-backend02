@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -67,17 +67,17 @@ public class Orders implements Serializable {
     /**
      * 支付时间
      */
-    private Date paymentTime;
+    private LocalDateTime paymentTime;
 
     /**
      * 发货时间
      */
-    private Date deliveryTime;
+    private LocalDateTime deliveryTime;
 
     /**
      * 收货时间
      */
-    private Date receiveTime;
+    private LocalDateTime receiveTime;
 
     /**
      * 支付方式：1-支付宝 2-微信 3-银联
@@ -102,12 +102,12 @@ public class Orders implements Serializable {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 时区信息

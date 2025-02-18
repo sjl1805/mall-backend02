@@ -2,7 +2,9 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.UserQuery;
+import com.example.model.dto.users.UserPageDTO;
+import com.example.model.dto.users.UserRegisterDTO;
+import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +26,14 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "分页查询用户列表")
-    public Result<IPage<Users>> listUsers(UserQuery query) {
+    public Result<IPage<Users>> listUsers(UserPageDTO query) {
         return Result.success(usersService.listUsersByPage(query));
+    }
+
+    @GetMapping("/login")
+    @Operation(summary = "用户登录")
+    public Result<Users> login(UserLoginDTO loginDTO) {
+        return Result.success(usersService.login(loginDTO));
     }
 
     @GetMapping("/{id}")
@@ -39,9 +47,9 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "注册新用户")
-    public Result<Users> registerUser(
-            @Parameter(description = "用户注册信息") @RequestBody Users user) {
-        return Result.success(usersService.registerUser(user));
+    public Result<Map<String, Object>> registerUser(
+            @Parameter(description = "用户注册信息") @RequestBody UserRegisterDTO registerDTO) {
+        return Result.success(usersService.registerUser(registerDTO));
     }
 
     @PutMapping("/{id}")

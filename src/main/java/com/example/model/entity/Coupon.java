@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -47,12 +47,12 @@ public class Coupon implements Serializable {
     /**
      * 生效时间
      */
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 失效时间
      */
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      * 状态：0-失效 1-生效
@@ -62,12 +62,12 @@ public class Coupon implements Serializable {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

@@ -3,7 +3,7 @@ package com.example.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户实体类
@@ -59,7 +59,7 @@ public class Users implements Serializable {
     private Integer status = 1;
 
     /**
-     * 角色：0-超级管理员 1-管理员 2-普通用户
+     * 角色：0-游客 1-普通用户 2-商户  9-管理员
      */
     private Integer role = 2;
 
@@ -67,13 +67,13 @@ public class Users implements Serializable {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
