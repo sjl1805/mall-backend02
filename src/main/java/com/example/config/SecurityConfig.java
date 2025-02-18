@@ -52,9 +52,9 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/users/register",
+                    "/v3/api-docs/**",
                     "/swagger-ui.html",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
                     "/swagger-resources/**",
                     "/webjars/**"
                 ).permitAll()
