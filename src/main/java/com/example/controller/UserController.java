@@ -19,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@Tag(name = "用户管理", description = "用户相关操作接口")
+@Tag(name = "User", description = "用户相关操作接口")
 public class UserController {
 
     private final UsersService usersService;

@@ -14,6 +14,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI mallOpenAPI() {
         return new OpenAPI()
+                .openapi("3.0.3")
                 .info(new Info()
                         .title("Mall API")
                         .version("1.0")
