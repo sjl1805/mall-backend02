@@ -24,6 +24,12 @@ public enum ResultCode {
     USER_EXIST(1007, "User Exist", "用户已存在"),
     USER_NAME_OR_PASSWORD_ERROR(1008, "User Name Or Password Error", "用户名或密码错误"),
     
+    // 新增用户相关错误码
+    USER_NOT_FOUND(1001, "用户不存在"),
+    PASSWORD_ERROR(1002, "密码错误"),
+    USERNAME_EXISTS(1003, "用户名已存在"),
+    REGISTER_ERROR(1004, "注册失败"),
+    
     // 系统级错误
     INTERNAL_ERROR(500, "服务器内部错误"),
     SERVICE_ERROR(501, "业务逻辑错误"),

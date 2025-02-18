@@ -25,37 +25,30 @@
         avatar, gender, status, role, create_time, update_time
     </sql>
 
-    <!-- 增强的分页查询 -->
+    <!-- 增强分页查询，添加注释说明每个条件 -->
     <select id="selectUserPage" resultType="com.example.model.entity.Users">
+        <!-- 使用include标签复用字段列表 -->
         SELECT <include refid="Base_Column_List"/>
         FROM users
         <where>
+            <!-- 用户名模糊查询 -->
             <if test="query.username != null and query.username != ''">
                 AND username LIKE CONCAT('%', #{query.username}, '%')
             </if>
+            <!-- 精确手机号查询 -->
             <if test="query.phone != null and query.phone != ''">
                 AND phone = #{query.phone}
             </if>
-            <if test="query.email != null and query.email != ''">
-                AND email = #{query.email}
-            </if>
+            <!-- 状态过滤 -->
             <if test="query.status != null">
                 AND status = #{query.status}
             </if>
-            <if test="query.role != null">
-                AND role = #{query.role}
-            </if>
-            <if test="query.createTimeStart != null">
-                AND create_time >= #{query.createTimeStart}
-            </if>
-            <if test="query.createTimeEnd != null">
-                AND create_time &lt;= #{query.createTimeEnd}
-            </if>
         </where>
+        <!-- 动态排序实现 -->
         ORDER BY
         <choose>
-            <when test="query.sortField != null and query.sortField != ''">
-                ${query.sortField} ${query.sortOrder}
+            <when test="query.sortField == 'createTime'">
+                create_time ${query.sortOrder}
             </when>
             <otherwise>
                 create_time DESC

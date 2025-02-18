@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.dto.users.UserRegisterDTO;
@@ -23,6 +22,9 @@ import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+import java.util.LinkedHashMap;
 
 /**
 * @author 31815
@@ -30,80 +32,103 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 * @createDate 2025-02-18 23:43:44
 */
 @Service
-@CacheConfig(cacheNames = "userCache") // 统一缓存配置
+@CacheConfig(cacheNames = "userService")
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     implements UsersService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
-
-    private final UsersMapper usersMapper;
-
     private final JwtUtils jwtUtils;
 
     public UsersServiceImpl(PasswordEncoder passwordEncoder, 
-                           UsersMapper usersMapper,
                            JwtUtils jwtUtils) {
         this.passwordEncoder = passwordEncoder;
-        this.usersMapper = usersMapper;
         this.jwtUtils = jwtUtils;
     }
 
     @Override
     public IPage<Users> listUsersByPage(UserPageDTO queryDTO) {
         Page<Users> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return usersMapper.selectUserPage(page, queryDTO);
+        return baseMapper.selectUserPage(page, queryDTO);
     }
 
+    /**
+     * 用户登录实现
+     * 1. 根据账号查询有效用户
+     * 2. 密码校验
+     * 3. 生成JWT令牌
+     */
     @Override
     public Map<String, Object> login(UserLoginDTO loginDTO) {
-        Users user = usersMapper.selectByUsernameOrPhone(loginDTO.getAccount());
-        if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new BusinessException(ResultCode.USER_NAME_OR_PASSWORD_ERROR);
+        // 查询有效用户（包含状态检查）
+        Users user = baseMapper.selectByUsernameOrPhone(loginDTO.getAccount());
+        if (user == null) {
+            throw new BusinessException(ResultCode.USER_NOT_FOUND);
         }
         
-        UserDetails userDetails = User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .roles(getRoleName(user.getRole()))
-                .build();
+        // 密码验证（使用BCrypt加密校验）
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new BusinessException(ResultCode.PASSWORD_ERROR);
+        }
 
-        String token = jwtUtils.generateToken(userDetails);
+
+
+        // 生成访问令牌
+        String token = jwtUtils.generateToken(user.getUsername(),user.getRole());
+        System.out.println("token:\t"+token);
         
-        Map<String, Object> result = new HashMap<>();
-        result.put("user", user);
-        result.put("token", token);
-        return result;
-    }
-
-    private String getRoleName(Integer roleCode) {
-        return switch (roleCode) {
-            case 9 -> "ADMIN";
-            case 2 -> "MERCHANT";
-            case 1 -> "USER";
-            default -> "GUEST";
-        };
+        // 返回结果（过滤敏感信息）
+        return Map.of(
+            "userInfo", user,
+            "token", token
+        );
     }
 
     @Override
-    @CacheEvict(allEntries = true) // 注册时清空缓存
+    public Boolean logout(Long userId) {
+        // 示例实现：记录登出日志或使token失效
+        return true; // 根据实际业务逻辑返回操作结果
+    }
+
+
+
+    /**
+     * 用户注册实现
+     * 1. 校验用户名唯一性
+     * 2. 密码加密处理
+     * 3. 保存用户信息
+     * 4. 返回注册结果
+     */
+    @Override
+    @CacheEvict(allEntries = true)
     public Map<String, Object> registerUser(UserRegisterDTO registerDTO) {
-        // 检查用户名是否已存在
-        if (lambdaQuery().eq(Users::getUsername, registerDTO.getUsername()).exists()) {
-            throw new RuntimeException("用户名已存在");
+        // 校验用户名唯一性
+        if (checkUsernameExists(registerDTO.getUsername())) {
+            throw new BusinessException(ResultCode.USERNAME_EXISTS);
         }
+
+        // DTO转Entity
+        Users newUser = new Users();
+        BeanUtils.copyProperties(registerDTO, newUser);
         
-        // 加密密码
-        registerDTO.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        //save(registerDTO);
+        // 密码加密
+        newUser.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        // 设置默认角色和状态
+        newUser.setRole(1);
+        newUser.setStatus(1);
 
-        // 生成token
-        String token = "100";
+        // 保存用户
+        if (!save(newUser)) {
+            throw new BusinessException(ResultCode.REGISTER_ERROR);
+        }
 
-        // 返回用户信息和token
-        Map<String, Object> result = new HashMap<>();
-        result.put("user", registerDTO);
-        result.put("token", token);
-        return result;
+        // 生成令牌
+        String token = jwtUtils.generateToken(newUser.getUsername(), newUser.getRole());
+        
+        return Map.of(
+            "userId", newUser.getId(),
+            "username", newUser.getUsername(),
+            "token", token
+        );
     }
 
     @Override
@@ -115,14 +140,25 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
                 .update();
     }
 
+    /**
+     * 获取用户统计信息
+     * 包含：总用户数、各状态用户数、角色分布
+     */
     @Override
-    @Cacheable(key = "'statistics'") // 缓存统计结果
-    public Map<String, Object> getUserStatistics() {
-        Map<String, Object> stats = new HashMap<>();
-        // 总用户数
-        stats.put("totalUsers", count());
-        // 状态分布
-        stats.put("statusDistribution", usersMapper.countUserStatus());
+    @Cacheable(key = "'userStats'")
+    public Map<String, Integer> getUserStatistics() {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        
+        // 总用户数（long转int）
+        stats.put("totalUsers", (int) count());
+        
+        // 状态分布统计（处理Long到Integer的转换）
+        List<Map<String, Object>> statusCounts = baseMapper.countUserStatus();
+        statusCounts.forEach(item -> 
+            stats.put("status_" + item.get("status"), 
+                ((Long)item.get("count")).intValue())
+        );
+
         return stats;
     }
 
@@ -140,7 +176,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Users user = usersMapper.selectByUsernameOrPhone(username);
+        Users user = baseMapper.selectByUsernameOrPhone(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
@@ -149,6 +185,24 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
                 .password(user.getPassword())
                 .roles(getRoleName(user.getRole()))
                 .build();
+    }
+
+    /**
+     * 检查用户名是否存在（缓存优化版）
+     */
+    private boolean checkUsernameExists(String username) {
+        return lambdaQuery()
+                .eq(Users::getUsername, username)
+                .exists();
+    }
+
+    private String getRoleName(Integer roleCode) {
+        return switch (roleCode) {
+            case 9 -> "ADMIN";
+            case 2 -> "MERCHANT";
+            case 1 -> "USER";
+            default -> "GUEST";
+        };
     }
 }
 

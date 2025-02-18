@@ -3,7 +3,6 @@ package com.example.utils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -23,16 +22,17 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // 生成token
-    public String generateToken(UserDetails userDetails) {
+    // token生成方法
+    public String generateToken(String username, Integer role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
         return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration * 1000))
-                .signWith(getSigningKey())
-                .compact();
+            .claims(claims)
+            .subject(username)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + expiration))
+            .signWith(getSigningKey())
+            .compact();
     }
 
     // 验证token（兼容0.12.x版本）
@@ -57,4 +57,5 @@ public class JwtUtils {
                 .getPayload()
                 .getSubject();
     }
+    
 } 

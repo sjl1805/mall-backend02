@@ -36,6 +36,12 @@ public class UserController {
         return Result.success(usersService.login(loginDTO));
     }
 
+    @GetMapping("/logout")
+    @Operation(summary = "用户登出")
+    public Result<Boolean> logout (Long useId){
+        return Result.success(usersService.logout(useId));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "获取用户详情")
     public Result<Users> getUserById(
@@ -78,7 +84,7 @@ public class UserController {
 
     @GetMapping("/statistics")
     @Operation(summary = "获取用户统计信息")
-    public Result<Map<String, Object>> getUserStatistics() {
+    public Result<Map<String, Integer>> getUserStatistics() {
         return Result.success(usersService.getUserStatistics());
     }
 } 
