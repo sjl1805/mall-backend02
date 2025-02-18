@@ -21,8 +21,24 @@ spring:
 springdoc:
   api-docs:
     path: /v3/api-docs
+    enabled: true
+    packages-to-scan: com.example.controller
+    default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
     tags-sorter: alpha
     operations-sorter: alpha
+    display-request-duration: true
+    filter: true
+    persist-authorization: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted  # 逻辑删除字段
+      logic-delete-value: 1
+      logic-not-delete-value: 0
