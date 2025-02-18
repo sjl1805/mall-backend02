@@ -22,7 +22,7 @@ public interface UsersService extends IService<Users> {
     /**
      * 登录
      */
-    Users login(UserLoginDTO loginDTO);
+    Map<String, Object> login(UserLoginDTO loginDTO);
 
     /**
      * 注册新用户

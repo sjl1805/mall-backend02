@@ -19,7 +19,9 @@ spring:
         max-active: 8
         max-idle: 8
         min-idle: 0
-
+jwt:
+  secret: 1your-256-bit-secret-key-must-be-at-least-32-characters
+  expiration: 3600
 # 添加Swagger配置
 springdoc:
   api-docs:

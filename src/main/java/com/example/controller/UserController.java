@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/login")
     @Operation(summary = "用户登录")
-    public Result<Users> login(UserLoginDTO loginDTO) {
+    public Result<Map<String, Object>> login(UserLoginDTO loginDTO) {
         return Result.success(usersService.login(loginDTO));
     }
 

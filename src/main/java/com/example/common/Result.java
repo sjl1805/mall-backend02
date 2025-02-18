@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Schema(description = "统一响应结果")
 public class Result<T> implements Serializable {
     @Schema(description = "状态码", example = "200")
-    private int code;
+    private Integer code;
     
     @Schema(description = "业务消息", example = "操作成功")
     private String message;
@@ -24,7 +24,7 @@ public class Result<T> implements Serializable {
     private String debugInfo;
     
     @Schema(description = "时间戳", example = "1672531200000")
-    private long timestamp = System.currentTimeMillis();
+    private Long timestamp = System.currentTimeMillis();
 
     // 成功响应
     public static <T> Result<T> success() {
@@ -33,26 +33,24 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>();
-        result.code = ResultCode.SUCCESS.getCode();
-        result.message = ResultCode.SUCCESS.getZhMsg();
-        result.data = data;
+        result.setCode(ResultCode.SUCCESS.getCode());
+        result.setMessage(ResultCode.SUCCESS.getMessage());
+        result.setData(data);
         return result;
     }
 
     // 失败响应
     public static <T> Result<T> error(ResultCode resultCode) {
-        return error(resultCode, resultCode.getZhMsg());
-    }
-
-    public static <T> Result<T> error(ResultCode resultCode, String message) {
-        return error(resultCode, message, null);
-    }
-
-    public static <T> Result<T> error(ResultCode resultCode, String message, String debugInfo) {
         Result<T> result = new Result<>();
-        result.code = resultCode.getCode();
-        result.message = message;
-        result.debugInfo = debugInfo;
+        result.setCode(resultCode.getCode());
+        result.setMessage(resultCode.getMessage());
+        return result;
+    }
+
+    public static <T> Result<T> error(Integer code, String message) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMessage(message);
         return result;
     }
 
@@ -69,9 +67,9 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> error(Exception e, boolean showDetail) {
         Result<T> result = new Result<>();
-        result.code = ResultCode.INTERNAL_SERVER_ERROR.getCode();
-        result.message = showDetail ? e.getMessage() : ResultCode.INTERNAL_SERVER_ERROR.getZhMsg();
-        result.debugInfo = showDetail ? e.getClass().getName() : null;
+        result.setCode(ResultCode.INTERNAL_ERROR.getCode());
+        result.setMessage(showDetail ? e.getMessage() : ResultCode.INTERNAL_ERROR.getMessage());
+        result.setDebugInfo(showDetail ? e.getClass().getName() : null);
         return result;
     }
 
@@ -81,7 +79,7 @@ public class Result<T> implements Serializable {
     }
 
     // 链式调用方法
-    public Result<T> code(int code) {
+    public Result<T> code(Integer code) {
         this.code = code;
         return this;
     }

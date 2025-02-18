@@ -16,6 +16,13 @@ import java.util.Map;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.dto.users.UserRegisterDTO;
 import com.example.model.dto.users.UserLoginDTO;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.example.utils.JwtUtils;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
 * @author 31815
@@ -25,16 +32,20 @@ import com.example.model.dto.users.UserLoginDTO;
 @Service
 @CacheConfig(cacheNames = "userCache") // 统一缓存配置
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
-    implements UsersService {
+    implements UsersService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
     private final UsersMapper usersMapper;
 
+    private final JwtUtils jwtUtils;
+
     public UsersServiceImpl(PasswordEncoder passwordEncoder, 
-                           UsersMapper usersMapper) {
+                           UsersMapper usersMapper,
+                           JwtUtils jwtUtils) {
         this.passwordEncoder = passwordEncoder;
         this.usersMapper = usersMapper;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -44,13 +55,33 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
-    @Cacheable(key = "#loginDTO.account")
-    public Users login(UserLoginDTO loginDTO) {
+    public Map<String, Object> login(UserLoginDTO loginDTO) {
         Users user = usersMapper.selectByUsernameOrPhone(loginDTO.getAccount());
         if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new BusinessException(ResultCode.USER_NAME_OR_PASSWORD_ERROR);
         }
-        return user;
+        
+        UserDetails userDetails = User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roles(getRoleName(user.getRole()))
+                .build();
+
+        String token = jwtUtils.generateToken(userDetails);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("user", user);
+        result.put("token", token);
+        return result;
+    }
+
+    private String getRoleName(Integer roleCode) {
+        return switch (roleCode) {
+            case 9 -> "ADMIN";
+            case 2 -> "MERCHANT";
+            case 1 -> "USER";
+            default -> "GUEST";
+        };
     }
 
     @Override
@@ -105,6 +136,19 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     @CacheEvict(key = "#user.id") // 更新时清除缓存
     public boolean updateById(Users user) {
         return super.updateById(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        Users user = usersMapper.selectByUsernameOrPhone(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        return User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roles(getRoleName(user.getRole()))
+                .build();
     }
 }
 
