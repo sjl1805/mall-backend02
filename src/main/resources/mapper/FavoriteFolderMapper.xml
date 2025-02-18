@@ -41,7 +41,21 @@
             <include refid="Base_Column_List"/>
         FROM favorite_folder
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.name != null and query.name != ''">
+                AND name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.isPublic != null">
+                AND is_public = #{query.isPublic}
+            </if>
+            <if test="query.userId != null">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.createTimeStart != null">
+                AND create_time >= #{query.createTimeStart}
+            </if>
+            <if test="query.createTimeEnd != null">
+                AND create_time &lt;= #{query.createTimeEnd}
+            </if>
         </where>
         ORDER BY 
         <choose>
@@ -80,4 +94,12 @@
             AND id != #{excludeId}
         </if>
     </select>
+
+    <!-- 新增收藏项数量更新 -->
+    <update id="updateItemCount">
+        UPDATE favorite_folder
+        SET item_count = item_count + #{delta},
+            update_time = NOW()
+        WHERE id = #{folderId}
+    </update>
 </mapper>

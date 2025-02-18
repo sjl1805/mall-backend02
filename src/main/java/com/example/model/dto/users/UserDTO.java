@@ -15,10 +15,13 @@ public class UserDTO {
     @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
-    @NotBlank(message = "密码不能为空")
     @Size(min = 6, max = 20, message = "密码长度6-20位")
-    @Schema(description = "密码（创建时必填）")
+    @Schema(description = "密码（仅新增时必填）")
     private String password;
+
+    @Size(max = 64, message = "昵称最长64位")
+    @Schema(description = "昵称")
+    private String nickname;
 
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
@@ -34,16 +37,18 @@ public class UserDTO {
 
     @Min(value = 0, message = "性别参数错误")
     @Max(value = 2, message = "性别参数错误")
-    @Schema(description = "性别：0-未知 1-男 2-女")
-    private Integer gender;
+    @Schema(description = "性别：0-未知 1-男 2-女", defaultValue = "0")
+    private Integer gender = 0;
 
     @Min(value = 0, message = "状态参数错误")
     @Max(value = 1, message = "状态参数错误")
-    @Schema(description = "状态：0-禁用 1-启用")
-    private Integer status;
+    @Schema(description = "状态：0-禁用 1-启用", defaultValue = "1")
+    private Integer status = 1;
 
     @Min(value = 0, message = "角色参数错误")
     @Max(value = 9, message = "角色参数错误")
-    @Schema(description = "角色：0-游客 1-普通用户 2-商户  9-管理员")
-    private Integer role;
+    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号", 
+          allowableValues = {"0", "1", "2", "9"}, 
+          defaultValue = "1")
+    private Integer role = 1;
 } 

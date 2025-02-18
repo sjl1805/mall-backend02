@@ -2,10 +2,14 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.BehaviorQuery;
-import com.example.model.entity.UserBehavior;
+import com.example.model.dto.users.UserBehaviorPageDTO;
 
+import com.example.model.dto.users.UserBehaviorDTO;
+
+import com.example.model.entity.UserBehavior;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +24,11 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 分页查询用户行为
      * @param page 分页参数
-     * @param query 查询条件
+     * @param queryDTO 查询条件
      * @return 分页结果
      */
     IPage<UserBehavior> selectBehaviorPage(IPage<UserBehavior> page,
-                                          @Param("query") BehaviorQuery query);
+                                          @Param("query") UserBehaviorPageDTO queryDTO);
 
     /**
      * 统计用户行为权重
@@ -59,6 +63,17 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     int checkBehaviorExists(@Param("userId") Long userId,
                           @Param("productId") Long productId,
                           @Param("behaviorType") Integer behaviorType);
+
+    @Update("UPDATE user_behavior SET weight = #{weight} WHERE id = #{id}")
+    int updateBehaviorWeight(@Param("id") Long id, 
+                            @Param("weight") Double weight);
+
+    List<Map<String, Object>> analyzeBehaviorPattern(
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime,
+            @Param("minDuration") Integer minDuration);
+
+    int batchInsert(@Param("behaviors") List<UserBehaviorDTO> behaviors);
 }
 
 

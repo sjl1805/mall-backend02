@@ -84,6 +84,7 @@
             update_time = NOW()
         WHERE id = #{productId}
           AND stock + #{delta} >= 0
+          AND status = 1
     </update>
 
     <!-- 检查名称唯一性 -->
@@ -94,5 +95,15 @@
         <if test="excludeId != null">
             AND id != #{excludeId}
         </if>
+    </select>
+
+    <!-- 新增新品推荐查询 -->
+    <select id="selectNewArrivals" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM products
+        WHERE category_id = #{categoryId}
+          AND status = 1
+        ORDER BY create_time DESC
+        LIMIT #{limit}
     </select>
 </mapper>

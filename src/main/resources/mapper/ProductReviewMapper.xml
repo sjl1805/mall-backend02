@@ -49,9 +49,29 @@
             <include refid="Base_Column_List"/>
         FROM product_review
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.productId != null">
+                AND product_id = #{query.productId}
+            </if>
+            <if test="query.userId != null">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.minRating != null">
+                AND rating >= #{query.minRating}
+            </if>
+            <if test="query.maxRating != null">
+                AND rating &lt;= #{query.maxRating}
+            </if>
+            <if test="query.createTimeStart != null">
+                AND create_time >= #{query.createTimeStart}
+            </if>
+            <if test="query.createTimeEnd != null">
+                AND create_time &lt;= #{query.createTimeEnd}
+            </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -103,4 +123,14 @@
           AND order_id = #{orderId}
           AND product_id = #{productId}
     </select>
+
+    <!-- 新增评价内容更新 -->
+    <update id="updateReviewContent">
+        UPDATE product_review
+        SET content = #{content},
+            images = #{images},
+            update_time = NOW()
+        WHERE id = #{reviewId}
+          AND user_id = #{userId}
+    </update>
 </mapper>

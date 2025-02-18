@@ -2,12 +2,12 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.CouponQuery;
+import com.example.model.dto.coupon.CouponPageDTO;
 import com.example.model.entity.Coupon;
-
 import org.apache.ibatis.annotations.Param;
-
+import org.apache.ibatis.annotations.Select;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 优惠券管理Mapper接口
@@ -18,10 +18,10 @@ public interface CouponMapper extends BaseMapper<Coupon> {
     /**
      * 分页查询优惠券列表（带条件）
      * @param page 分页参数
-     * @param query 查询条件
+     * @param queryDTO 查询条件
      * @return 分页结果
      */
-    IPage<Coupon> selectCouponPage(IPage<Coupon> page, @Param("query") CouponQuery query);
+    IPage<Coupon> selectCouponPage(IPage<Coupon> page, @Param("query") CouponPageDTO queryDTO);
 
     /**
      * 更新优惠券状态
@@ -37,8 +37,8 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @param excludeId 排除的ID
      * @return 存在的记录数
      */
-    int checkNameUnique(@Param("name") String name, 
-                       @Param("excludeId") Long excludeId);
+    int checkNameUnique(@Param("name") String name,
+                      @Param("excludeId") Long excludeId);
 
     /**
      * 自动过期优惠券
@@ -46,6 +46,9 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @return 过期数量
      */
     int expireCoupons(@Param("currentTime") Date currentTime);
+
+    @Select("SELECT * FROM coupon WHERE status = 1 AND start_time <= NOW() AND end_time >= NOW()")
+    List<Coupon> selectAvailableCoupons();
 }
 
 

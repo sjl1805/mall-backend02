@@ -2,10 +2,10 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.SkuQuery;
+import com.example.model.dto.product.ProductSkuPageDTO;
 import com.example.model.entity.ProductSku;
-
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
      * @return 分页结果
      */
     IPage<ProductSku> selectSkuPage(IPage<ProductSku> page, 
-                                  @Param("query") SkuQuery query);
+                                  @Param("query") ProductSkuPageDTO queryDTO);
 
     /**
      * 增加销量
@@ -64,6 +64,19 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
      * @return 各状态数量
      */
     List<Map<String, Object>> countSkuStatus(@Param("productId") Long productId);
+
+    @Update("UPDATE product_sku SET stock = stock + #{quantity} " +
+            "WHERE id = #{skuId} AND product_id = #{productId} " +
+            "AND stock + #{quantity} >= 0")
+    int updateStockSafely(@Param("productId") Long productId,
+                        @Param("skuId") Long skuId,
+                        @Param("quantity") Integer quantity);
+
+    @Update("UPDATE product_sku SET main_image = #{imageUrl} " +
+            "WHERE product_id = #{productId} AND main_image = #{oldImage}")
+    int batchUpdateMainImage(@Param("productId") Long productId,
+                            @Param("oldImage") String oldImage,
+                            @Param("imageUrl") String imageUrl);
 }
 
 

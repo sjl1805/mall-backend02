@@ -1,8 +1,12 @@
 package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.product.ProductSpecPageDTO;
+import com.example.model.dto.product.ProductSpecDTO;
 import com.example.model.entity.ProductSpec;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 /**
@@ -18,7 +22,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
      * @param specs 规格列表
      * @return 插入数量
      */
-    int batchInsert(@Param("specs") List<ProductSpec> specs);
+    int batchInsert(@Param("specs") List<ProductSpecDTO> specs);
 
     /**
      * 根据商品ID查询规格
@@ -42,6 +46,15 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
      * @return 规格数量
      */
     int countByProductId(@Param("productId") Long productId);
+
+    IPage<ProductSpec> selectSpecPage(IPage<ProductSpec> page, 
+                                    @Param("query") ProductSpecPageDTO queryDTO);
+
+    @Update("UPDATE product_spec SET spec_values = #{specValues} " +
+            "WHERE id = #{specId} AND product_id = #{productId}")
+    int updateSpecValuesSafely(@Param("productId") Long productId,
+                              @Param("specId") Long specId,
+                              @Param("specValues") String specValues);
 }
 
 

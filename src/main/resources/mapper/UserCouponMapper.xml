@@ -30,11 +30,11 @@
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
-        <if test="query.startTime != null">
-            AND get_time >= #{query.startTime}
+        <if test="query.getTimeStart != null">
+            AND get_time >= #{query.getTimeStart}
         </if>
-        <if test="query.endTime != null">
-            AND get_time &lt;= #{query.endTime}
+        <if test="query.getTimeEnd != null">
+            AND get_time &lt;= #{query.getTimeEnd}
         </if>
     </sql>
 
@@ -44,7 +44,18 @@
             <include refid="Base_Column_List"/>
         FROM user_coupon
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.userId != null">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.getTimeStart != null">
+                AND get_time >= #{query.getTimeStart}
+            </if>
+            <if test="query.getTimeEnd != null">
+                AND get_time &lt;= #{query.getTimeEnd}
+            </if>
         </where>
         ORDER BY 
         <choose>
@@ -67,15 +78,16 @@
         WHERE id = #{userCouponId}
     </update>
 
-    <!-- 自动过期优惠券 -->
-    <update id="expireCoupons">
+    <!-- 新增批量过期优惠券 -->
+    <update id="autoExpireCoupons">
         UPDATE user_coupon
-        SET status = 2
+        SET status = 2,
+            update_time = NOW()
         WHERE status = 0
           AND EXISTS (
             SELECT 1 FROM coupon c 
             WHERE c.id = coupon_id 
-            AND c.end_time &lt; #{currentTime}
+            AND c.end_time &lt; NOW()
           )
     </update>
 

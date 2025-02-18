@@ -16,16 +16,17 @@ public class UserPageDTO {
     @Schema(description = "邮箱（精确查询）")
     private String email;
 
-    @Schema(description = "状态：0-禁用 1-启用")
+    @Schema(description = "状态：0-禁用 1-启用", allowableValues = {"0", "1"})
     private Integer status;
 
-    @Schema(description = "角色：0-超级管理员 1-管理员 2-普通用户")
+    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号", 
+           allowableValues = {"0", "1", "2", "9"})
     private Integer role;
 
-    @Schema(description = "注册时间起始")
+    @Schema(description = "创建时间起始")
     private Date createTimeStart;
 
-    @Schema(description = "注册时间结束")
+    @Schema(description = "创建时间结束")
     private Date createTimeEnd;
 
     @Schema(description = "页码", example = "1")

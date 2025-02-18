@@ -45,9 +45,23 @@
             <include refid="Base_Column_List"/>
         FROM user_behavior
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.userId != null">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.productId != null">
+                AND product_id = #{query.productId}
+            </if>
+            <if test="query.behaviorType != null">
+                AND behavior_type = #{query.behaviorType}
+            </if>
+            <if test="query.startTime != null">
+                AND behavior_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND behavior_time &lt;= #{query.endTime}
+            </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -93,4 +107,32 @@
           AND product_id = #{productId}
           AND behavior_type = #{behaviorType}
     </select>
+
+    <select id="analyzeBehaviorPattern" resultType="map">
+        SELECT 
+            product_id AS productId,
+            COUNT(DISTINCT user_id) AS userCount,
+            SUM(CASE WHEN behavior_type = 1 THEN 1 ELSE 0 END) AS viewCount,
+            SUM(CASE WHEN behavior_type = 2 THEN 1 ELSE 0 END) AS favoriteCount,
+            SUM(CASE WHEN behavior_type = 3 THEN 1 ELSE 0 END) AS purchaseCount
+        FROM user_behavior
+        WHERE behavior_time BETWEEN #{startTime} AND #{endTime}
+          AND duration >= #{minDuration}
+        GROUP BY product_id
+        HAVING COUNT(*) > 5
+        ORDER BY purchaseCount DESC
+    </select>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_behavior (
+            user_id, product_id, behavior_type,
+            behavior_time, duration, weight
+        ) VALUES
+        <foreach collection="behaviors" item="b" separator=",">
+            (
+                #{b.userId}, #{b.productId}, #{b.behaviorType},
+                #{b.behaviorTime}, #{b.duration}, #{b.weight}
+            )
+        </foreach>
+    </insert>
 </mapper>

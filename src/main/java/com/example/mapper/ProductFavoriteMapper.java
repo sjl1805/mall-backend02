@@ -2,10 +2,12 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.FavoriteQuery;
+import com.example.model.dto.favorite.ProductFavoriteDTO;
+import com.example.model.dto.favorite.ProductFavoritePageDTO;
 import com.example.model.entity.ProductFavorite;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
      * @return 分页结果
      */
     IPage<ProductFavorite> selectFavoritePage(IPage<ProductFavorite> page,
-                                             @Param("query") FavoriteQuery query);
+                                             @Param("query") ProductFavoritePageDTO queryDTO);
 
     /**
      * 统计用户收藏数量
@@ -56,6 +58,14 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
      */
     int moveToFolder(@Param("fromFolderId") Long fromFolderId,
                    @Param("toFolderId") Long toFolderId);
+
+    @Update("UPDATE product_favorite SET folder_id = #{folderId} " +
+            "WHERE id = #{favoriteId} AND user_id = #{userId}")
+    int updateFolder(@Param("userId") Long userId,
+                   @Param("favoriteId") Long favoriteId,
+                   @Param("folderId") Long folderId);
+
+    int batchInsert(@Param("favorites") List<ProductFavoriteDTO> favorites);
 }
 
 

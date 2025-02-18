@@ -6,6 +6,7 @@ import com.example.model.dto.users.UserPageDTO;
 import com.example.model.entity.Users;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Map;
 
@@ -61,6 +62,14 @@ public interface UsersMapper extends BaseMapper<Users> {
     int checkFieldUnique(@Param("field") String field, 
                         @Param("value") String value,
                         @Param("excludeId") Long excludeId);
+
+    @Select("SELECT COUNT(*) FROM users WHERE ${field} = #{value} AND id != #{excludeId}")
+    int checkUnique(@Param("field") String field, 
+                   @Param("value") String value,
+                   @Param("excludeId") Long excludeId);
+
+    @Select("SELECT * FROM users WHERE phone = #{phone} AND status = 1")
+    Users selectActiveUserByPhone(@Param("phone") String phone);
 }
 
 

@@ -25,7 +25,7 @@
         avatar, gender, status, role, create_time, update_time
     </sql>
 
-    <!-- 分页查询用户 -->
+    <!-- 增强的分页查询 -->
     <select id="selectUserPage" resultType="com.example.model.entity.Users">
         SELECT <include refid="Base_Column_List"/>
         FROM users

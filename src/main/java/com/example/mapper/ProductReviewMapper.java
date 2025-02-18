@@ -2,10 +2,10 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.ReviewQuery;
+import com.example.model.dto.product.ProductReviewPageDTO;
 import com.example.model.entity.ProductReview;
-
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +20,11 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
     /**
      * 分页查询评价列表
      * @param page 分页参数
-     * @param query 查询条件
+     * @param queryDTO 查询条件
      * @return 分页结果
      */
     IPage<ProductReview> selectReviewPage(IPage<ProductReview> page, 
-                                        @Param("query") ReviewQuery query);
+                                         @Param("query") ProductReviewPageDTO queryDTO);
 
     /**
      * 更新评价状态
@@ -32,8 +32,24 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      * @param status 新状态
      * @return 影响行数
      */
-    int updateReviewStatus(@Param("reviewId") Long reviewId, 
-                         @Param("status") Integer status);
+    @Update("UPDATE product_review SET status = #{status} WHERE id = #{reviewId}")
+    int updateStatus(@Param("reviewId") Long reviewId, 
+                   @Param("status") Integer status);
+
+    /**
+     * 更新评价内容
+     * @param userId 用户ID
+     * @param reviewId 评价ID
+     * @param content 新内容
+     * @param images 新图片
+     * @return 影响行数
+     */
+    @Update("UPDATE product_review SET content = #{content}, images = #{images} " +
+            "WHERE id = #{reviewId} AND user_id = #{userId}")
+    int updateReviewContent(@Param("userId") Long userId,
+                          @Param("reviewId") Long reviewId,
+                          @Param("content") String content,
+                          @Param("images") String images);
 
     /**
      * 统计商品评分

@@ -80,10 +80,21 @@
         </if>
     </select>
 
-    <!-- 自动过期优惠券 -->
+    <!-- 新增可用优惠券查询 -->
+    <select id="selectAvailableCoupons" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+          AND start_time &lt;= NOW()
+          AND end_time >= NOW()
+        ORDER BY value DESC
+    </select>
+
+    <!-- 优化自动过期 -->
     <update id="expireCoupons">
         UPDATE coupon
-        SET status = 0
+        SET status = 0,
+            update_time = NOW()
         WHERE status = 1
           AND end_time &lt; #{currentTime}
     </update>

@@ -64,9 +64,7 @@
             <include refid="Base_Column_List"/>
         FROM product_sku
         <where>
-            <if test="query.productId != null">
-                AND product_id = #{query.productId}
-            </if>
+            product_id = #{query.productId}
             <if test="query.minPrice != null">
                 AND price >= #{query.minPrice}
             </if>
@@ -105,4 +103,23 @@
         WHERE product_id = #{productId}
         GROUP BY status
     </select>
+
+    <!-- 安全更新库存 -->
+    <update id="updateStockSafely">
+        UPDATE product_sku
+        SET stock = stock + #{quantity},
+            update_time = NOW()
+        WHERE id = #{skuId}
+          AND product_id = #{productId}
+          AND stock + #{quantity} >= 0
+    </update>
+
+    <!-- 批量更新主图 -->
+    <update id="batchUpdateMainImage">
+        UPDATE product_sku
+        SET main_image = #{imageUrl},
+            update_time = NOW()
+        WHERE product_id = #{productId}
+          AND main_image = #{oldImage}
+    </update>
 </mapper>

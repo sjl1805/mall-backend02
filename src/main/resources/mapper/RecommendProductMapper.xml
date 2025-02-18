@@ -33,13 +33,13 @@
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
-        <if test="query.startTime != null">
-            AND start_time >= #{query.startTime}
+        <if test="query.startTimeBegin != null">
+            AND start_time >= #{query.startTimeBegin}
         </if>
-        <if test="query.endTime != null">
-            AND end_time &lt;= #{query.endTime}
+        <if test="query.startTimeEnd != null">
+            AND start_time &lt;= #{query.startTimeEnd}
         </if>
-        <if test="query.algorithmVersion != null">
+        <if test="query.algorithmVersion != null and query.algorithmVersion != ''">
             AND algorithm_version = #{query.algorithmVersion}
         </if>
     </sql>
@@ -50,7 +50,21 @@
             <include refid="Base_Column_List"/>
         FROM recommend_product
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.type != null">
+                AND type = #{query.type}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.startTimeBegin != null">
+                AND start_time >= #{query.startTimeBegin}
+            </if>
+            <if test="query.startTimeEnd != null">
+                AND start_time &lt;= #{query.startTimeEnd}
+            </if>
+            <if test="query.algorithmVersion != null and query.algorithmVersion != ''">
+                AND algorithm_version = #{query.algorithmVersion}
+            </if>
         </where>
         ORDER BY
         <choose>
@@ -95,14 +109,18 @@
 
     <!-- 检查时间冲突 -->
     <select id="checkTimeConflict" resultType="int">
-        SELECT COUNT(*)
+        SELECT COUNT(*) 
         FROM recommend_product
         WHERE product_id = #{productId}
           AND (
             (start_time BETWEEN #{startTime} AND #{endTime})
             OR (end_time BETWEEN #{startTime} AND #{endTime})
             OR (#{startTime} BETWEEN start_time AND end_time)
+            OR (#{endTime} BETWEEN start_time AND end_time)
           )
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
     </select>
 
     <!-- 根据算法版本查询 -->
@@ -113,4 +131,20 @@
         WHERE algorithm_version = #{version}
         ORDER BY create_time DESC
     </select>
+
+    <!-- 新增批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommend_product (
+            product_id, type, sort, 
+            status, start_time, end_time,
+            algorithm_version, recommend_reason
+        ) VALUES
+        <foreach collection="recommends" item="item" separator=",">
+            (
+                #{item.productId}, #{item.type}, #{item.sort},
+                #{item.status}, #{item.startTime}, #{item.endTime},
+                #{item.algorithmVersion}, #{item.recommendReason}
+            )
+        </foreach>
+    </insert>
 </mapper>

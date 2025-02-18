@@ -2,10 +2,11 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.CategoryQuery;
+import com.example.model.dto.category.CategoryPageDTO;
 import com.example.model.entity.Category;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
@@ -17,10 +18,10 @@ public interface CategoryMapper extends BaseMapper<Category> {
     /**
      * 分页查询分类列表（带条件）
      * @param page 分页参数
-     * @param query 查询条件
+     * @param queryDTO 查询条件
      * @return 分页结果
      */
-    IPage<Category> selectCategoryPage(IPage<Category> page, @Param("query") CategoryQuery query);
+    IPage<Category> selectCategoryPage(IPage<Category> page, @Param("query") CategoryPageDTO queryDTO);
 
     /**
      * 查询子分类列表
@@ -47,6 +48,14 @@ public interface CategoryMapper extends BaseMapper<Category> {
     int checkNameUnique(@Param("name") String name, 
                        @Param("parentId") Long parentId,
                        @Param("excludeId") Long excludeId);
+
+    /**
+     * 查询激活的子分类列表
+     * @param parentId 父分类ID
+     * @return 激活的子分类列表
+     */
+    @Select("SELECT * FROM category WHERE parent_id = #{parentId} AND status = 1 ORDER BY sort DESC")
+    List<Category> selectActiveChildren(@Param("parentId") Long parentId);
 }
 
 

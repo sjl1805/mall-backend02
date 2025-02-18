@@ -63,4 +63,12 @@
         WHERE order_id = #{orderId}
           AND product_id = #{productId}
     </update>
+
+    <!-- 新增商品图片批量更新 -->
+    <update id="batchUpdateProductImage">
+        UPDATE order_item
+        SET product_image = #{imageUrl},
+            update_time = NOW()
+        WHERE product_id = #{productId}
+    </update>
 </mapper>

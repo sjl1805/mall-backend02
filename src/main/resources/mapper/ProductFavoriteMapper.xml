@@ -37,7 +37,13 @@
             <include refid="Base_Column_List"/>
         FROM product_favorite
         <where>
-            <include refid="Condition_Column"/>
+            user_id = #{query.userId}
+            <if test="query.productId != null">
+                AND product_id = #{query.productId}
+            </if>
+            <if test="query.folderId != null">
+                AND folder_id = #{query.folderId}
+            </if>
         </where>
         ORDER BY 
         <choose>
@@ -80,5 +86,16 @@
         SET folder_id = #{toFolderId},
             update_time = NOW()
         WHERE folder_id = #{fromFolderId}
+          AND user_id = #{userId}
     </update>
+
+    <!-- 新增批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_favorite (
+            user_id, product_id, folder_id
+        ) VALUES
+        <foreach collection="favorites" item="fav" separator=",">
+            (#{fav.userId}, #{fav.productId}, #{fav.folderId})
+        </foreach>
+    </insert>
 </mapper>

@@ -2,10 +2,12 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.RecommendQuery;
+import com.example.model.dto.product.RecommendProductDTO;
+import com.example.model.dto.product.RecommendProductPageDTO;
 import com.example.model.entity.RecommendProduct;
-
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +22,11 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
     /**
      * 分页查询推荐商品
      * @param page 分页参数
-     * @param query 查询条件
+     * @param queryDTO 查询条件
      * @return 分页结果
      */
     IPage<RecommendProduct> selectRecommendPage(IPage<RecommendProduct> page,
-                                               @Param("query") RecommendQuery query);
+                                               @Param("query") RecommendProductPageDTO queryDTO);
 
     /**
      * 根据类型和状态查询推荐
@@ -41,8 +43,17 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @param status 新状态
      * @return 影响行数
      */
-    int updateRecommendStatus(@Param("id") Long id,
-                            @Param("status") Integer status);
+    @Update("UPDATE recommend_product SET status = #{status} WHERE id = #{id}")
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    /**
+     * 更新推荐排序
+     * @param id 推荐ID
+     * @param sort 新排序
+     * @return 影响行数
+     */
+    @Update("UPDATE recommend_product SET sort = #{sort} WHERE id = #{id}")
+    int updateSort(@Param("id") Long id, @Param("sort") Integer sort);
 
     /**
      * 统计有效推荐数量
@@ -67,6 +78,24 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @return 推荐列表
      */
     List<RecommendProduct> selectByAlgorithmVersion(@Param("version") String version);
+
+    /**
+     * 根据类型和时间范围查询推荐
+     * @param type 推荐类型
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 推荐列表
+     */
+    List<RecommendProduct> selectByTypeAndTimeRange(@Param("type") Integer type,
+                                                  @Param("start") Date start,
+                                                  @Param("end") Date end);
+
+    /**
+     * 批量插入推荐商品
+     * @param recommends 推荐商品列表
+     * @return 影响行数
+     */
+    int batchInsert(@Param("recommends") List<RecommendProductDTO> recommends);
 }
 
 

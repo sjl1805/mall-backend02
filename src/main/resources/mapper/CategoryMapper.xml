@@ -88,4 +88,21 @@
             AND id != #{excludeId}
         </if>
     </select>
+
+    <!-- 树形结构查询 -->
+    <select id="selectCategoryTree" resultMap="TreeResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM category
+        WHERE parent_id = 0 AND status = 1
+        ORDER BY sort DESC
+    </select>
+
+    <!-- 优化子分类查询 -->
+    <select id="selectActiveChildren" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM category
+        WHERE parent_id = #{parentId} 
+          AND status = 1
+        ORDER BY sort DESC
+    </select>
 </mapper>
