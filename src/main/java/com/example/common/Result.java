@@ -27,11 +27,11 @@ public class Result<T> implements Serializable {
     private long timestamp = System.currentTimeMillis();
 
     // 成功响应
-    public static <T> Result<T> ok() {
-        return ok(null);
+    public static <T> Result<T> success() {
+        return success(null);
     }
 
-    public static <T> Result<T> ok(T data) {
+    public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>();
         result.code = ResultCode.SUCCESS.getCode();
         result.message = ResultCode.SUCCESS.getZhMsg();
@@ -40,15 +40,15 @@ public class Result<T> implements Serializable {
     }
 
     // 失败响应
-    public static <T> Result<T> fail(ResultCode resultCode) {
-        return fail(resultCode, resultCode.getZhMsg());
+    public static <T> Result<T> error(ResultCode resultCode) {
+        return error(resultCode, resultCode.getZhMsg());
     }
 
-    public static <T> Result<T> fail(ResultCode resultCode, String message) {
-        return fail(resultCode, message, null);
+    public static <T> Result<T> error(ResultCode resultCode, String message) {
+        return error(resultCode, message, null);
     }
 
-    public static <T> Result<T> fail(ResultCode resultCode, String message, String debugInfo) {
+    public static <T> Result<T> error(ResultCode resultCode, String message, String debugInfo) {
         Result<T> result = new Result<>();
         result.code = resultCode.getCode();
         result.message = message;
@@ -59,7 +59,7 @@ public class Result<T> implements Serializable {
     // 分页响应
     public static <T> Result<PageResult<T>> page(T data, long total, int page, int size) {
         PageResult<T> pageResult = new PageResult<>(data, total, page, size);
-        return ok(pageResult);
+        return success(pageResult);
     }
 
     // 异常处理

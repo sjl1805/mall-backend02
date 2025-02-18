@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.CouponQuery;
 import com.example.model.entity.Coupon;
-import com.example.model.query.CouponQuery;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

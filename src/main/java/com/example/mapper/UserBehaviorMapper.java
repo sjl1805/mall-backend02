@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.BehaviorQuery;
 import com.example.model.entity.UserBehavior;
-import com.example.model.query.BehaviorQuery;
+
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import java.util.Map;

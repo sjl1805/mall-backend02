@@ -1,21 +1,16 @@
 package com.example.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serial;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
- * 用户表
+ * 用户实体类
  * @TableName users
  */
-@TableName(value ="users")
 @Data
+@TableName("users")
 public class Users implements Serializable {
     /**
      * 用户ID
@@ -24,66 +19,62 @@ public class Users implements Serializable {
     private Long id;
 
     /**
-     * 用户名
+     * 用户名（唯一）
      */
     private String username;
 
     /**
-     * 密码哈希值
+     * BCrypt加密后的密码哈希值
      */
     private String password;
 
     /**
-     * 昵称
+     * 用户昵称
      */
     private String nickname;
 
     /**
-     * 手机号
+     * 手机号（唯一）
      */
     private String phone;
 
     /**
-     * 邮箱
+     * 邮箱（唯一）
      */
     private String email;
 
     /**
-     * 头像
+     * 头像地址
      */
-    private String avatar;
+    private String avatar = "/images/default-avatar.png";
 
     /**
-     * 性别：0未知 1男 2女
+     * 性别：0-未知 1-男 2-女
      */
-    private Integer gender;
+    private Integer gender = 0;
 
     /**
-     * 状态：0禁用 1启用
+     * 状态：0-禁用 1-启用
      */
-    private Integer status;
+    private Integer status = 1;
 
     /**
-     * 
+     * 角色：0-超级管理员 1-管理员 2-普通用户
      */
-    private Integer role;
+    private Integer role = 2;
 
     /**
-     * 创建时间（带时区）
+     * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
-     * 更新时间（带时区）
+     * 更新时间
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
-    /**
-     * 
-     */
-    private Date createDate;
-
-    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

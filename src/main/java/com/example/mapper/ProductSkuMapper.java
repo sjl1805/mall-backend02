@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.SkuQuery;
 import com.example.model.entity.ProductSku;
-import com.example.model.query.SkuQuery;
+
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import java.util.Map;

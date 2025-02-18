@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.FavoriteFolderQuery;
 import com.example.model.entity.FavoriteFolder;
-import com.example.model.query.FavoriteFolderQuery;
+
 import org.apache.ibatis.annotations.Param;
 
 /**

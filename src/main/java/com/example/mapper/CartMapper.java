@@ -1,8 +1,9 @@
 package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.model.dto.CartQuery;
 import com.example.model.entity.Cart;
-import com.example.model.query.CartQuery;
+
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 

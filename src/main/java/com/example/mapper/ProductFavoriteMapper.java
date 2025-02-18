@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.FavoriteQuery;
 import com.example.model.entity.ProductFavorite;
-import com.example.model.query.FavoriteQuery;
+
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 

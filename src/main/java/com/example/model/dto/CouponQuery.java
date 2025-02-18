@@ -1,4 +1,4 @@
-package com.example.model.query;
+package com.example.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -7,16 +7,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Data
-@Schema(description = "用户查询条件")
-public class UserQuery {
-    @Schema(description = "关键词（用户名/昵称/邮箱）")
-    private String keyword;
+@Schema(description = "优惠券查询条件")
+public class CouponQuery {
+    @Schema(description = "优惠券名称")
+    private String name;
     
-    @Schema(description = "用户状态")
+    @Schema(description = "优惠券类型")
+    private Integer type;
+    
+    @Schema(description = "状态")
     private Integer status;
-    
-    @Schema(description = "用户角色")
-    private Integer role;
     
     @Schema(description = "开始时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

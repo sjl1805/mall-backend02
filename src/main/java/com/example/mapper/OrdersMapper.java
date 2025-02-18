@@ -2,8 +2,9 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.OrderQuery;
 import com.example.model.entity.Orders;
-import com.example.model.query.OrderQuery;
+
 import org.apache.ibatis.annotations.Param;
 import java.math.BigDecimal;
 

@@ -2,9 +2,12 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.UserQuery;
 import com.example.model.entity.Users;
-import com.example.model.query.UserQuery;
+
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 /**
  * 用户管理Mapper接口
@@ -13,12 +16,25 @@ import org.apache.ibatis.annotations.Param;
 public interface UsersMapper extends BaseMapper<Users> {
 
     /**
-     * 分页查询用户列表（带条件）
+     * 分页查询用户列表
      * @param page 分页参数
      * @param query 查询条件
      * @return 分页结果
      */
     IPage<Users> selectUserPage(IPage<Users> page, @Param("query") UserQuery query);
+
+    /**
+     * 根据手机号查询用户
+     * @param phone 手机号
+     * @return 用户信息
+     */
+    Users selectByPhone(@Param("phone") String phone);
+
+    /**
+     * 统计用户状态分布
+     * @return 状态统计结果
+     */
+    IPage<Map<String, Object>> countUserStatus();
 
     /**
      * 根据用户名或手机号查询用户（用于登录）

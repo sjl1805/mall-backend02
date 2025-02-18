@@ -1,28 +1,25 @@
-package com.example.model.query;
+package com.example.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Data
-@Schema(description = "订单查询条件")
-public class OrderQuery {
-    @Schema(description = "订单号")
-    private String orderNo;
-    
+@Schema(description = "用户行为查询条件")
+public class BehaviorQuery {
     @Schema(description = "用户ID")
     private Long userId;
     
-    @Schema(description = "订单状态")
-    private Integer status;
+    @Schema(description = "商品ID")
+    private Long productId;
+    
+    @Schema(description = "行为类型")
+    private Integer behaviorType;
     
     @Schema(description = "开始时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
     
     @Schema(description = "结束时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
     
     @Schema(description = "排序字段")

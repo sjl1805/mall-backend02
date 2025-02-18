@@ -1,4 +1,4 @@
-package com.example.model.query;
+package com.example.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

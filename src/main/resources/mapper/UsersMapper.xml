@@ -21,43 +21,38 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,password,
-        nickname,phone,email,
-        avatar,gender,status,
-        role,create_time,update_time,
-        create_date
-    </sql>
-
-    <!-- 条件查询字段 -->
-    <sql id="Condition_Column">
-        <if test="query.keyword != null and query.keyword != ''">
-            AND (username LIKE CONCAT('%', #{query.keyword}, '%')
-                 OR nickname LIKE CONCAT('%', #{query.keyword}, '%')
-                 OR email LIKE CONCAT('%', #{query.keyword}, '%'))
-        </if>
-        <if test="query.status != null">
-            AND status = #{query.status}
-        </if>
-        <if test="query.role != null">
-            AND role = #{query.role}
-        </if>
-        <if test="query.startTime != null">
-            AND create_time >= #{query.startTime}
-        </if>
-        <if test="query.endTime != null">
-            AND create_time &lt;= #{query.endTime}
-        </if>
+        id, username, password, nickname, phone, email, 
+        avatar, gender, status, role, create_time, update_time
     </sql>
 
     <!-- 分页查询用户 -->
-    <select id="selectUserPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+    <select id="selectUserPage" resultType="com.example.model.entity.Users">
+        SELECT <include refid="Base_Column_List"/>
         FROM users
         <where>
-            <include refid="Condition_Column"/>
+            <if test="query.username != null and query.username != ''">
+                AND username LIKE CONCAT('%', #{query.username}, '%')
+            </if>
+            <if test="query.phone != null and query.phone != ''">
+                AND phone = #{query.phone}
+            </if>
+            <if test="query.email != null and query.email != ''">
+                AND email = #{query.email}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+            <if test="query.role != null">
+                AND role = #{query.role}
+            </if>
+            <if test="query.createTimeStart != null">
+                AND create_time >= #{query.createTimeStart}
+            </if>
+            <if test="query.createTimeEnd != null">
+                AND create_time &lt;= #{query.createTimeEnd}
+            </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -66,6 +61,22 @@
                 create_time DESC
             </otherwise>
         </choose>
+    </select>
+
+    <!-- 根据手机号查询 -->
+    <select id="selectByPhone" resultType="com.example.model.entity.Users">
+        SELECT <include refid="Base_Column_List"/>
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+
+    <!-- 统计用户状态 -->
+    <select id="countUserStatus" resultType="map">
+        SELECT 
+            status AS status,
+            COUNT(*) AS count
+        FROM users
+        GROUP BY status
     </select>
 
     <!-- 登录查询 -->
