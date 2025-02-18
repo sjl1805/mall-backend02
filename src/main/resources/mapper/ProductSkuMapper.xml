@@ -23,4 +23,86 @@
         main_image,status,create_time,
         update_time
     </sql>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_sku (
+            product_id, spec_values, price,
+            stock, sales, main_image,
+            status
+        ) VALUES
+        <foreach collection="skus" item="sku" separator=",">
+            (
+                #{sku.productId}, #{sku.specValues}, #{sku.price},
+                #{sku.stock}, #{sku.sales}, #{sku.mainImage},
+                #{sku.status}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据商品ID查询 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        ORDER BY price ASC
+    </select>
+
+    <!-- 更新库存（乐观锁） -->
+    <update id="updateStock">
+        UPDATE product_sku
+        SET stock = stock + #{quantity},
+            update_time = NOW()
+        WHERE id = #{skuId}
+        AND stock + #{quantity} >= 0
+    </update>
+
+    <!-- 分页查询 -->
+    <select id="selectSkuPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        <where>
+            <if test="query.productId != null">
+                AND product_id = #{query.productId}
+            </if>
+            <if test="query.minPrice != null">
+                AND price >= #{query.minPrice}
+            </if>
+            <if test="query.maxPrice != null">
+                AND price &lt;= #{query.maxPrice}
+            </if>
+            <if test="query.status != null">
+                AND status = #{query.status}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 增加销量 -->
+    <update id="increaseSales">
+        UPDATE product_sku
+        SET sales = sales + #{quantity},
+            update_time = NOW()
+        WHERE id = #{skuId}
+    </update>
+
+    <!-- 统计状态数量 -->
+    <select id="countSkuStatus" resultType="map">
+        SELECT 
+            status AS status,
+            COUNT(*) AS count
+        FROM product_sku
+        WHERE product_id = #{productId}
+        GROUP BY status
+    </select>
 </mapper>

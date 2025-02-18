@@ -1,7 +1,12 @@
 package com.example.mapper;
 
-import com.example.model.entity.ProductReview;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.entity.ProductReview;
+import com.example.model.query.ReviewQuery;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 31815
@@ -11,6 +16,50 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
+    /**
+     * 分页查询评价列表
+     * @param page 分页参数
+     * @param query 查询条件
+     * @return 分页结果
+     */
+    IPage<ProductReview> selectReviewPage(IPage<ProductReview> page, 
+                                        @Param("query") ReviewQuery query);
+
+    /**
+     * 更新评价状态
+     * @param reviewId 评价ID
+     * @param status 新状态
+     * @return 影响行数
+     */
+    int updateReviewStatus(@Param("reviewId") Long reviewId, 
+                         @Param("status") Integer status);
+
+    /**
+     * 统计商品评分
+     * @param productId 商品ID
+     * @return 评分统计结果
+     */
+    Map<String, Object> countProductRating(@Param("productId") Long productId);
+
+    /**
+     * 获取用户最新评价
+     * @param userId 用户ID
+     * @param limit 数量限制
+     * @return 评价列表
+     */
+    List<ProductReview> selectLatestUserReviews(@Param("userId") Long userId,
+                                              @Param("limit") Integer limit);
+
+    /**
+     * 检查用户是否已评价
+     * @param userId 用户ID
+     * @param orderId 订单ID
+     * @param productId 商品ID
+     * @return 存在数量
+     */
+    int checkReviewExists(@Param("userId") Long userId,
+                        @Param("orderId") Long orderId,
+                        @Param("productId") Long productId);
 }
 
 

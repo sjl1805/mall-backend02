@@ -24,4 +24,93 @@
         end_time,algorithm_version,recommend_reason,
         create_time,update_time
     </sql>
+
+    <!-- 动态查询条件 -->
+    <sql id="Condition_Column">
+        <if test="query.type != null">
+            AND type = #{query.type}
+        </if>
+        <if test="query.status != null">
+            AND status = #{query.status}
+        </if>
+        <if test="query.startTime != null">
+            AND start_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND end_time &lt;= #{query.endTime}
+        </if>
+        <if test="query.algorithmVersion != null">
+            AND algorithm_version = #{query.algorithmVersion}
+        </if>
+    </sql>
+
+    <!-- 分页查询推荐商品 -->
+    <select id="selectRecommendPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommend_product
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                sort ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据类型和状态查询 -->
+    <select id="selectByTypeAndStatus" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommend_product
+        WHERE type = #{type}
+          AND status = #{status}
+        ORDER BY sort ASC
+    </select>
+
+    <!-- 更新推荐状态 -->
+    <update id="updateRecommendStatus">
+        UPDATE recommend_product
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 统计有效推荐 -->
+    <select id="countActiveRecommends" resultType="map">
+        SELECT 
+            type,
+            COUNT(*) AS count
+        FROM recommend_product
+        WHERE status = 1
+          AND start_time &lt;= NOW()
+          AND end_time >= NOW()
+        GROUP BY type
+    </select>
+
+    <!-- 检查时间冲突 -->
+    <select id="checkTimeConflict" resultType="int">
+        SELECT COUNT(*)
+        FROM recommend_product
+        WHERE product_id = #{productId}
+          AND (
+            (start_time BETWEEN #{startTime} AND #{endTime})
+            OR (end_time BETWEEN #{startTime} AND #{endTime})
+            OR (#{startTime} BETWEEN start_time AND end_time)
+          )
+    </select>
+
+    <!-- 根据算法版本查询 -->
+    <select id="selectByAlgorithmVersion" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommend_product
+        WHERE algorithm_version = #{version}
+        ORDER BY create_time DESC
+    </select>
 </mapper>

@@ -19,4 +19,46 @@
         quantity,checked,create_time,
         update_time
     </sql>
+
+    <!-- 批量更新选中状态 -->
+    <update id="batchUpdateChecked">
+        UPDATE cart
+        SET checked = #{checked},
+            update_time = NOW()
+        WHERE user_id = #{userId}
+          AND product_id IN
+        <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </update>
+
+    <!-- 清空选中商品 -->
+    <delete id="clearCheckedItems">
+        DELETE FROM cart
+        WHERE user_id = #{userId}
+          AND checked = 1
+    </delete>
+
+    <!-- 分页查询购物车 -->
+    <select id="selectCartList" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM cart
+        <where>
+            <if test="query.userId != null">
+                AND user_id = #{query.userId}
+            </if>
+            <if test="query.checked != null">
+                AND checked = #{query.checked}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计购物车商品数量 -->
+    <select id="countCartItems" resultType="int">
+        SELECT COUNT(*)
+        FROM cart
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

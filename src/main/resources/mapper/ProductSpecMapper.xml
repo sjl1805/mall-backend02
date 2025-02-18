@@ -17,4 +17,40 @@
         id,product_id,spec_name,
         spec_values,create_time,update_time
     </sql>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_spec (
+            product_id, spec_name, spec_values
+        ) VALUES
+        <foreach collection="specs" item="spec" separator=",">
+            (
+                #{spec.productId}, #{spec.specName}, #{spec.specValues}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据商品ID查询 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_spec
+        WHERE product_id = #{productId}
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 更新规格值 -->
+    <update id="updateSpecValues">
+        UPDATE product_spec
+        SET spec_values = #{specValues},
+            update_time = NOW()
+        WHERE id = #{specId}
+    </update>
+
+    <!-- 统计规格数量 -->
+    <select id="countByProductId" resultType="int">
+        SELECT COUNT(*)
+        FROM product_spec
+        WHERE product_id = #{productId}
+    </select>
 </mapper>

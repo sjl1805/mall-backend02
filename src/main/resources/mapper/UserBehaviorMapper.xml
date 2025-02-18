@@ -21,4 +21,76 @@
         behavior_type,behavior_time,duration,
         create_time,update_time,weight
     </sql>
+
+    <sql id="Condition_Column">
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+        <if test="query.productId != null">
+            AND product_id = #{query.productId}
+        </if>
+        <if test="query.behaviorType != null">
+            AND behavior_type = #{query.behaviorType}
+        </if>
+        <if test="query.startTime != null">
+            AND behavior_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND behavior_time &lt;= #{query.endTime}
+        </if>
+    </sql>
+
+    <select id="selectBehaviorPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                behavior_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="calculateUserWeight" resultType="map">
+        SELECT 
+            SUM(weight) AS totalWeight,
+            COUNT(*) AS behaviorCount,
+            MAX(behavior_time) AS lastBehaviorTime
+        FROM user_behavior
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectRecentBehaviors" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        ORDER BY behavior_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="countBehaviorDistribution" resultType="map">
+        SELECT 
+            behavior_type AS type,
+            COUNT(*) AS count,
+            SUM(weight) AS totalWeight
+        FROM user_behavior
+        WHERE behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        GROUP BY behavior_type
+    </select>
+
+    <select id="checkBehaviorExists" resultType="int">
+        SELECT COUNT(*)
+        FROM user_behavior
+        WHERE user_id = #{userId}
+          AND product_id = #{productId}
+          AND behavior_type = #{behaviorType}
+    </select>
 </mapper>

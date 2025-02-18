@@ -21,4 +21,63 @@
         description,is_public,item_count,
         sort,create_time,update_time
     </sql>
+
+    <!-- 条件查询字段 -->
+    <sql id="Condition_Column">
+        <if test="query.name != null and query.name != ''">
+            AND name LIKE CONCAT('%', #{query.name}, '%')
+        </if>
+        <if test="query.isPublic != null">
+            AND is_public = #{query.isPublic}
+        </if>
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+    </sql>
+
+    <!-- 分页查询收藏夹 -->
+    <select id="selectFolderPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                sort ASC, create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 更新公开状态 -->
+    <update id="updatePublicStatus">
+        UPDATE favorite_folder
+        SET is_public = #{isPublic},
+            update_time = NOW()
+        WHERE id = #{folderId}
+    </update>
+
+    <!-- 更新排序 -->
+    <update id="updateSort">
+        UPDATE favorite_folder
+        SET sort = #{newSort},
+            update_time = NOW()
+        WHERE id = #{folderId}
+    </update>
+
+    <!-- 检查名称唯一性 -->
+    <select id="checkNameUnique" resultType="int">
+        SELECT COUNT(*) 
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+          AND name = #{name}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
 </mapper>

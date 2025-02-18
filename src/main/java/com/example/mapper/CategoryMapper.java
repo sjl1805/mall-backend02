@@ -1,16 +1,51 @@
 package com.example.mapper;
 
-import com.example.model.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.entity.Category;
+import com.example.model.query.CategoryQuery;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
 
 /**
-* @author 31815
-* @description 针对表【category(商品分类表)】的数据库操作Mapper
-* @createDate 2025-02-18 23:44:29
-* @Entity model.entity.Category
-*/
+ * 商品分类管理Mapper接口
+ * @author 毕业设计学生
+ */
 public interface CategoryMapper extends BaseMapper<Category> {
 
+    /**
+     * 分页查询分类列表（带条件）
+     * @param page 分页参数
+     * @param query 查询条件
+     * @return 分页结果
+     */
+    IPage<Category> selectCategoryPage(IPage<Category> page, @Param("query") CategoryQuery query);
+
+    /**
+     * 查询子分类列表
+     * @param parentId 父分类ID
+     * @return 子分类列表
+     */
+    List<Category> selectChildren(@Param("parentId") Long parentId);
+
+    /**
+     * 更新分类状态（启用/禁用）
+     * @param categoryId 分类ID
+     * @param status 新状态
+     * @return 影响行数
+     */
+    int updateStatus(@Param("categoryId") Long categoryId, @Param("status") Integer status);
+
+    /**
+     * 检查分类名称唯一性
+     * @param name 分类名称
+     * @param parentId 父分类ID
+     * @param excludeId 排除的ID
+     * @return 存在的记录数
+     */
+    int checkNameUnique(@Param("name") String name, 
+                       @Param("parentId") Long parentId,
+                       @Param("excludeId") Long excludeId);
 }
 
 

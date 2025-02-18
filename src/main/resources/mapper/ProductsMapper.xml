@@ -23,4 +23,76 @@
         images,create_time,update_time,
         status
     </sql>
+
+    <!-- 条件查询字段 -->
+    <sql id="Condition_Column">
+        <if test="query.keyword != null and query.keyword != ''">
+            AND (name LIKE CONCAT('%', #{query.keyword}, '%')
+                 OR description LIKE CONCAT('%', #{query.keyword}, '%'))
+        </if>
+        <if test="query.categoryId != null">
+            AND category_id = #{query.categoryId}
+        </if>
+        <if test="query.minPrice != null">
+            AND price >= #{query.minPrice}
+        </if>
+        <if test="query.maxPrice != null">
+            AND price &lt;= #{query.maxPrice}
+        </if>
+        <if test="query.status != null">
+            AND status = #{query.status}
+        </if>
+        <if test="query.startTime != null">
+            AND create_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND create_time &lt;= #{query.endTime}
+        </if>
+    </sql>
+
+    <!-- 分页查询商品 -->
+    <select id="selectProductPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM products
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 更新状态 -->
+    <update id="updateStatus">
+        UPDATE products
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{productId}
+    </update>
+
+    <!-- 调整库存 -->
+    <update id="adjustStock">
+        UPDATE products
+        SET stock = stock + #{delta},
+            update_time = NOW()
+        WHERE id = #{productId}
+          AND stock + #{delta} >= 0
+    </update>
+
+    <!-- 检查名称唯一性 -->
+    <select id="checkNameUnique" resultType="int">
+        SELECT COUNT(*) 
+        FROM products
+        WHERE name = #{name}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
 </mapper>

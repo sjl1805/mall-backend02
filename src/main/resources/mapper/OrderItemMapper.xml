@@ -23,4 +23,44 @@
         quantity,total_amount,create_time,
         update_time
     </sql>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item (
+            order_id, product_id, product_name,
+            product_image, price, quantity,
+            total_amount
+        ) VALUES
+        <foreach collection="items" item="item" separator=",">
+            (
+                #{item.orderId}, #{item.productId}, #{item.productName},
+                #{item.productImage}, #{item.price}, #{item.quantity},
+                #{item.totalAmount}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据订单ID查询 -->
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE order_id = #{orderId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计商品销量 -->
+    <select id="sumProductSales" resultType="int">
+        SELECT SUM(quantity)
+        FROM order_item
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 更新评价状态 -->
+    <update id="updateCommentStatus">
+        UPDATE order_item
+        SET comment_status = #{commentStatus}
+        WHERE order_id = #{orderId}
+          AND product_id = #{productId}
+    </update>
 </mapper>

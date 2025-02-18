@@ -21,4 +21,73 @@
         status,order_id,get_time,
         use_time,create_time,update_time
     </sql>
+
+    <!-- 条件查询字段 -->
+    <sql id="Condition_Column">
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+        <if test="query.status != null">
+            AND status = #{query.status}
+        </if>
+        <if test="query.startTime != null">
+            AND get_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND get_time &lt;= #{query.endTime}
+        </if>
+    </sql>
+
+    <!-- 分页查询用户优惠券 -->
+    <select id="selectUserCouponPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_coupon
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                get_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 更新优惠券状态 -->
+    <update id="updateCouponStatus">
+        UPDATE user_coupon
+        SET status = #{status},
+            order_id = #{orderId},
+            use_time = CASE WHEN #{status} = 1 THEN NOW() ELSE use_time END,
+            update_time = NOW()
+        WHERE id = #{userCouponId}
+    </update>
+
+    <!-- 自动过期优惠券 -->
+    <update id="expireCoupons">
+        UPDATE user_coupon
+        SET status = 2
+        WHERE status = 0
+          AND EXISTS (
+            SELECT 1 FROM coupon c 
+            WHERE c.id = coupon_id 
+            AND c.end_time &lt; #{currentTime}
+          )
+    </update>
+
+    <!-- 检查优惠券有效性 -->
+    <select id="checkCouponValid" resultType="int">
+        SELECT COUNT(*) 
+        FROM user_coupon uc
+        INNER JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+          AND uc.coupon_id = #{couponId}
+          AND uc.status = 0
+          AND c.start_time &lt;= NOW()
+          AND c.end_time >= NOW()
+    </select>
 </mapper>

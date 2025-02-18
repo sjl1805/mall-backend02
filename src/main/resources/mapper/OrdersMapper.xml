@@ -35,4 +35,67 @@
         comment_status,create_time,update_time,
         timezone
     </sql>
+
+    <!-- 条件查询字段 -->
+    <sql id="Condition_Column">
+        <if test="query.orderNo != null and query.orderNo != ''">
+            AND order_no LIKE CONCAT('%', #{query.orderNo}, '%')
+        </if>
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+        <if test="query.status != null">
+            AND status = #{query.status}
+        </if>
+        <if test="query.startTime != null">
+            AND create_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND create_time &lt;= #{query.endTime}
+        </if>
+    </sql>
+
+    <!-- 分页查询订单 -->
+    <select id="selectOrderPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="query.sortField != null and query.sortField != ''">
+                ${query.sortField} ${query.sortOrder}
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 更新订单状态 -->
+    <update id="updateStatus">
+        UPDATE orders
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{orderId}
+    </update>
+
+    <!-- 自动取消超时订单 -->
+    <update id="autoCancelOrders">
+        UPDATE orders
+        SET status = 4
+        WHERE status = 0
+          AND TIMESTAMPDIFF(MINUTE, create_time, NOW()) > #{timeoutMinutes}
+    </update>
+
+    <!-- 统计订单金额 -->
+    <select id="sumOrderAmount" resultType="java.math.BigDecimal">
+        SELECT SUM(pay_amount)
+        FROM orders
+        <where>
+            <include refid="Condition_Column"/>
+        </where>
+    </select>
 </mapper>
