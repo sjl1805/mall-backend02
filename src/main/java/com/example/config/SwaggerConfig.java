@@ -2,11 +2,13 @@ package com.example.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 
 @Configuration
 public class SwaggerConfig {
@@ -18,8 +20,15 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Mall API")
                         .version("1.0")
-                        .description("电商平台接口文档")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                        .description("电商平台接口文档"))
+                .components(new Components()
+                        .addSecuritySchemes("BearerAuth", 
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("BearerAuth"))
                 .externalDocs(new ExternalDocumentation()
                         .description("项目文档")
                         .url("https://github.com/your-repo"));
