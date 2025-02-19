@@ -1,0 +1,411 @@
+2025-02-20 01:32:53 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:32:53 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:32:53 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:32:53 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:32:53 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:32:53 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:32:53 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:32:53 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:32:53 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:32:53 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:32:53 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 249 ms
+2025-02-20 01:32:53 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:53 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:32:54 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@396c8d96, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@805ac9c, org.springframework.security.web.context.SecurityContextHolderFilter@3185cf69, org.springframework.security.web.header.HeaderWriterFilter@62f02086, org.springframework.web.filter.CorsFilter@362809db, org.springframework.security.web.authentication.logout.LogoutFilter@406e36d9, com.example.security.JwtAuthenticationFilter@b95bde2, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@617bd044, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@26c28fd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2ccfe125, org.springframework.security.web.session.SessionManagementFilter@222fe234, org.springframework.security.web.access.ExceptionTranslationFilter@6b17672a, org.springframework.security.web.access.intercept.AuthorizationFilter@1ce0d3a8]
+2025-02-20 01:32:54 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:32:54 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:32:54 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 1.01 seconds (process running for 172.957)
+2025-02-20 01:32:54 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-02-20 01:33:46 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-02-20 01:33:46 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:33:46 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:33:46 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:33:46 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:33:46 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:33:46 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:33:46 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:33:46 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:33:46 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:33:46 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:33:46 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 228 ms
+2025-02-20 01:33:46 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:46 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:47 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@eaecfb9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3ee04fa0, org.springframework.security.web.context.SecurityContextHolderFilter@22753a0a, org.springframework.security.web.header.HeaderWriterFilter@e41e526, org.springframework.web.filter.CorsFilter@14584590, org.springframework.security.web.authentication.logout.LogoutFilter@fc7f723, com.example.security.JwtAuthenticationFilter@6c3ac5a9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4135165e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@405cb38b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@32349d5d, org.springframework.security.web.session.SessionManagementFilter@4460122c, org.springframework.security.web.access.ExceptionTranslationFilter@1bbf0391, org.springframework.security.web.access.intercept.AuthorizationFilter@43ccb0c6]
+2025-02-20 01:33:47 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:33:47 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:33:47 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 0.87 seconds (process running for 225.831)
+2025-02-20 01:33:47 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-02-20 01:33:48 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-02-20 01:33:48 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:33:48 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:33:48 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:33:49 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:33:49 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:33:49 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 244 ms
+2025-02-20 01:33:49 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@45c2320f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3eadcdfc, org.springframework.security.web.context.SecurityContextHolderFilter@79d0c3c, org.springframework.security.web.header.HeaderWriterFilter@30613405, org.springframework.web.filter.CorsFilter@3a1ee465, org.springframework.security.web.authentication.logout.LogoutFilter@3609a3a8, com.example.security.JwtAuthenticationFilter@7b266ef4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@70d5e7c3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@492d24c0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@47e9da03, org.springframework.security.web.session.SessionManagementFilter@2e37c20c, org.springframework.security.web.access.ExceptionTranslationFilter@3b1984c8, org.springframework.security.web.access.intercept.AuthorizationFilter@49169386]
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:33:49 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 0.877 seconds (process running for 228.2)
+2025-02-20 01:33:49 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-02-20 01:34:48 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 151 class path changes (0 additions, 0 deletions, 151 modifications)
+2025-02-20 01:34:48 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:34:48 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:34:48 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:34:48 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:34:48 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:34:48 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:34:48 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:34:48 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:34:48 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:34:48 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:34:48 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 233 ms
+2025-02-20 01:34:48 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:48 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:34:49 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@726334b7, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@69bbb655, org.springframework.security.web.context.SecurityContextHolderFilter@19f9fe59, org.springframework.security.web.header.HeaderWriterFilter@2f312442, org.springframework.web.filter.CorsFilter@698985e0, org.springframework.security.web.authentication.logout.LogoutFilter@59f85771, com.example.security.JwtAuthenticationFilter@3167521e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@44e5c424, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@62d0fbce, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@50702f07, org.springframework.security.web.session.SessionManagementFilter@37bb446a, org.springframework.security.web.access.ExceptionTranslationFilter@5c80382a, org.springframework.security.web.access.intercept.AuthorizationFilter@56bdefb1]
+2025-02-20 01:34:49 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:34:49 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:34:49 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 0.82 seconds (process running for 287.658)
+2025-02-20 01:34:49 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-02-20 01:35:45 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2025-02-20 01:35:45 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:35:45 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:35:45 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:35:45 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:35:45 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:35:45 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 230 ms
+2025-02-20 01:35:45 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@622d68ff, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@255dabf8, org.springframework.security.web.context.SecurityContextHolderFilter@3eb2a32c, org.springframework.security.web.header.HeaderWriterFilter@4b7e457b, org.springframework.web.filter.CorsFilter@7593b99e, org.springframework.security.web.authentication.logout.LogoutFilter@52f2b8aa, com.example.security.JwtAuthenticationFilter@5e1eaffc, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4dd14f9e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@743d8ec2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2337f2a1, org.springframework.security.web.session.SessionManagementFilter@51eb9533, org.springframework.security.web.access.ExceptionTranslationFilter@130c039f, org.springframework.security.web.access.intercept.AuthorizationFilter@dcb673a]
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:35:45 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 0.85 seconds (process running for 344.447)
+2025-02-20 01:35:45 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-02-20 01:36:09 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 15 class path changes (0 additions, 0 deletions, 15 modifications)
+2025-02-20 01:36:09 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:36:09 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:36:09 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:36:09 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:36:09 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:36:09 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 225 ms
+2025-02-20 01:36:09 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:09 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'recommendProductController' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\controller\RecommendProductController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+2025-02-20 01:36:09 [restartedMain] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-02-20 01:36:09 [restartedMain] INFO  o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-02-20 01:36:09 [restartedMain] ERROR org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'recommendProductController' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\controller\RecommendProductController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.example.MallBackendApplication.main(MallBackendApplication.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.2.5.jar:3.2.5]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1317) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1202) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 24 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:221) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:88) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1311) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 36 common frames omitted
+Caused by: java.lang.Error: Unresolved compilation problems: 
+	RECOMMEND_TIME_CONFLICT cannot be resolved or is not a field
+	RECOMMEND_TIME_CONFLICT cannot be resolved or is not a field
+
+	at com.example.service.impl.RecommendProductServiceImpl.<init>(RecommendProductServiceImpl.java:57) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:195) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 38 common frames omitted
+2025-02-20 01:36:42 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:36:42 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:36:42 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:36:42 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:36:42 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:36:42 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 224 ms
+2025-02-20 01:36:42 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:36:42 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'recommendProductController' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\controller\RecommendProductController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+2025-02-20 01:36:42 [restartedMain] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-02-20 01:36:42 [restartedMain] INFO  o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-02-20 01:36:42 [restartedMain] ERROR org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'recommendProductController' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\controller\RecommendProductController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.5.jar:6.1.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.example.MallBackendApplication.main(MallBackendApplication.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.2.5.jar:3.2.5]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'recommendProductServiceImpl' defined in file [C:\Users\31815\Desktop\mall-backend\target\classes\com\example\service\impl\RecommendProductServiceImpl.class]: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1317) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1202) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 24 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.example.service.impl.RecommendProductServiceImpl]: Constructor threw exception
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:221) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:88) ~[spring-beans-6.1.5.jar:6.1.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1311) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 36 common frames omitted
+Caused by: java.lang.Error: Unresolved compilation problems: 
+	RECOMMEND_TIME_CONFLICT cannot be resolved or is not a field
+	RECOMMEND_TIME_CONFLICT cannot be resolved or is not a field
+
+	at com.example.service.impl.RecommendProductServiceImpl.<init>(RecommendProductServiceImpl.java:57) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:195) ~[spring-beans-6.1.5.jar:6.1.5]
+	... 38 common frames omitted
+2025-02-20 01:37:22 [restartedMain] INFO  com.example.MallBackendApplication - Starting MallBackendApplication using Java 17.0.10 with PID 21716 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-20 01:37:22 [restartedMain] DEBUG com.example.MallBackendApplication - Running with Spring Boot v3.2.5, Spring v6.1.5
+2025-02-20 01:37:22 [restartedMain] INFO  com.example.MallBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-20 01:37:22 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-20 01:37:22 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-20 01:37:22 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2025-02-20 01:37:22 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-20 01:37:22 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-20 01:37:22 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-02-20 01:37:22 [restartedMain] INFO  o.a.c.c.C.[Tomcat-2].[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-02-20 01:37:22 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 235 ms
+2025-02-20 01:37:22 [restartedMain] DEBUG com.example.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CartMapper.adjustQuantity] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CategoryMapper.selectActiveChildren] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.CouponMapper.selectAvailableCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateItemCount] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updateSort] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.FavoriteFolderMapper.updatePublicStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.batchUpdateProductImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrderItemMapper.updateCommentStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.autoCancelOrders] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.OrdersMapper.updateDeliveryInfo] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductReviewMapper.updateReviewContent] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.updateStockSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSkuMapper.batchUpdateMainImage] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductsMapper.selectNewArrivals] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.ProductSpecMapper.updateSpecValuesSafely] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.setDefaultAddress] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserAddressMapper.updateDefaultStatus] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.autoExpireCoupons] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:22 [restartedMain] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.example.mapper.UserCouponMapper.updateStatusByUser] is ignored, because it exists, maybe from xml file
+2025-02-20 01:37:23 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@210282a6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@664c6427, org.springframework.security.web.context.SecurityContextHolderFilter@61f30244, org.springframework.security.web.header.HeaderWriterFilter@6e45cfb3, org.springframework.web.filter.CorsFilter@36f48923, org.springframework.security.web.authentication.logout.LogoutFilter@5ad3bb4a, com.example.security.JwtAuthenticationFilter@4bef6a5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4137fb3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@44eb00d5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@70c5f47c, org.springframework.security.web.session.SessionManagementFilter@15de532e, org.springframework.security.web.access.ExceptionTranslationFilter@41e48c2d, org.springframework.security.web.access.intercept.AuthorizationFilter@59d3f49d]
+2025-02-20 01:37:23 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-02-20 01:37:23 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/api'
+2025-02-20 01:37:23 [restartedMain] INFO  com.example.MallBackendApplication - Started MallBackendApplication in 0.84 seconds (process running for 441.727)
+2025-02-20 01:37:23 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged

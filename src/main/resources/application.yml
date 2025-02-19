@@ -5,29 +5,50 @@ server:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mall?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/mall?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      minimum-idle: 5
+
   cache:
     type: redis
     redis:
       time-to-live: 1h # 全局默认缓存时间
-  # 添加文件存储路径配置（可选）
+      key-prefix: "CACHE:" # 缓存键前缀
+      use-key-prefix: true
+
   file:
-    upload-dir: uploads/
+    upload-dir: uploads/ # 文件上传存储路径
+
   data:
     redis:
       host: localhost
       port: 6379
-      password:
+      password: 
       database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+  # 配置Swagger文档
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 jwt:
   secret: "your-512-bit-secret-key-must-be-at-least-64-characters-long-1234567890abcdefghijklmnopqrstuvwxyz"
-  expiration: 86400000  # 24小时
-# 添加Swagger配置
+  expiration: 86400000  # 24小时（单位：毫秒）
+
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -45,11 +66,23 @@ springdoc:
 
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath*:mapper/**/*.xml
+    map-underscore-to-camel-case: true # 开启驼峰命名转换
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # SQL日志输出
+  mapper-locations: classpath*:mapper/**/*.xml # Mapper文件位置
+  global-config:
+    db-config:
+      id-type: auto # 主键生成策略（数据库自增）
 
 logging:
   level:
-    com.example.security: DEBUG
+    root: INFO
+    com.example: DEBUG # 项目包日志级别
     org.springframework.security: DEBUG
+    org.springframework.web: INFO
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"

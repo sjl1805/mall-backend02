@@ -21,33 +21,31 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-
 /**
  * Redis配置类
- *
- * <p>主要功能：
- * 1. 配置RedisTemplate序列化方式
- * 2. 配置缓存管理器
- * 3. 自定义安全对象的序列化处理
- *
- * <p>序列化策略：
- * - Key使用String序列化
- * - Value使用JSON序列化
- * - 支持Java8时间类型
- * - 处理SecurityUser和GrantedAuthority的特殊序列化需求
+ * 
+ * @author 31815
+ * @description 提供Redis全生命周期管理功能，包含：
+ *              1. RedisTemplate配置
+ *              2. 缓存管理器配置
+ *              3. 序列化策略管理
+ * @createDate 2025-02-18 23:43:48
  */
 @EnableCaching
 @Configuration
 public class RedisConfig {
 
     @Value("${spring.cache.redis.time-to-live}")
-    private Duration ttl;  // 修改字段类型为Duration
+    private Duration ttl;
 
     /**
      * 配置RedisTemplate
-     *
      * @param factory Redis连接工厂
      * @return 配置好的RedisTemplate实例
+     * @implNote 序列化策略：
+     *           - Key使用String序列化
+     *           - Value使用JSON序列化
+     *           - 支持Java8时间类型
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -68,9 +66,9 @@ public class RedisConfig {
 
     /**
      * 配置缓存管理器
-     *
      * @param factory Redis连接工厂
      * @return 缓存管理器实例
+     * @implNote 默认缓存有效期：${spring.cache.redis.time-to-live}
      */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
@@ -78,7 +76,7 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(mapper, Object.class);
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(ttl)  // 直接使用Duration对象
+                .entryTtl(ttl)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
@@ -92,7 +90,8 @@ public class RedisConfig {
 
     /**
      * 创建定制化的ObjectMapper
-     * 处理安全相关对象的序列化问题
+     * @return 配置好的ObjectMapper实例
+     * @implNote 处理安全相关对象的序列化问题
      */
     private ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -108,5 +107,4 @@ public class RedisConfig {
 
         return mapper;
     }
-
 } 
