@@ -4,93 +4,96 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.UserAddressMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.UserAddress">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="isDefault" column="is_default" jdbcType="TINYINT"/>
-        <result property="isDefaultTrue" column="is_default_true" jdbcType="TINYINT"/>
-        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
-        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
-        <result property="province" column="province" jdbcType="VARCHAR"/>
-        <result property="city" column="city" jdbcType="VARCHAR"/>
-        <result property="district" column="district" jdbcType="VARCHAR"/>
-        <result property="detailAddress" column="detail_address" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="userId" column="user_id" jdbcType="BIGINT" />
+        <result property="isDefault" column="is_default" jdbcType="TINYINT" />
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR" />
+        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR" />
+        <result property="province" column="province" jdbcType="VARCHAR" />
+        <result property="city" column="city" jdbcType="VARCHAR" />
+        <result property="district" column="district" jdbcType="VARCHAR" />
+        <result property="detailAddress" column="detail_address" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,user_id,is_default,
-        is_default_true,receiver_name,receiver_phone,
+        receiver_name,receiver_phone,
         province,city,district,
         detail_address,create_time,update_time
     </sql>
 
-    <!-- 设置默认地址 -->
-    <update id="setDefaultAddress">
-        UPDATE user_address
-        SET is_default = CASE
-                             WHEN id = #{addressId} THEN 1
-                             ELSE 0
-            END
-        WHERE user_id = #{userId}
-    </update>
+    <!-- 动态查询条件（根据管理端参数生成） -->
+    <sql id="Condition_Column">
+        <!-- 用户ID过滤 -->
+        <if test="query.userId != null">
+            AND user_id = #{query.userId}
+        </if>
+        <!-- 默认地址过滤 -->
+        <if test="query.isDefault != null">
+            AND is_default = #{query.isDefault}
+        </if>
+        <!-- 创建时间范围查询 -->
+        <if test="query.createTimeStart != null">
+            AND create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null">
+            AND create_time &lt;= #{query.createTimeEnd}
+        </if>
+    </sql>
 
-    <!-- 清除默认地址 -->
-    <update id="clearDefaultAddress">
-        UPDATE user_address
-        SET is_default = 0
-        WHERE user_id = #{userId}
-    </update>
-
-    <!-- 查询默认地址 -->
-    <select id="selectDefaultByUserId" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM user_address
-        WHERE user_id = #{userId}
-        AND is_default = 1
-        LIMIT 1
-    </select>
-
-    <!-- 分页查询地址 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectAddressPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_address
         <where>
-            <if test="query.userId != null">
-                AND user_id = #{query.userId}
-            </if>
-            <if test="query.isDefault != null">
-                AND is_default = #{query.isDefault}
-            </if>
-            <if test="query.createTimeStart != null">
-                AND create_time >= #{query.createTimeStart}
-            </if>
-            <if test="query.createTimeEnd != null">
-                AND create_time &lt;= #{query.createTimeEnd}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按默认地址优先 -->
             <otherwise>
                 is_default DESC, create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 更新默认地址状态 -->
-    <update id="updateDefaultStatus">
+    <!-- 设置默认地址（事务操作） -->
+    <update id="setDefaultAddress">
         UPDATE user_address
-        SET is_default  = CASE
-                              WHEN id = #{addressId} THEN 1
-                              ELSE 0
+        SET is_default = CASE
+                             WHEN id = #{addressId} THEN 1
+                             ELSE 0
             END,
             update_time = NOW()
         WHERE user_id = #{userId}
+    </update>
+
+    <!-- 查询默认地址（使用覆盖索引优化） -->
+    <select id="selectDefaultByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId}
+          AND is_default = 1
+        LIMIT 1
+    </select>
+
+    <!-- 更新默认状态（原子操作） -->
+    <update id="updateDefaultStatus">
+        UPDATE user_address
+        SET is_default  = 1,
+            update_time = NOW()
+        WHERE user_id = #{userId}
+          AND id = #{addressId}
     </update>
 </mapper>

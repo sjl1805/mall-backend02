@@ -4,21 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.ProductSpecMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSpec">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="specName" column="spec_name" jdbcType="VARCHAR"/>
-        <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="specName" column="spec_name" jdbcType="VARCHAR" />
+        <result property="specValues" column="spec_values" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,product_id,spec_name,
         spec_values,create_time,update_time
     </sql>
 
-    <!-- 批量插入 -->
+    <!-- 批量插入（使用MySQL批量插入优化） -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product_spec (
         product_id, spec_name, spec_values
@@ -30,7 +32,7 @@
         </foreach>
     </insert>
 
-    <!-- 根据商品ID查询 -->
+    <!-- 商品规格查询（前台展示用） -->
     <select id="selectByProductId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -39,7 +41,7 @@
         ORDER BY create_time ASC
     </select>
 
-    <!-- 更新规格值 -->
+    <!-- 更新规格值（记录更新时间） -->
     <update id="updateSpecValues">
         UPDATE product_spec
         SET spec_values = #{specValues},
@@ -47,23 +49,25 @@
         WHERE id = #{specId}
     </update>
 
-    <!-- 统计规格数量 -->
+    <!-- 统计规格数量（用于商品管理） -->
     <select id="countByProductId" resultType="int">
         SELECT COUNT(*)
         FROM product_spec
         WHERE product_id = #{productId}
     </select>
 
-    <!-- 分页查询 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectSpecPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM product_spec
         <where>
             product_id = #{query.productId}
+            <!-- 规格名称模糊查询 -->
             <if test="query.specName != null and query.specName != ''">
                 AND spec_name LIKE CONCAT('%', #{query.specName}, '%')
             </if>
+            <!-- 创建时间范围查询 -->
             <if test="query.createTimeStart != null">
                 AND create_time >= #{query.createTimeStart}
             </if>
@@ -73,16 +77,18 @@
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按创建时间升序 -->
             <otherwise>
                 create_time ASC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 安全更新规格值 -->
+    <!-- 安全更新规格值（带商品ID校验） -->
     <update id="updateSpecValuesSafely">
         UPDATE product_spec
         SET spec_values = #{specValues},

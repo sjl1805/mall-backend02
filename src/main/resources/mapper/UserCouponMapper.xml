@@ -4,32 +4,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.UserCouponMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.UserCoupon">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="couponId" column="coupon_id" jdbcType="BIGINT"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-        <result property="getTime" column="get_time" jdbcType="TIMESTAMP"/>
-        <result property="useTime" column="use_time" jdbcType="TIMESTAMP"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="userId" column="user_id" jdbcType="BIGINT" />
+        <result property="couponId" column="coupon_id" jdbcType="BIGINT" />
+        <result property="status" column="status" jdbcType="TINYINT" />
+        <result property="orderId" column="order_id" jdbcType="BIGINT" />
+        <result property="getTime" column="get_time" jdbcType="TIMESTAMP" />
+        <result property="useTime" column="use_time" jdbcType="TIMESTAMP" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,user_id,coupon_id,
         status,order_id,get_time,
         use_time,create_time,update_time
     </sql>
 
-    <!-- 条件查询字段 -->
+    <!-- 动态查询条件（根据管理端参数生成） -->
     <sql id="Condition_Column">
+        <!-- 用户ID过滤 -->
         <if test="query.userId != null">
             AND user_id = #{query.userId}
         </if>
+        <!-- 状态过滤 -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
+        <!-- 领取时间范围查询 -->
         <if test="query.getTimeStart != null">
             AND get_time >= #{query.getTimeStart}
         </if>
@@ -38,63 +43,57 @@
         </if>
     </sql>
 
-    <!-- 分页查询用户优惠券 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectUserCouponPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_coupon
         <where>
-            <if test="query.userId != null">
-                AND user_id = #{query.userId}
-            </if>
-            <if test="query.status != null">
-                AND status = #{query.status}
-            </if>
-            <if test="query.getTimeStart != null">
-                AND get_time >= #{query.getTimeStart}
-            </if>
-            <if test="query.getTimeEnd != null">
-                AND get_time &lt;= #{query.getTimeEnd}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按领取时间倒序 -->
             <otherwise>
                 get_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 更新优惠券状态 -->
-    <update id="updateCouponStatus">
+    <!-- 更新优惠券状态（带时间戳更新） -->
+    <update id="updateStatusByUser">
         UPDATE user_coupon
-        SET status      = #{status},
-            order_id    = #{orderId},
-            use_time    = CASE WHEN #{status} = 1 THEN NOW() ELSE use_time END,
+        SET status = #{status},
+            order_id = #{orderId},
+            use_time = CASE WHEN #{status} = 1 THEN NOW() ELSE use_time END,
             update_time = NOW()
         WHERE id = #{userCouponId}
+          AND user_id = #{userId}
     </update>
 
-    <!-- 新增批量过期优惠券 -->
+    <!-- 自动过期处理（使用子查询优化） -->
     <update id="autoExpireCoupons">
-        UPDATE user_coupon
-        SET status      = 2,
-            update_time = NOW()
-        WHERE status = 0
-          AND EXISTS (SELECT 1
-                      FROM coupon c
-                      WHERE c.id = coupon_id
-                        AND c.end_time &lt; NOW())
+        UPDATE user_coupon uc
+        SET uc.status = 2,
+            uc.update_time = NOW()
+        WHERE uc.status = 0
+          AND EXISTS (
+            SELECT 1
+            FROM coupon c
+            WHERE c.id = uc.coupon_id
+              AND c.end_time &lt; NOW()
+          )
     </update>
 
-    <!-- 检查优惠券有效性 -->
+    <!-- 有效性检查（关联优惠券表校验） -->
     <select id="checkCouponValid" resultType="int">
         SELECT COUNT(*)
         FROM user_coupon uc
-                 INNER JOIN coupon c ON uc.coupon_id = c.id
+        INNER JOIN coupon c ON uc.coupon_id = c.id
         WHERE uc.user_id = #{userId}
           AND uc.coupon_id = #{couponId}
           AND uc.status = 0

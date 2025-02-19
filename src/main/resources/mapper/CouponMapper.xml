@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.CouponMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.Coupon">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
@@ -17,6 +18,7 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <!-- 通用查询字段（避免使用*） -->
     <sql id="Base_Column_List">
         id,name,type,
         value,min_amount,start_time,
@@ -24,17 +26,24 @@
         update_time
     </sql>
 
-    <!-- 条件查询字段 -->
+    <!-- 动态查询条件（根据前端传入参数生成WHERE条件） -->
     <sql id="Condition_Column">
+        <!-- 名称模糊查询 -->
         <if test="query.name != null and query.name != ''">
             AND name LIKE CONCAT('%', #{query.name}, '%')
         </if>
+
+        <!-- 类型过滤（1-满减券 2-折扣券） -->
         <if test="query.type != null">
             AND type = #{query.type}
         </if>
+
+        <!-- 状态过滤（0-失效 1-生效） -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
+
+        <!-- 时间范围查询 -->
         <if test="query.startTime != null">
             AND start_time >= #{query.startTime}
         </if>
@@ -43,7 +52,7 @@
         </if>
     </sql>
 
-    <!-- 分页查询优惠券 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectCouponPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -53,16 +62,18 @@
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段和方向 -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认排序：按生效时间倒序 -->
             <otherwise>
                 start_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 更新状态 -->
+    <!-- 状态更新（同时更新修改时间） -->
     <update id="updateStatus">
         UPDATE coupon
         SET status      = #{status},
@@ -70,7 +81,7 @@
         WHERE id = #{couponId}
     </update>
 
-    <!-- 检查名称唯一性 -->
+    <!-- 名称唯一性校验（全局唯一） -->
     <select id="checkNameUnique" resultType="int">
         SELECT COUNT(*)
         FROM coupon
@@ -80,7 +91,7 @@
         </if>
     </select>
 
-    <!-- 新增可用优惠券查询 -->
+    <!-- 可用优惠券查询（供用户领取） -->
     <select id="selectAvailableCoupons" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -91,7 +102,7 @@
         ORDER BY value DESC
     </select>
 
-    <!-- 优化自动过期 -->
+    <!-- 自动过期处理（定时任务调用） -->
     <update id="expireCoupons">
         UPDATE coupon
         SET status      = 0,
@@ -100,14 +111,15 @@
           AND end_time &lt; #{currentTime}
     </update>
 
-    <!-- 用户有效优惠券查询 -->
+    <!-- 用户有效优惠券查询（联表查询） -->
     <select id="selectValidCouponsByUser" resultMap="BaseResultMap">
         SELECT c.*
         FROM coupon c
-                 JOIN user_coupon uc ON c.id = uc.coupon_id
+        INNER JOIN user_coupon uc ON c.id = uc.coupon_id
         WHERE uc.user_id = #{userId}
           AND c.status = 1
           AND c.start_time &lt;= #{currentTime}
           AND c.end_time >= #{currentTime}
+        ORDER BY c.value DESC
     </select>
 </mapper>

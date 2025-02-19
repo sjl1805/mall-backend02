@@ -4,19 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.OrderItemMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.OrderItem">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
-        <result property="productImage" column="product_image" jdbcType="VARCHAR"/>
-        <result property="price" column="price" jdbcType="DECIMAL"/>
-        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
-        <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="productName" column="product_name" jdbcType="VARCHAR" />
+        <result property="productImage" column="product_image" jdbcType="VARCHAR" />
+        <result property="price" column="price" jdbcType="DECIMAL" />
+        <result property="quantity" column="quantity" jdbcType="INTEGER" />
+        <result property="totalAmount" column="total_amount" jdbcType="DECIMAL" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,order_id,product_id,
         product_name,product_image,price,
@@ -24,7 +26,7 @@
         update_time
     </sql>
 
-    <!-- 批量插入 -->
+    <!-- 批量插入（使用MySQL的批量插入优化） -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO order_item (
         order_id, product_id, product_name,
@@ -40,7 +42,7 @@
         </foreach>
     </insert>
 
-    <!-- 根据订单ID查询 -->
+    <!-- 订单明细查询（包含历史快照信息） -->
     <select id="selectByOrderId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -49,14 +51,14 @@
         ORDER BY create_time DESC
     </select>
 
-    <!-- 统计商品销量 -->
+    <!-- 商品销量统计（建议在product_id字段添加索引） -->
     <select id="sumProductSales" resultType="int">
-        SELECT SUM(quantity)
+        SELECT IFNULL(SUM(quantity), 0)
         FROM order_item
         WHERE product_id = #{productId}
     </select>
 
-    <!-- 更新评价状态 -->
+    <!-- 评价状态更新（支持部分商品评价） -->
     <update id="updateCommentStatus">
         UPDATE order_item
         SET comment_status = #{commentStatus}
@@ -64,11 +66,11 @@
           AND product_id = #{productId}
     </update>
 
-    <!-- 新增商品图片批量更新 -->
+    <!-- 商品图片批量更新（商品信息变更时使用） -->
     <update id="batchUpdateProductImage">
         UPDATE order_item
         SET product_image = #{imageUrl},
-            update_time   = NOW()
+            update_time = NOW()
         WHERE product_id = #{productId}
     </update>
 </mapper>

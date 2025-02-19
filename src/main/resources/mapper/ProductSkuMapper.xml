@@ -4,19 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.ProductSkuMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSku">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
-        <result property="price" column="price" jdbcType="DECIMAL"/>
-        <result property="stock" column="stock" jdbcType="INTEGER"/>
-        <result property="sales" column="sales" jdbcType="INTEGER"/>
-        <result property="mainImage" column="main_image" jdbcType="VARCHAR"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="specValues" column="spec_values" jdbcType="VARCHAR" />
+        <result property="price" column="price" jdbcType="DECIMAL" />
+        <result property="stock" column="stock" jdbcType="INTEGER" />
+        <result property="sales" column="sales" jdbcType="INTEGER" />
+        <result property="mainImage" column="main_image" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="TINYINT" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,product_id,spec_values,
         price,stock,sales,
@@ -24,7 +26,7 @@
         update_time
     </sql>
 
-    <!-- 批量插入 -->
+    <!-- 批量插入（使用MySQL批量插入优化） -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product_sku (
         product_id, spec_values, price,
@@ -40,7 +42,7 @@
         </foreach>
     </insert>
 
-    <!-- 根据商品ID查询 -->
+    <!-- 商品SKU查询（按价格升序） -->
     <select id="selectByProductId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -49,74 +51,79 @@
         ORDER BY price ASC
     </select>
 
-    <!-- 更新库存（乐观锁） -->
+    <!-- 安全更新库存（带乐观锁机制） -->
     <update id="updateStock">
         UPDATE product_sku
-        SET stock       = stock + #{quantity},
+        SET stock = stock + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
           AND stock + #{quantity} >= 0
     </update>
 
-    <!-- 分页查询 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectSkuPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM product_sku
         <where>
             product_id = #{query.productId}
+            <!-- 价格范围过滤 -->
             <if test="query.minPrice != null">
                 AND price >= #{query.minPrice}
             </if>
             <if test="query.maxPrice != null">
                 AND price &lt;= #{query.maxPrice}
             </if>
+            <!-- 状态过滤 -->
             <if test="query.status != null">
                 AND status = #{query.status}
             </if>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验字段合法性） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按创建时间倒序 -->
             <otherwise>
                 create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 增加销量 -->
+    <!-- 增加销量（保证销量不为负） -->
     <update id="increaseSales">
         UPDATE product_sku
-        SET sales       = sales + #{quantity},
+        SET sales = sales + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
+          AND sales + #{quantity} >= 0
     </update>
 
-    <!-- 统计状态数量 -->
+    <!-- 统计SKU状态（用于商品管理面板） -->
     <select id="countSkuStatus" resultType="map">
-        SELECT status   AS status,
+        SELECT status AS status,
                COUNT(*) AS count
         FROM product_sku
         WHERE product_id = #{productId}
         GROUP BY status
     </select>
 
-    <!-- 安全更新库存 -->
+    <!-- 安全更新库存（带商品ID校验） -->
     <update id="updateStockSafely">
         UPDATE product_sku
-        SET stock       = stock + #{quantity},
+        SET stock = stock + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
           AND product_id = #{productId}
           AND stock + #{quantity} >= 0
     </update>
 
-    <!-- 批量更新主图 -->
+    <!-- 批量更新主图（商品信息变更时使用） -->
     <update id="batchUpdateMainImage">
         UPDATE product_sku
-        SET main_image  = #{imageUrl},
+        SET main_image = #{imageUrl},
             update_time = NOW()
         WHERE product_id = #{productId}
           AND main_image = #{oldImage}

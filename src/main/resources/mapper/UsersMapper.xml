@@ -4,93 +4,101 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.UsersMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.Users">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
-        <result property="password" column="password" jdbcType="VARCHAR"/>
-        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-        <result property="phone" column="phone" jdbcType="VARCHAR"/>
-        <result property="email" column="email" jdbcType="VARCHAR"/>
-        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
-        <result property="gender" column="gender" jdbcType="TINYINT"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="role" column="role" jdbcType="TINYINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="password" column="password" jdbcType="VARCHAR" />
+        <result property="nickname" column="nickname" jdbcType="VARCHAR" />
+        <result property="phone" column="phone" jdbcType="VARCHAR" />
+        <result property="email" column="email" jdbcType="VARCHAR" />
+        <result property="avatar" column="avatar" jdbcType="VARCHAR" />
+        <result property="gender" column="gender" jdbcType="TINYINT" />
+        <result property="status" column="status" jdbcType="TINYINT" />
+        <result property="role" column="role" jdbcType="TINYINT" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
         <result property="createDate" column="create_date" jdbcType="DATE"/>
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id, username, password, nickname, phone, email, 
         avatar, gender, status, role, create_time, update_time
     </sql>
 
-    <!-- 增强分页查询，添加注释说明每个条件 -->
-    <select id="selectUserPage" resultType="com.example.model.entity.Users">
-        <!-- 使用include标签复用字段列表 -->
+    <!-- 动态查询条件（根据管理端参数生成） -->
+    <sql id="Condition_Column">
+        <!-- 用户名模糊查询 -->
+        <if test="query.username != null and query.username != ''">
+            AND username LIKE CONCAT('%', #{query.username}, '%')
+        </if>
+        <!-- 手机号精确查询 -->
+        <if test="query.phone != null and query.phone != ''">
+            AND phone = #{query.phone}
+        </if>
+        <!-- 状态过滤 -->
+        <if test="query.status != null">
+            AND status = #{query.status}
+        </if>
+    </sql>
+
+    <!-- 分页查询（支持动态排序） -->
+    <select id="selectUserPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM users
         <where>
-            <!-- 用户名模糊查询 -->
-            <if test="query.username != null and query.username != ''">
-                AND username LIKE CONCAT('%', #{query.username}, '%')
-            </if>
-            <!-- 精确手机号查询 -->
-            <if test="query.phone != null and query.phone != ''">
-                AND phone = #{query.phone}
-            </if>
-            <!-- 状态过滤 -->
-            <if test="query.status != null">
-                AND status = #{query.status}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
-        <!-- 动态排序实现 -->
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验） -->
             <when test="query.sortField == 'createTime'">
                 create_time ${query.sortOrder}
             </when>
+            <!-- 默认按创建时间倒序 -->
             <otherwise>
                 create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 根据手机号查询 -->
-    <select id="selectByPhone" resultType="com.example.model.entity.Users">
+    <!-- 手机号查询（使用覆盖索引优化） -->
+    <select id="selectByPhone" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM users
         WHERE phone = #{phone}
     </select>
 
-    <!-- 统计用户状态 -->
+    <!-- 用户状态统计（用于数据看板） -->
     <select id="countUserStatus" resultType="map">
-        SELECT status   AS status,
+        SELECT status AS status,
                COUNT(*) AS count
         FROM users
         GROUP BY status
     </select>
 
-    <!-- 登录查询 -->
+    <!-- 登录查询（支持用户名/手机号登录） -->
     <select id="selectByUsernameOrPhone" resultMap="BaseResultMap">
-        SELECT *
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM users
         WHERE (username = #{account} OR phone = #{account})
           AND status = 1
         LIMIT 1
     </select>
 
-    <!-- 更新用户状态 -->
+    <!-- 更新用户状态（记录操作时间） -->
     <update id="updateUserStatus">
         UPDATE users
-        SET status      = #{status},
+        SET status = #{status},
             update_time = NOW()
         WHERE id = #{userId}
     </update>
 
-    <!-- 检查字段唯一性 -->
+    <!-- 字段唯一性检查（支持排除当前用户） -->
     <select id="checkFieldUnique" resultType="int">
         SELECT COUNT(*)
         FROM users

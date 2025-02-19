@@ -4,66 +4,74 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.ProductFavoriteMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductFavorite">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="folderId" column="folder_id" jdbcType="BIGINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="userId" column="user_id" jdbcType="BIGINT" />
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="folderId" column="folder_id" jdbcType="BIGINT" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,user_id,product_id,
         folder_id,create_time,update_time
     </sql>
 
-    <!-- 条件查询字段 -->
+    <!-- 动态查询条件（根据前端参数生成WHERE条件） -->
     <sql id="Condition_Column">
+        <!-- 用户ID过滤 -->
         <if test="query.userId != null">
             AND user_id = #{query.userId}
         </if>
+        <!-- 商品ID过滤 -->
         <if test="query.productId != null">
             AND product_id = #{query.productId}
         </if>
+        <!-- 收藏夹ID过滤 -->
         <if test="query.folderId != null">
             AND folder_id = #{query.folderId}
         </if>
+        <!-- 创建时间范围查询 -->
+        <if test="query.createTimeStart != null">
+            AND create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null">
+            AND create_time &lt;= #{query.createTimeEnd}
+        </if>
     </sql>
 
-    <!-- 分页查询收藏 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectFavoritePage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM product_favorite
         <where>
-            user_id = #{query.userId}
-            <if test="query.productId != null">
-                AND product_id = #{query.productId}
-            </if>
-            <if test="query.folderId != null">
-                AND folder_id = #{query.folderId}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验字段合法性） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按创建时间倒序 -->
             <otherwise>
                 create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 统计用户收藏 -->
+    <!-- 统计用户收藏总数（使用COUNT优化） -->
     <select id="countUserFavorites" resultType="int">
         SELECT COUNT(*)
         FROM product_favorite
         WHERE user_id = #{userId}
     </select>
 
-    <!-- 检查收藏存在 -->
+    <!-- 存在性检查（使用联合索引提升查询效率） -->
     <select id="checkFavoriteExists" resultType="int">
         SELECT COUNT(*)
         FROM product_favorite
@@ -71,7 +79,7 @@
           AND product_id = #{productId}
     </select>
 
-    <!-- 批量删除 -->
+    <!-- 批量删除（使用批量IN操作提升效率） -->
     <delete id="batchDelete">
         DELETE FROM product_favorite
         WHERE id IN
@@ -80,17 +88,18 @@
         </foreach>
     </delete>
 
-    <!-- 转移收藏夹 -->
+    <!-- 转移收藏夹（批量更新操作） -->
     <update id="moveToFolder">
         UPDATE product_favorite
-        SET folder_id = #{targetFolderId}
+        SET folder_id = #{targetFolderId},
+            update_time = NOW()
         WHERE id IN
         <foreach collection="favoriteIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
 
-    <!-- 新增批量插入 -->
+    <!-- 批量插入（使用MySQL批量插入语法） -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product_favorite (
         user_id, product_id, folder_id

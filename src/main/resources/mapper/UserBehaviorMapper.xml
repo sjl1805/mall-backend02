@@ -5,15 +5,15 @@
 <mapper namespace="com.example.mapper.UserBehaviorMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.UserBehavior">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="behaviorType" column="behavior_type" jdbcType="TINYINT"/>
-        <result property="behaviorTime" column="behavior_time" jdbcType="TIMESTAMP"/>
-        <result property="duration" column="duration" jdbcType="INTEGER"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-        <result property="weight" column="weight" jdbcType="DECIMAL"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="userId" column="user_id" jdbcType="BIGINT" />
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="behaviorType" column="behavior_type" jdbcType="TINYINT" />
+        <result property="behaviorTime" column="behavior_time" jdbcType="TIMESTAMP" />
+        <result property="duration" column="duration" jdbcType="INTEGER" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="weight" column="weight" jdbcType="DECIMAL" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -45,21 +45,7 @@
         <include refid="Base_Column_List"/>
         FROM user_behavior
         <where>
-            <if test="query.userId != null">
-                AND user_id = #{query.userId}
-            </if>
-            <if test="query.productId != null">
-                AND product_id = #{query.productId}
-            </if>
-            <if test="query.behaviorType != null">
-                AND behavior_type = #{query.behaviorType}
-            </if>
-            <if test="query.startTime != null">
-                AND behavior_time >= #{query.startTime}
-            </if>
-            <if test="query.endTime != null">
-                AND behavior_time &lt;= #{query.endTime}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>

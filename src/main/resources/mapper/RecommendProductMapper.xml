@@ -4,20 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.RecommendProductMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.RecommendProduct">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="productId" column="product_id" jdbcType="BIGINT"/>
-        <result property="type" column="type" jdbcType="TINYINT"/>
-        <result property="sort" column="sort" jdbcType="INTEGER"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
-        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
-        <result property="algorithmVersion" column="algorithm_version" jdbcType="VARCHAR"/>
-        <result property="recommendReason" column="recommend_reason" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="productId" column="product_id" jdbcType="BIGINT" />
+        <result property="type" column="type" jdbcType="TINYINT" />
+        <result property="sort" column="sort" jdbcType="INTEGER" />
+        <result property="status" column="status" jdbcType="TINYINT" />
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP" />
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP" />
+        <result property="algorithmVersion" column="algorithm_version" jdbcType="VARCHAR" />
+        <result property="recommendReason" column="recommend_reason" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,product_id,type,
         sort,status,start_time,
@@ -25,77 +27,63 @@
         create_time,update_time
     </sql>
 
-    <!-- 动态查询条件 -->
+    <!-- 动态查询条件（根据管理端参数生成） -->
     <sql id="Condition_Column">
+        <!-- 类型过滤 -->
         <if test="query.type != null">
             AND type = #{query.type}
         </if>
+        <!-- 状态过滤 -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
+        <!-- 开始时间范围查询 -->
         <if test="query.startTimeBegin != null">
             AND start_time >= #{query.startTimeBegin}
         </if>
         <if test="query.startTimeEnd != null">
             AND start_time &lt;= #{query.startTimeEnd}
         </if>
+        <!-- 算法版本过滤 -->
         <if test="query.algorithmVersion != null and query.algorithmVersion != ''">
             AND algorithm_version = #{query.algorithmVersion}
         </if>
     </sql>
 
-    <!-- 分页查询推荐商品 -->
+    <!-- 分页查询（管理端使用） -->
     <select id="selectRecommendPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM recommend_product
         <where>
-            <if test="query.type != null">
-                AND type = #{query.type}
-            </if>
-            <if test="query.status != null">
-                AND status = #{query.status}
-            </if>
-            <if test="query.startTimeBegin != null">
-                AND start_time >= #{query.startTimeBegin}
-            </if>
-            <if test="query.startTimeEnd != null">
-                AND start_time &lt;= #{query.startTimeEnd}
-            </if>
-            <if test="query.algorithmVersion != null and query.algorithmVersion != ''">
-                AND algorithm_version = #{query.algorithmVersion}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验防止SQL注入） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按排序值升序 -->
             <otherwise>
                 sort ASC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 根据类型和状态查询 -->
+    <!-- 前台有效推荐查询（使用联合索引优化） -->
     <select id="selectByTypeAndStatus" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE type = #{type}
-        AND status = #{status}
+          AND status = #{status}
+          AND start_time &lt;= NOW()
+          AND end_time >= NOW()
         ORDER BY sort ASC
     </select>
 
-    <!-- 更新推荐状态 -->
-    <update id="updateRecommendStatus">
-        UPDATE recommend_product
-        SET status      = #{status},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <!-- 统计有效推荐 -->
+    <!-- 统计有效推荐（用于数据看板） -->
     <select id="countActiveRecommends" resultType="map">
         SELECT type,
                COUNT(*) AS count
@@ -106,37 +94,28 @@
         GROUP BY type
     </select>
 
-    <!-- 检查时间冲突 -->
+    <!-- 时间冲突检查（支持修改时排除自身） -->
     <select id="checkTimeConflict" resultType="int">
         SELECT COUNT(*)
         FROM recommend_product
         WHERE product_id = #{productId}
-        AND (
-        (start_time BETWEEN #{startTime} AND #{endTime})
-        OR (end_time BETWEEN #{startTime} AND #{endTime})
-        OR (#{startTime} BETWEEN start_time AND end_time)
-        OR (#{endTime} BETWEEN start_time AND end_time)
-        )
+          AND (
+            (start_time BETWEEN #{startTime} AND #{endTime})
+            OR (end_time BETWEEN #{startTime} AND #{endTime})
+            OR (#{startTime} BETWEEN start_time AND end_time)
+            OR (#{endTime} BETWEEN start_time AND end_time)
+          )
         <if test="excludeId != null">
             AND id != #{excludeId}
         </if>
     </select>
 
-    <!-- 根据算法版本查询 -->
-    <select id="selectByAlgorithmVersion" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM recommend_product
-        WHERE algorithm_version = #{version}
-        ORDER BY create_time DESC
-    </select>
-
-    <!-- 新增批量插入 -->
+    <!-- 批量插入（使用MySQL批量插入优化） -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO recommend_product (
-        product_id, type, sort,
-        status, start_time, end_time,
-        algorithm_version, recommend_reason
+            product_id, type, sort,
+            status, start_time, end_time,
+            algorithm_version, recommend_reason
         ) VALUES
         <foreach collection="recommends" item="item" separator=",">
             (

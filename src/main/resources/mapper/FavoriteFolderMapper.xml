@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.FavoriteFolderMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.FavoriteFolder">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="userId" column="user_id" jdbcType="BIGINT"/>
@@ -16,59 +17,58 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,user_id,name,
         description,is_public,item_count,
         sort,create_time,update_time
     </sql>
 
-    <!-- 条件查询字段 -->
+    <!-- 动态查询条件（根据前端参数生成WHERE条件） -->
     <sql id="Condition_Column">
+        <!-- 名称模糊查询 -->
         <if test="query.name != null and query.name != ''">
             AND name LIKE CONCAT('%', #{query.name}, '%')
         </if>
+        <!-- 公开状态过滤 -->
         <if test="query.isPublic != null">
             AND is_public = #{query.isPublic}
         </if>
+        <!-- 用户ID过滤 -->
         <if test="query.userId != null">
             AND user_id = #{query.userId}
         </if>
+        <!-- 创建时间范围查询 -->
+        <if test="query.createTimeStart != null">
+            AND create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null">
+            AND create_time &lt;= #{query.createTimeEnd}
+        </if>
     </sql>
 
-    <!-- 分页查询收藏夹 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectFolderPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM favorite_folder
         <where>
-            <if test="query.name != null and query.name != ''">
-                AND name LIKE CONCAT('%', #{query.name}, '%')
-            </if>
-            <if test="query.isPublic != null">
-                AND is_public = #{query.isPublic}
-            </if>
-            <if test="query.userId != null">
-                AND user_id = #{query.userId}
-            </if>
-            <if test="query.createTimeStart != null">
-                AND create_time >= #{query.createTimeStart}
-            </if>
-            <if test="query.createTimeEnd != null">
-                AND create_time &lt;= #{query.createTimeEnd}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验字段合法性） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认排序：先按sort升序，再按创建时间倒序 -->
             <otherwise>
                 sort ASC, create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 更新公开状态 -->
+    <!-- 更新公开状态（同时更新修改时间） -->
     <update id="updatePublicStatus">
         UPDATE favorite_folder
         SET is_public   = #{isPublic},
@@ -76,7 +76,7 @@
         WHERE id = #{folderId}
     </update>
 
-    <!-- 更新排序 -->
+    <!-- 更新排序值（用于前端拖拽排序功能） -->
     <update id="updateSort">
         UPDATE favorite_folder
         SET sort        = #{newSort},
@@ -84,7 +84,7 @@
         WHERE id = #{folderId}
     </update>
 
-    <!-- 检查名称唯一性 -->
+    <!-- 名称唯一性校验（同一用户下不可重复） -->
     <select id="checkNameUnique" resultType="int">
         SELECT COUNT(*)
         FROM favorite_folder
@@ -95,10 +95,10 @@
         </if>
     </select>
 
-    <!-- 新增收藏项数量更新 -->
+    <!-- 更新收藏项数量（保证数量不会为负数） -->
     <update id="updateItemCount">
         UPDATE favorite_folder
-        SET item_count  = item_count + #{delta},
+        SET item_count  = GREATEST(item_count + #{delta}, 0),
             update_time = NOW()
         WHERE id = #{folderId}
     </update>

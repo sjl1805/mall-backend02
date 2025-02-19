@@ -4,28 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.OrdersMapper">
 
+    <!-- 基础字段映射（与数据库表结构对应） -->
     <resultMap id="BaseResultMap" type="com.example.model.entity.Orders">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
-        <result property="payAmount" column="pay_amount" jdbcType="DECIMAL"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
-        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
-        <result property="receiverAddress" column="receiver_address" jdbcType="VARCHAR"/>
-        <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP"/>
-        <result property="deliveryTime" column="delivery_time" jdbcType="TIMESTAMP"/>
-        <result property="receiveTime" column="receive_time" jdbcType="TIMESTAMP"/>
-        <result property="paymentMethod" column="payment_method" jdbcType="TINYINT"/>
-        <result property="logisticsCompany" column="logistics_company" jdbcType="VARCHAR"/>
-        <result property="trackingNumber" column="tracking_number" jdbcType="VARCHAR"/>
-        <result property="commentStatus" column="comment_status" jdbcType="TINYINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-        <result property="timezone" column="timezone" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT" />
+        <result property="totalAmount" column="total_amount" jdbcType="DECIMAL" />
+        <result property="payAmount" column="pay_amount" jdbcType="DECIMAL" />
+        <result property="status" column="status" jdbcType="TINYINT" />
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR" />
+        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR" />
+        <result property="receiverAddress" column="receiver_address" jdbcType="VARCHAR" />
+        <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP" />
+        <result property="deliveryTime" column="delivery_time" jdbcType="TIMESTAMP" />
+        <result property="receiveTime" column="receive_time" jdbcType="TIMESTAMP" />
+        <result property="paymentMethod" column="payment_method" jdbcType="TINYINT" />
+        <result property="logisticsCompany" column="logistics_company" jdbcType="VARCHAR" />
+        <result property="trackingNumber" column="tracking_number" jdbcType="VARCHAR" />
+        <result property="commentStatus" column="comment_status" jdbcType="TINYINT" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+        <result property="timezone" column="timezone" jdbcType="VARCHAR" />
     </resultMap>
 
+    <!-- 通用查询字段（避免使用SELECT *） -->
     <sql id="Base_Column_List">
         id,order_no,user_id,
         total_amount,pay_amount,status,
@@ -36,96 +38,80 @@
         timezone
     </sql>
 
-    <!-- 条件查询字段 -->
+    <!-- 动态查询条件（根据前端参数生成WHERE条件） -->
     <sql id="Condition_Column">
+        <!-- 订单号模糊查询 -->
         <if test="query.orderNo != null and query.orderNo != ''">
             AND order_no LIKE CONCAT('%', #{query.orderNo}, '%')
         </if>
+        <!-- 用户ID过滤 -->
         <if test="query.userId != null">
             AND user_id = #{query.userId}
         </if>
+        <!-- 状态过滤 -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
-        <if test="query.startTime != null">
-            AND create_time >= #{query.startTime}
+        <!-- 支付方式过滤 -->
+        <if test="query.paymentMethod != null">
+            AND payment_method = #{query.paymentMethod}
         </if>
-        <if test="query.endTime != null">
-            AND create_time &lt;= #{query.endTime}
+        <!-- 金额范围查询 -->
+        <if test="query.minAmount != null">
+            AND pay_amount >= #{query.minAmount}
+        </if>
+        <if test="query.maxAmount != null">
+            AND pay_amount &lt;= #{query.maxAmount}
+        </if>
+        <!-- 时间范围查询 -->
+        <if test="query.createTimeStart != null">
+            AND create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null">
+            AND create_time &lt;= #{query.createTimeEnd}
         </if>
     </sql>
 
-    <!-- 分页查询订单 -->
+    <!-- 分页查询（支持动态排序） -->
     <select id="selectOrderPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM orders
         <where>
-            <if test="query.orderNo != null and query.orderNo != ''">
-                AND order_no LIKE CONCAT('%', #{query.orderNo}, '%')
-            </if>
-            <if test="query.userId != null">
-                AND user_id = #{query.userId}
-            </if>
-            <if test="query.status != null">
-                AND status = #{query.status}
-            </if>
-            <if test="query.paymentMethod != null">
-                AND payment_method = #{query.paymentMethod}
-            </if>
-            <if test="query.logisticsCompany != null and query.logisticsCompany != ''">
-                AND logistics_company = #{query.logisticsCompany}
-            </if>
-            <if test="query.minAmount != null">
-                AND pay_amount >= #{query.minAmount}
-            </if>
-            <if test="query.maxAmount != null">
-                AND pay_amount &lt;= #{query.maxAmount}
-            </if>
-            <if test="query.createTimeStart != null">
-                AND create_time >= #{query.createTimeStart}
-            </if>
-            <if test="query.createTimeEnd != null">
-                AND create_time &lt;= #{query.createTimeEnd}
-            </if>
+            <include refid="Condition_Column"/>
         </where>
         ORDER BY
         <choose>
+            <!-- 前端指定排序字段（需要严格校验字段合法性） -->
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
             </when>
+            <!-- 默认按创建时间倒序 -->
             <otherwise>
                 create_time DESC
             </otherwise>
         </choose>
     </select>
 
-    <!-- 更新订单状态 -->
-    <update id="updateStatus">
-        UPDATE orders
-        SET status      = #{status},
-            update_time = NOW()
-        WHERE id = #{orderId}
-    </update>
-
-    <!-- 自动取消超时订单 -->
+    <!-- 自动取消超时订单（定时任务调用） -->
     <update id="autoCancelOrders">
         UPDATE orders
-        SET status = 4
+        SET status = 4,
+            update_time = NOW()
         WHERE status = 0
           AND TIMESTAMPDIFF(MINUTE, create_time, NOW()) > #{timeoutMinutes}
     </update>
 
-    <!-- 统计订单金额 -->
+    <!-- 统计订单金额（使用COALESCE处理空值） -->
     <select id="sumOrderAmount" resultType="java.math.BigDecimal">
-        SELECT SUM(pay_amount)
+        SELECT COALESCE(SUM(pay_amount), 0)
         FROM orders
         <where>
             <include refid="Condition_Column"/>
         </where>
     </select>
 
-    <!-- 新增物流信息更新 -->
+    <!-- 更新物流信息（包含状态变更和时间更新） -->
     <update id="updateDeliveryInfo">
         UPDATE orders
         SET logistics_company = #{logisticsCompany},
