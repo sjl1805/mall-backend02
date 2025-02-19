@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,9 +37,9 @@ public class FavoriteFolderController {
     public Result<Boolean> createFolder(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "收藏夹信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = FavoriteFolderDTO.class))
+                    description = "收藏夹信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = FavoriteFolderDTO.class))
             )
             @Valid @RequestBody FavoriteFolderDTO folderDTO) {
         return Result.success(favoriteFolderService.createFolder(userId, folderDTO));
@@ -69,7 +69,7 @@ public class FavoriteFolderController {
     public Result<Boolean> updatePublicStatus(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @Parameter(description = "收藏夹ID", example = "1") @PathVariable @Min(1) Long folderId,
-            @Parameter(description = "公开状态：0-私有 1-公开", example = "1") 
+            @Parameter(description = "公开状态：0-私有 1-公开", example = "1")
             @RequestParam @NotNull @Min(0) @Max(1) Integer isPublic) {
         return Result.success(favoriteFolderService.updatePublicStatus(userId, folderId, isPublic));
     }
@@ -80,7 +80,7 @@ public class FavoriteFolderController {
     public Result<Boolean> updateSort(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @Parameter(description = "收藏夹ID", example = "1") @PathVariable @Min(1) Long folderId,
-            @Parameter(description = "新的排序值", example = "2") 
+            @Parameter(description = "新的排序值", example = "2")
             @RequestParam @NotNull @Min(0) Integer newSort) {
         return Result.success(favoriteFolderService.updateSort(userId, folderId, newSort));
     }
@@ -108,7 +108,7 @@ public class FavoriteFolderController {
     public Result<Boolean> updateItemCount(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @Parameter(description = "收藏夹ID", example = "1") @PathVariable @Min(1) Long folderId,
-            @Parameter(description = "数量变化值（正数增加，负数减少）", example = "1") 
+            @Parameter(description = "数量变化值（正数增加，负数减少）", example = "1")
             @RequestParam @NotNull Integer delta) {
         return Result.success(favoriteFolderService.updateItemCount(userId, folderId, delta));
     }

@@ -2,6 +2,7 @@ package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
 import java.util.Date;
 
 @Data
@@ -19,8 +20,8 @@ public class UserPageDTO {
     @Schema(description = "状态：0-禁用 1-启用", allowableValues = {"0", "1"})
     private Integer status;
 
-    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号", 
-           allowableValues = {"0", "1", "2", "9"})
+    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号",
+            allowableValues = {"0", "1", "2", "9"})
     private Integer role;
 
     @Schema(description = "创建时间起始")

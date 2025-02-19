@@ -5,16 +5,16 @@
 <mapper namespace="com.example.mapper.ProductsMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Products">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="price" column="price" jdbcType="DECIMAL"/>
-            <result property="stock" column="stock" jdbcType="INTEGER"/>
-            <result property="images" column="images" jdbcType="OTHER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="DECIMAL"/>
+        <result property="stock" column="stock" jdbcType="INTEGER"/>
+        <result property="images" column="images" jdbcType="OTHER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,7 +28,7 @@
     <sql id="Condition_Column">
         <if test="query.keyword != null and query.keyword != ''">
             AND (name LIKE CONCAT('%', #{query.keyword}, '%')
-                 OR description LIKE CONCAT('%', #{query.keyword}, '%'))
+            OR description LIKE CONCAT('%', #{query.keyword}, '%'))
         </if>
         <if test="query.categoryId != null">
             AND category_id = #{query.categoryId}
@@ -52,13 +52,13 @@
 
     <!-- 分页查询商品 -->
     <select id="selectProductPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM products
         <where>
             <include refid="Condition_Column"/>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -72,7 +72,7 @@
     <!-- 更新状态 -->
     <update id="updateStatus">
         UPDATE products
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{productId}
     </update>
@@ -80,7 +80,7 @@
     <!-- 调整库存 -->
     <update id="adjustStock">
         UPDATE products
-        SET stock = stock + #{delta},
+        SET stock       = stock + #{delta},
             update_time = NOW()
         WHERE id = #{productId}
           AND stock + #{delta} >= 0
@@ -89,7 +89,7 @@
 
     <!-- 检查名称唯一性 -->
     <select id="checkNameUnique" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM products
         WHERE name = #{name}
         <if test="excludeId != null">
@@ -99,10 +99,11 @@
 
     <!-- 新增新品推荐查询 -->
     <select id="selectNewArrivals" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM products
         WHERE category_id = #{categoryId}
-          AND status = 1
+        AND status = 1
         ORDER BY create_time DESC
         LIMIT #{limit}
     </select>

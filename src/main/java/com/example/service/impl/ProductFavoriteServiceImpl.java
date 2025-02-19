@@ -1,36 +1,37 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.ProductFavoriteService;
-import com.example.model.entity.ProductFavorite;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.ProductFavoriteMapper;
-import org.springframework.stereotype.Service;
+import com.example.model.dto.favorite.ProductFavoriteDTO;
+import com.example.model.dto.favorite.ProductFavoritePageDTO;
+import com.example.model.entity.ProductFavorite;
+import com.example.service.FavoriteFolderService;
+import com.example.service.ProductFavoriteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.example.model.dto.favorite.ProductFavoriteDTO;
-import com.example.model.dto.favorite.ProductFavoritePageDTO;
-import com.example.exception.BusinessException;
-import com.example.common.ResultCode;
-import com.example.service.FavoriteFolderService;
 
 /**
-* @author 31815
-* @description 针对表【product_favorite(商品收藏表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:15
-*/
+ * @author 31815
+ * @description 针对表【product_favorite(商品收藏表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:15
+ */
 @Service
 @CacheConfig(cacheNames = "productFavoriteService")
 public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMapper, ProductFavorite>
-    implements ProductFavoriteService {
+        implements ProductFavoriteService {
 
     //private static final Logger logger = LoggerFactory.getLogger(ProductFavoriteServiceImpl.class);
 
@@ -54,7 +55,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         ProductFavorite favorite = new ProductFavorite();
         BeanUtils.copyProperties(favoriteDTO, favorite);
         favorite.setUserId(userId);
-        
+
         boolean success = save(favorite);
         if (success) {
             // 更新收藏夹计数
@@ -114,8 +115,8 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         int affected = baseMapper.moveToFolder(favoriteIds, targetFolderId);
 
         // 更新收藏夹计数
-        folderCountMap.forEach((folderId, count) -> 
-            folderService.updateItemCount(userId, folderId, -count)
+        folderCountMap.forEach((folderId, count) ->
+                folderService.updateItemCount(userId, folderId, -count)
         );
         folderService.updateItemCount(userId, targetFolderId, affected);
 

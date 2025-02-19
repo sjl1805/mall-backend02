@@ -13,16 +13,16 @@ import java.io.Serializable;
 public class Result<T> implements Serializable {
     @Schema(description = "状态码", example = "200")
     private Integer code;
-    
+
     @Schema(description = "业务消息", example = "操作成功")
     private String message;
-    
+
     @Schema(description = "响应数据")
     private T data;
-    
+
     @Schema(description = "错误详情（开发环境可见）")
     private String debugInfo;
-    
+
     @Schema(description = "时间戳", example = "1672531200000")
     private Long timestamp = System.currentTimeMillis();
 

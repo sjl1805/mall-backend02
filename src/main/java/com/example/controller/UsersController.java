@@ -2,9 +2,9 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
+import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.dto.users.UserPageDTO;
 import com.example.model.dto.users.UserRegisterDTO;
-import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,12 +13,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Max;
 
 import java.util.Map;
 
@@ -41,9 +41,9 @@ public class UsersController {
     @ApiResponse(responseCode = "200", description = "登录成功返回用户信息和访问令牌")
     public Result<Map<String, Object>> login(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "登录参数",
-                required = true,
-                content = @Content(schema = @Schema(implementation = UserLoginDTO.class))
+                    description = "登录参数",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UserLoginDTO.class))
             )
             @Valid @RequestBody UserLoginDTO loginDTO) {
         return Result.success(usersService.login(loginDTO));
@@ -54,7 +54,8 @@ public class UsersController {
     @ApiResponse(responseCode = "200", description = "登出成功")
     public Result<Boolean> logout() {
         // 从安全上下文中获取当前用户
-        return Result.success(usersService.logout());
+
+        return Result.success(true);
     }
 
     @GetMapping("/{id}")
@@ -71,9 +72,9 @@ public class UsersController {
     @ApiResponse(responseCode = "201", description = "注册成功返回新用户信息")
     public Result<Map<String, Object>> registerUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "注册信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = UserRegisterDTO.class))
+                    description = "注册信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UserRegisterDTO.class))
             )
             @Valid @RequestBody UserRegisterDTO registerDTO) {
         return Result.success(usersService.registerUser(registerDTO));

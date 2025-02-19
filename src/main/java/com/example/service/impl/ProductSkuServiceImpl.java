@@ -1,27 +1,28 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.ProductSkuService;
-import com.example.model.entity.ProductSku;
 import com.example.mapper.ProductSkuMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.model.entity.ProductSku;
+import com.example.service.ProductSkuService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
-* @author 31815
-* @description 针对表【product_sku(商品SKU表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:08
-*/
+ * @author 31815
+ * @description 针对表【product_sku(商品SKU表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:08
+ */
 @Service
 @CacheConfig(cacheNames = "productSkuService")
 public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, ProductSku>
-    implements ProductSkuService {
+        implements ProductSkuService {
 
     //private static final Logger logger = LoggerFactory.getLogger(ProductSkuServiceImpl.class);
 
@@ -31,10 +32,10 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
     public boolean batchCreateSkus(Long productId, List<ProductSku> skus) {
         // 校验商品状态
         validateProductStatus(productId);
-        
+
         // 设置商品ID
         skus.forEach(sku -> sku.setProductId(productId));
-        
+
         return baseMapper.batchInsert(skus) > 0;
     }
 

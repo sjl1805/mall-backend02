@@ -1,8 +1,8 @@
 package com.example.model.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 @Data
 @Schema(description = "商品评价数据传输对象")
@@ -36,7 +36,8 @@ public class ProductReviewDTO {
     @Schema(description = "评价图片（JSON数组）", example = "['/images/review1.jpg','/images/review2.jpg']")
     private String images;
 
-    @Min(0) @Max(2)
+    @Min(0)
+    @Max(2)
     @Schema(description = "审核状态：0-待审核 1-已通过 2-已拒绝", example = "0")
     private Integer status;
 } 

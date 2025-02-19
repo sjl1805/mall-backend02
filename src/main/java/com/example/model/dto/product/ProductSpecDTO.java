@@ -1,8 +1,10 @@
 package com.example.model.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import jakarta.validation.constraints.*;
 
 @Data
 @Schema(description = "商品规格数据传输对象")

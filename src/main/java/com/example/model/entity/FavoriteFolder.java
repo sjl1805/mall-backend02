@@ -4,66 +4,58 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import lombok.Data;
 
 /**
  * 收藏夹表
+ *
  * @TableName favorite_folder
  */
-@TableName(value ="favorite_folder")
+@TableName(value = "favorite_folder")
 @Data
 public class FavoriteFolder implements Serializable {
+    @Serial
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 收藏夹ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
-
     /**
      * 用户ID
      */
     private Long userId;
-
     /**
      * 收藏夹名称
      */
     private String name;
-
     /**
      * 收藏夹描述
      */
     private String description;
-
     /**
      * 公开状态：0-私密 1-公开
      */
     private Integer isPublic;
-
     /**
      * 收藏项数量
      */
     private Integer itemCount;
-
     /**
      * 排序
      */
     private Integer sort;
-
     /**
      * 创建时间（带时区）
      */
     private LocalDateTime createTime;
-
     /**
      * 更新时间（带时区）
      */
     private LocalDateTime updateTime;
-
-    @Serial
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

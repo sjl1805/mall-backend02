@@ -1,34 +1,35 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.RecommendProductService;
-import com.example.model.entity.RecommendProduct;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.RecommendProductMapper;
-import org.springframework.stereotype.Service;
+import com.example.model.dto.product.RecommendProductDTO;
+import com.example.model.dto.product.RecommendProductPageDTO;
+import com.example.model.entity.RecommendProduct;
+import com.example.service.RecommendProductService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.example.model.dto.product.RecommendProductDTO;
-import com.example.model.dto.product.RecommendProductPageDTO;
-import com.example.exception.BusinessException;
-import com.example.common.ResultCode;
 
 /**
-* @author 31815
-* @description 针对表【recommend_product(推荐商品表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:00
-*/
+ * @author 31815
+ * @description 针对表【recommend_product(推荐商品表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:00
+ */
 @Service
 @CacheConfig(cacheNames = "recommendService")
 public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMapper, RecommendProduct>
-    implements RecommendProductService {
+        implements RecommendProductService {
 
     //private static final Logger logger = LoggerFactory.getLogger(RecommendProductServiceImpl.class);
 
@@ -38,9 +39,9 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
     public boolean createRecommend(RecommendProductDTO recommendDTO) {
         // 校验时间冲突
         if (baseMapper.checkTimeConflict(
-            recommendDTO.getProductId(),
-            recommendDTO.getStartTime(),
-            recommendDTO.getEndTime()
+                recommendDTO.getProductId(),
+                recommendDTO.getStartTime(),
+                recommendDTO.getEndTime()
         ) > 0) {
             throw new BusinessException(ResultCode.RECOMMEND_TIME_CONFLICT);
         }
@@ -94,9 +95,9 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
         // 批量校验时间冲突
         recommends.forEach(recommend -> {
             if (baseMapper.checkTimeConflict(
-                recommend.getProductId(),
-                recommend.getStartTime(),
-                recommend.getEndTime()
+                    recommend.getProductId(),
+                    recommend.getStartTime(),
+                    recommend.getEndTime()
             ) > 0) {
                 throw new BusinessException(ResultCode.RECOMMEND_TIME_CONFLICT);
             }

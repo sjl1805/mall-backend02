@@ -5,15 +5,15 @@
 <mapper namespace="com.example.mapper.CategoryMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Category">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="icon" column="icon" jdbcType="VARCHAR"/>
-            <result property="level" column="level" jdbcType="TINYINT"/>
-            <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="level" column="level" jdbcType="TINYINT"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -33,22 +33,22 @@
         <if test="query.name != null and query.name != ''">
             AND name LIKE CONCAT('%', #{query.name}, '%')
         </if>
-        
+
         <!-- 状态过滤 -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
-        
+
         <!-- 层级过滤 -->
         <if test="query.level != null">
             AND level = #{query.level}
         </if>
-        
+
         <!-- 父分类过滤 -->
         <if test="query.parentId != null">
             AND parent_id = #{query.parentId}
         </if>
-        
+
         <!-- 时间范围查询 -->
         <if test="query.createTimeStart != null">
             AND create_time >= #{query.createTimeStart}
@@ -60,13 +60,13 @@
 
     <!-- 分页查询分类 -->
     <select id="selectCategoryPage" resultMap="TreeResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM category
         <where>
             <include refid="Condition_Column"/>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -88,17 +88,17 @@
     <!-- 更新状态 -->
     <update id="updateStatus">
         UPDATE category
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{categoryId}
     </update>
 
     <!-- 检查名称唯一性 -->
     <select id="checkNameUnique" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM category
         WHERE name = #{name}
-          AND parent_id = #{parentId}
+        AND parent_id = #{parentId}
         <if test="excludeId != null">
             AND id != #{excludeId}
         </if>
@@ -106,9 +106,10 @@
 
     <!-- 优化树形查询 -->
     <select id="selectCategoryTree" resultMap="TreeResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM category
-        WHERE parent_id = 0 
+        WHERE parent_id = 0
         <if test="status != null">
             AND status = #{status}
         </if>
@@ -117,10 +118,11 @@
 
     <!-- 优化子分类查询 -->
     <select id="selectActiveChildren" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM category
-        WHERE parent_id = #{parentId} 
-          AND status = 1
+        WHERE parent_id = #{parentId}
+        AND status = 1
         ORDER BY sort DESC
     </select>
 </mapper>

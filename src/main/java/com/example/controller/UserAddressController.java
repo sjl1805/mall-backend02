@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +33,9 @@ public class UserAddressController {
     public Result<Boolean> addAddress(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "地址信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = UserAddress.class))
+                    description = "地址信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UserAddress.class))
             )
             @Valid @RequestBody UserAddress address) {
         address.setUserId(userId);

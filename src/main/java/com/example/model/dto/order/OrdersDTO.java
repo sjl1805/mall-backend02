@@ -1,8 +1,9 @@
 package com.example.model.dto.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -32,9 +33,10 @@ public class OrdersDTO {
     private BigDecimal payAmount;
 
     @NotNull(message = "订单状态不能为空")
-    @Min(0) @Max(4)
-    @Schema(description = "订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消", 
-          requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Min(0)
+    @Max(4)
+    @Schema(description = "订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status;
 
     @NotBlank(message = "收货人姓名不能为空")
@@ -49,11 +51,12 @@ public class OrdersDTO {
 
     @NotBlank(message = "收货地址不能为空")
     @Size(max = 255, message = "地址最长255个字符")
-    @Schema(description = "收货地址", requiredMode = Schema.RequiredMode.REQUIRED, 
-          example = "浙江省杭州市西湖区文三路123号")
+    @Schema(description = "收货地址", requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "浙江省杭州市西湖区文三路123号")
     private String receiverAddress;
 
-    @Min(1) @Max(3)
+    @Min(1)
+    @Max(3)
     @Schema(description = "支付方式：1-支付宝 2-微信 3-银联", example = "1")
     private Integer paymentMethod;
 

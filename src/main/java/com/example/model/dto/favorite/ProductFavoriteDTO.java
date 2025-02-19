@@ -1,9 +1,9 @@
 package com.example.model.dto.favorite;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import jakarta.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 @Schema(description = "商品收藏数据传输对象")

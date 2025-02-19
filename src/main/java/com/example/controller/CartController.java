@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,9 +35,9 @@ public class CartController {
     public Result<Boolean> addToCart(
             @Parameter(description = "用户ID", example = "1") @RequestParam @Min(1) Long userId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "购物车商品信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = CartDTO.class))
+                    description = "购物车商品信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CartDTO.class))
             )
             @Valid @RequestBody CartDTO cartDTO) {
         return Result.success(cartService.addToCart(userId, cartDTO));
@@ -49,7 +49,7 @@ public class CartController {
     public Result<Boolean> updateQuantity(
             @Parameter(description = "用户ID", example = "1") @RequestParam @Min(1) Long userId,
             @Parameter(description = "购物车项ID", example = "1") @PathVariable @Min(1) Long cartId,
-            @Parameter(description = "数量变化值（正数增加，负数减少）", example = "2") 
+            @Parameter(description = "数量变化值（正数增加，负数减少）", example = "2")
             @RequestParam @NotNull Integer delta) {
         return Result.success(cartService.updateQuantity(userId, cartId, delta));
     }
@@ -60,7 +60,7 @@ public class CartController {
     public Result<Boolean> batchCheckItems(
             @Parameter(description = "用户ID", example = "1") @RequestParam @Min(1) Long userId,
             @Parameter(description = "商品ID列表") @RequestBody List<@Min(1) Long> productIds,
-            @Parameter(description = "勾选状态：0-未选 1-已选", example = "1") 
+            @Parameter(description = "勾选状态：0-未选 1-已选", example = "1")
             @RequestParam @NotNull @Min(0) @Max(1) Integer checked) {
         return Result.success(cartService.batchCheckItems(userId, productIds, checked));
     }

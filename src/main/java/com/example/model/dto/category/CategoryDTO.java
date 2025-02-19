@@ -1,11 +1,13 @@
 package com.example.model.dto.category;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 import org.hibernate.validator.constraints.URL;
+
 /**
  * 分类数据传输对象
+ *
  * @author 毕业设计学生
  */
 @Data

@@ -1,8 +1,8 @@
 package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 @Data
 @Schema(description = "用户地址数据传输对象")
@@ -41,11 +41,12 @@ public class UserAddressDTO {
 
     @NotBlank(message = "详细地址不能为空")
     @Size(max = 100, message = "地址最长100个字符")
-    @Schema(description = "详细地址", requiredMode = Schema.RequiredMode.REQUIRED, 
-          example = "文三路123号创业大厦")
+    @Schema(description = "详细地址", requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "文三路123号创业大厦")
     private String detailAddress;
 
-    @Min(0) @Max(1)
+    @Min(0)
+    @Max(1)
     @Schema(description = "默认地址：0-否 1-是", defaultValue = "0", example = "1")
     private Integer isDefault = 0;
 } 

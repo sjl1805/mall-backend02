@@ -1,8 +1,12 @@
 package com.example.model.dto.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import jakarta.validation.constraints.*;
+
 import java.util.List;
 
 @Data
@@ -17,7 +21,8 @@ public class OrderCreateDTO {
     private Long addressId;
 
     @NotNull(message = "支付方式不能为空")
-    @Min(1) @Max(3)
+    @Min(1)
+    @Max(3)
     @Schema(description = "支付方式：1-支付宝 2-微信 3-银行卡", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer paymentMethod;
 

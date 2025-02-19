@@ -2,6 +2,7 @@ package com.example.exception;
 
 import com.example.common.Result;
 import com.example.common.ResultCode;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
     // 处理其他未捕获异常
     @ExceptionHandler(Exception.class)
     public Result<Void> handleGlobalException(HttpServletRequest req, Exception e) {
-        return Result.error(ResultCode.INTERNAL_ERROR.getCode(), 
-                          "服务异常: " + e.getMessage());
+        return Result.error(ResultCode.INTERNAL_ERROR.getCode(),
+                "服务异常: " + e.getMessage());
     }
 } 

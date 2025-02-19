@@ -12,7 +12,7 @@ public class MallBackendApplication {
         SpringApplication.run(MallBackendApplication.class, args);
         System.out.println("*********************项目启动成功*********************");
         System.out.println("***********http://localhost:8080/api/swagger-ui/index.html");
-        
+
     }
 
 }

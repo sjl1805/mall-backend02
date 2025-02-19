@@ -1,8 +1,9 @@
 package com.example.model.dto.coupon;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -18,7 +19,8 @@ public class CouponDTO {
     private String name;
 
     @NotNull(message = "优惠券类型不能为空")
-    @Min(1) @Max(3)
+    @Min(1)
+    @Max(3)
     @Schema(description = "优惠券类型：1-满减券 2-折扣券 3-运费券", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer type;
 

@@ -13,9 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +38,9 @@ public class ProductReviewController {
     public Result<Boolean> createReview(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "评价信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = ProductReviewDTO.class))
+                    description = "评价信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ProductReviewDTO.class))
             )
             @Valid @RequestBody ProductReviewDTO reviewDTO) {
         return Result.success(productReviewService.createReview(reviewDTO));
@@ -61,7 +61,7 @@ public class ProductReviewController {
     public Result<Boolean> updateReviewStatus(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @Parameter(description = "评价ID", example = "1") @PathVariable @Min(1) Long reviewId,
-            @Parameter(description = "新状态：0-隐藏 1-显示", example = "1") 
+            @Parameter(description = "新状态：0-隐藏 1-显示", example = "1")
             @RequestParam @NotNull @Min(0) @Max(1) Integer status) {
         return Result.success(productReviewService.updateReviewStatus(productId, reviewId, status));
     }

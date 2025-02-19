@@ -1,8 +1,8 @@
 package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Data
 @Schema(description = "用户登录参数")

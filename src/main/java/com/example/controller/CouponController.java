@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,9 @@ public class CouponController {
     @ApiResponse(responseCode = "201", description = "优惠券创建成功")
     public Result<Boolean> createCoupon(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "优惠券信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = CouponDTO.class))
+                    description = "优惠券信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CouponDTO.class))
             )
             @Valid @RequestBody CouponDTO couponDTO) {
         return Result.success(couponService.createCoupon(couponDTO));
@@ -57,7 +57,7 @@ public class CouponController {
     @ApiResponse(responseCode = "200", description = "状态更新成功")
     public Result<Boolean> updateStatus(
             @Parameter(description = "优惠券ID", example = "1") @PathVariable @Min(1) Long couponId,
-            @Parameter(description = "新状态：0-禁用 1-启用", example = "1") 
+            @Parameter(description = "新状态：0-禁用 1-启用", example = "1")
             @RequestParam @NotNull @Min(0) @Max(1) Integer status) {
         return Result.success(couponService.updateStatus(couponId, status));
     }

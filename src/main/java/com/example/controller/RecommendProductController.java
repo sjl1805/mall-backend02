@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,9 +37,9 @@ public class RecommendProductController {
     @ApiResponse(responseCode = "201", description = "推荐创建成功")
     public Result<Boolean> createRecommend(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "推荐信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = RecommendProductDTO.class))
+                    description = "推荐信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = RecommendProductDTO.class))
             )
             @Valid @RequestBody RecommendProductDTO recommendDTO) {
         return Result.success(recommendProductService.createRecommend(recommendDTO));
@@ -58,7 +58,7 @@ public class RecommendProductController {
     @ApiResponse(responseCode = "200", description = "状态更新成功")
     public Result<Boolean> updateStatus(
             @Parameter(description = "推荐项ID", example = "1") @PathVariable @Min(1) Long id,
-            @Parameter(description = "新状态：0-禁用 1-启用", example = "1") 
+            @Parameter(description = "新状态：0-禁用 1-启用", example = "1")
             @RequestParam @NotNull @Min(0) @Max(1) Integer status) {
         return Result.success(recommendProductService.updateRecommendStatus(id, status));
     }
@@ -68,7 +68,7 @@ public class RecommendProductController {
     @ApiResponse(responseCode = "200", description = "排序更新成功")
     public Result<Boolean> updateSort(
             @Parameter(description = "推荐项ID", example = "1") @PathVariable @Min(1) Long id,
-            @Parameter(description = "新排序值", example = "5") 
+            @Parameter(description = "新排序值", example = "5")
             @RequestParam @NotNull @Min(0) Integer sort) {
         return Result.success(recommendProductService.updateRecommendSort(id, sort));
     }
@@ -94,9 +94,9 @@ public class RecommendProductController {
     @ApiResponse(responseCode = "201", description = "批量创建成功")
     public Result<Boolean> batchCreateRecommends(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "推荐列表",
-                required = true,
-                content = @Content(schema = @Schema(implementation = RecommendProductDTO.class))
+                    description = "推荐列表",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = RecommendProductDTO.class))
             )
             @RequestBody List<@Valid RecommendProductDTO> recommends) {
         return Result.success(recommendProductService.batchCreateRecommends(recommends));

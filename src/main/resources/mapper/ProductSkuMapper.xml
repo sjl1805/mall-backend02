@@ -5,16 +5,16 @@
 <mapper namespace="com.example.mapper.ProductSkuMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSku">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
-            <result property="price" column="price" jdbcType="DECIMAL"/>
-            <result property="stock" column="stock" jdbcType="INTEGER"/>
-            <result property="sales" column="sales" jdbcType="INTEGER"/>
-            <result property="mainImage" column="main_image" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="DECIMAL"/>
+        <result property="stock" column="stock" jdbcType="INTEGER"/>
+        <result property="sales" column="sales" jdbcType="INTEGER"/>
+        <result property="mainImage" column="main_image" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -27,23 +27,23 @@
     <!-- 批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product_sku (
-            product_id, spec_values, price,
-            stock, sales, main_image,
-            status
+        product_id, spec_values, price,
+        stock, sales, main_image,
+        status
         ) VALUES
         <foreach collection="skus" item="sku" separator=",">
             (
-                #{sku.productId}, #{sku.specValues}, #{sku.price},
-                #{sku.stock}, #{sku.sales}, #{sku.mainImage},
-                #{sku.status}
+            #{sku.productId}, #{sku.specValues}, #{sku.price},
+            #{sku.stock}, #{sku.sales}, #{sku.mainImage},
+            #{sku.status}
             )
         </foreach>
     </insert>
 
     <!-- 根据商品ID查询 -->
     <select id="selectByProductId" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_sku
         WHERE product_id = #{productId}
         ORDER BY price ASC
@@ -52,16 +52,16 @@
     <!-- 更新库存（乐观锁） -->
     <update id="updateStock">
         UPDATE product_sku
-        SET stock = stock + #{quantity},
+        SET stock       = stock + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
-        AND stock + #{quantity} >= 0
+          AND stock + #{quantity} >= 0
     </update>
 
     <!-- 分页查询 -->
     <select id="selectSkuPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_sku
         <where>
             product_id = #{query.productId}
@@ -89,16 +89,15 @@
     <!-- 增加销量 -->
     <update id="increaseSales">
         UPDATE product_sku
-        SET sales = sales + #{quantity},
+        SET sales       = sales + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
     </update>
 
     <!-- 统计状态数量 -->
     <select id="countSkuStatus" resultType="map">
-        SELECT 
-            status AS status,
-            COUNT(*) AS count
+        SELECT status   AS status,
+               COUNT(*) AS count
         FROM product_sku
         WHERE product_id = #{productId}
         GROUP BY status
@@ -107,7 +106,7 @@
     <!-- 安全更新库存 -->
     <update id="updateStockSafely">
         UPDATE product_sku
-        SET stock = stock + #{quantity},
+        SET stock       = stock + #{quantity},
             update_time = NOW()
         WHERE id = #{skuId}
           AND product_id = #{productId}
@@ -117,7 +116,7 @@
     <!-- 批量更新主图 -->
     <update id="batchUpdateMainImage">
         UPDATE product_sku
-        SET main_image = #{imageUrl},
+        SET main_image  = #{imageUrl},
             update_time = NOW()
         WHERE product_id = #{productId}
           AND main_image = #{oldImage}

@@ -5,16 +5,16 @@
 <mapper namespace="com.example.mapper.ProductReviewMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductReview">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="rating" column="rating" jdbcType="TINYINT"/>
-            <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="images" column="images" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="rating" column="rating" jdbcType="TINYINT"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -45,8 +45,8 @@
 
     <!-- 分页查询评价 -->
     <select id="selectReviewPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_review
         <where>
             <if test="query.productId != null">
@@ -85,30 +85,29 @@
     <!-- 更新评价状态 -->
     <update id="updateReviewStatus">
         UPDATE product_review
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{reviewId}
     </update>
 
     <!-- 统计商品评分 -->
     <select id="countProductRating" resultType="map">
-        SELECT 
-            AVG(rating) AS avgRating,
-            COUNT(*) AS totalReviews,
-            SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) AS fiveStar,
-            SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) AS fourStar,
-            SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) AS threeStar,
-            SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) AS twoStar,
-            SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) AS oneStar
+        SELECT AVG(rating)                                 AS avgRating,
+               COUNT(*)                                    AS totalReviews,
+               SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) AS fiveStar,
+               SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) AS fourStar,
+               SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) AS threeStar,
+               SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) AS twoStar,
+               SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) AS oneStar
         FROM product_review
         WHERE product_id = #{productId}
-        AND status = 1
+          AND status = 1
     </select>
 
     <!-- 获取用户最新评价 -->
     <select id="selectLatestUserReviews" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_review
         WHERE user_id = #{userId}
         ORDER BY create_time DESC
@@ -127,8 +126,8 @@
     <!-- 新增评价内容更新 -->
     <update id="updateReviewContent">
         UPDATE product_review
-        SET content = #{content},
-            images = #{images},
+        SET content     = #{content},
+            images      = #{images},
             update_time = NOW()
         WHERE id = #{reviewId}
           AND user_id = #{userId}

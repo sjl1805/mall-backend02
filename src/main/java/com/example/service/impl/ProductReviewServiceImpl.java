@@ -1,33 +1,34 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.ProductReviewService;
-import com.example.model.entity.ProductReview;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.ProductReviewMapper;
-import org.springframework.stereotype.Service;
+import com.example.model.dto.product.ProductReviewDTO;
+import com.example.model.dto.product.ProductReviewPageDTO;
+import com.example.model.entity.ProductReview;
+import com.example.service.ProductReviewService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
-import com.example.model.dto.product.ProductReviewDTO;
-import com.example.model.dto.product.ProductReviewPageDTO;
-import com.example.exception.BusinessException;
-import com.example.common.ResultCode;
 
 /**
-* @author 31815
-* @description 针对表【product_review(商品评价表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:11
-*/
+ * @author 31815
+ * @description 针对表【product_review(商品评价表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:11
+ */
 @Service
 @CacheConfig(cacheNames = "productReviewService")
 public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, ProductReview>
-    implements ProductReviewService {
+        implements ProductReviewService {
 
     //private static final Logger logger = LoggerFactory.getLogger(ProductReviewServiceImpl.class);
 

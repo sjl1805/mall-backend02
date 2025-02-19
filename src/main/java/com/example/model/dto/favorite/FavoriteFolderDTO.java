@@ -1,8 +1,8 @@
 package com.example.model.dto.favorite;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 @Data
 @Schema(description = "收藏夹数据传输对象")
@@ -24,7 +24,8 @@ public class FavoriteFolderDTO {
     private String description;
 
     @NotNull(message = "公开状态不能为空")
-    @Min(0) @Max(1)
+    @Min(0)
+    @Max(1)
     @Schema(description = "是否公开：0-私有 1-公开", example = "1", defaultValue = "0")
     private Integer isPublic = 0;
 

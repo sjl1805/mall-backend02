@@ -1,8 +1,8 @@
 package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 @Data
 @Schema(description = "用户信息传输对象")
@@ -47,8 +47,8 @@ public class UserDTO {
 
     @Min(value = 0, message = "角色参数错误")
     @Max(value = 9, message = "角色参数错误")
-    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号", 
-          allowableValues = {"0", "1", "2", "9"}, 
-          defaultValue = "1")
+    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号",
+            allowableValues = {"0", "1", "2", "9"},
+            defaultValue = "1")
     private Integer role = 1;
 } 

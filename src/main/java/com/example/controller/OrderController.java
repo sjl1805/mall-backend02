@@ -29,9 +29,9 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "订单创建成功")
     public Result<String> createOrder(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "订单信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = OrderCreateDTO.class))
+                    description = "订单信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = OrderCreateDTO.class))
             )
             @Valid @RequestBody OrderCreateDTO orderDTO) {
         return Result.success(ordersService.createOrder(orderDTO));
@@ -41,7 +41,7 @@ public class OrderController {
     @Operation(summary = "获取订单详情", description = "根据订单号查询订单详细信息")
     @ApiResponse(responseCode = "200", description = "成功返回订单详情")
     public Result<Orders> getOrderDetail(
-            @Parameter(description = "订单号", example = "PC20230301123456") @PathVariable String orderNo) {
+            @Parameter(description = "订单号", example = "202309010001") @PathVariable String orderNo) {
         return Result.success(ordersService.getOrderDetail(orderNo));
     }
 

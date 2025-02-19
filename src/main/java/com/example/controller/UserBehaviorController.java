@@ -32,9 +32,9 @@ public class UserBehaviorController {
     public Result<Boolean> recordBehavior(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "行为信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = UserBehaviorDTO.class))
+                    description = "行为信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UserBehaviorDTO.class))
             )
             @Valid @RequestBody UserBehaviorDTO behaviorDTO) {
         behaviorDTO.setUserId(userId);

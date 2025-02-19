@@ -5,19 +5,19 @@
 <mapper namespace="com.example.mapper.UsersMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Users">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="username" column="username" jdbcType="VARCHAR"/>
-            <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-            <result property="phone" column="phone" jdbcType="VARCHAR"/>
-            <result property="email" column="email" jdbcType="VARCHAR"/>
-            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
-            <result property="gender" column="gender" jdbcType="TINYINT"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="role" column="role" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="createDate" column="create_date" jdbcType="DATE"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="role" column="role" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,7 +28,8 @@
     <!-- 增强分页查询，添加注释说明每个条件 -->
     <select id="selectUserPage" resultType="com.example.model.entity.Users">
         <!-- 使用include标签复用字段列表 -->
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM users
         <where>
             <!-- 用户名模糊查询 -->
@@ -58,16 +59,16 @@
 
     <!-- 根据手机号查询 -->
     <select id="selectByPhone" resultType="com.example.model.entity.Users">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM users
         WHERE phone = #{phone}
     </select>
 
     <!-- 统计用户状态 -->
     <select id="countUserStatus" resultType="map">
-        SELECT 
-            status AS status,
-            COUNT(*) AS count
+        SELECT status   AS status,
+               COUNT(*) AS count
         FROM users
         GROUP BY status
     </select>
@@ -84,14 +85,14 @@
     <!-- 更新用户状态 -->
     <update id="updateUserStatus">
         UPDATE users
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{userId}
     </update>
 
     <!-- 检查字段唯一性 -->
     <select id="checkFieldUnique" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM users
         WHERE ${field} = #{value}
         <if test="excludeId != null">

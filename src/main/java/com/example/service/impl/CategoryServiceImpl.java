@@ -1,38 +1,40 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.CategoryService;
-import com.example.model.entity.Category;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.CategoryMapper;
+import com.example.model.dto.category.CategoryDTO;
+import com.example.model.dto.category.CategoryPageDTO;
+import com.example.model.entity.Category;
+import com.example.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import com.example.model.dto.category.CategoryPageDTO;
-import com.example.model.dto.category.CategoryDTO;
-import com.example.exception.BusinessException;
-import com.example.common.ResultCode;
 
 /**
-* @author 31815
-* @description 针对表【category(商品分类表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:29
-*/
+ * @author 31815
+ * @description 针对表【category(商品分类表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:29
+ */
 @Service
 @CacheConfig(cacheNames = "categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
-    implements CategoryService {
+        implements CategoryService {
 
     //private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     /**
      * 分页查询分类（带树形结构）
+     *
      * @param queryDTO 查询参数
      * @return 分页结果（包含子分类）
      */
@@ -45,6 +47,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 添加分类（带业务校验）
+     *
      * @param categoryDTO 分类数据
      * @return 操作结果
      * @throws BusinessException 业务异常
@@ -55,7 +58,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     public boolean addCategory(CategoryDTO categoryDTO) {
         // 校验父分类
         validateParentCategory(categoryDTO.getParentId());
-        
+
         // 检查名称唯一性
         if (checkNameExists(categoryDTO.getName(), categoryDTO.getParentId(), null)) {
             throw new BusinessException(ResultCode.CATEGORY_NAME_EXISTS);
@@ -68,6 +71,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 更新分类（带完整校验）
+     *
      * @param categoryDTO 分类数据
      * @return 操作结果
      * @throws BusinessException 业务异常
@@ -97,6 +101,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 删除分类（级联删除子分类）
+     *
      * @param id 分类ID
      * @return 操作结果
      */
@@ -116,6 +121,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 获取分类树（缓存优化）
+     *
      * @return 树形结构分类列表
      */
     @Override
@@ -126,7 +132,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 切换分类状态（级联操作）
-     * @param id 分类ID
+     *
+     * @param id     分类ID
      * @param status 新状态
      * @return 操作结果
      */
@@ -142,8 +149,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
         // 级联更新子分类
         if (success) {
-            baseMapper.selectChildren(id).forEach(child -> 
-                switchStatus(child.getId(), status)
+            baseMapper.selectChildren(id).forEach(child ->
+                    switchStatus(child.getId(), status)
             );
         }
         return success;
@@ -151,6 +158,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     /**
      * 校验父分类合法性
+     *
      * @param parentId 父分类ID
      * @throws BusinessException 业务异常
      */

@@ -5,15 +5,15 @@
 <mapper namespace="com.example.mapper.FavoriteFolderMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.FavoriteFolder">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="isPublic" column="is_public" jdbcType="TINYINT"/>
-            <result property="itemCount" column="item_count" jdbcType="INTEGER"/>
-            <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="isPublic" column="is_public" jdbcType="TINYINT"/>
+        <result property="itemCount" column="item_count" jdbcType="INTEGER"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -37,8 +37,8 @@
 
     <!-- 分页查询收藏夹 -->
     <select id="selectFolderPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM favorite_folder
         <where>
             <if test="query.name != null and query.name != ''">
@@ -57,7 +57,7 @@
                 AND create_time &lt;= #{query.createTimeEnd}
             </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -71,7 +71,7 @@
     <!-- 更新公开状态 -->
     <update id="updatePublicStatus">
         UPDATE favorite_folder
-        SET is_public = #{isPublic},
+        SET is_public   = #{isPublic},
             update_time = NOW()
         WHERE id = #{folderId}
     </update>
@@ -79,17 +79,17 @@
     <!-- 更新排序 -->
     <update id="updateSort">
         UPDATE favorite_folder
-        SET sort = #{newSort},
+        SET sort        = #{newSort},
             update_time = NOW()
         WHERE id = #{folderId}
     </update>
 
     <!-- 检查名称唯一性 -->
     <select id="checkNameUnique" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM favorite_folder
         WHERE user_id = #{userId}
-          AND name = #{name}
+        AND name = #{name}
         <if test="excludeId != null">
             AND id != #{excludeId}
         </if>
@@ -98,7 +98,7 @@
     <!-- 新增收藏项数量更新 -->
     <update id="updateItemCount">
         UPDATE favorite_folder
-        SET item_count = item_count + #{delta},
+        SET item_count  = item_count + #{delta},
             update_time = NOW()
         WHERE id = #{folderId}
     </update>

@@ -17,26 +17,27 @@ public class OrderNoUtils {
 
     /**
      * 生成订单号
+     *
      * @param bizType 业务类型 (PC:电脑端订单, AP:APP订单, WX:微信订单等)
      */
     public static String generate(String bizType) {
         // 17位时间戳
         String timePart = LocalDateTime.now().format(formatter);
-        
+
         // 4位自增序列（循环使用）
         long seq = sequence.getAndIncrement() % (MAX_SEQUENCE + 1);
-        if(sequence.get() > MAX_SEQUENCE) {
+        if (sequence.get() > MAX_SEQUENCE) {
             sequence.set(0);
         }
-        
+
         // 3位随机数
         int random = ThreadLocalRandom.current().nextInt(100, 999);
-        
-        return String.format("%s%s%04d%03d", 
-            bizType, 
-            timePart,
-            seq,
-            random
+
+        return String.format("%s%s%04d%03d",
+                bizType,
+                timePart,
+                seq,
+                random
         );
     }
 } 

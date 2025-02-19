@@ -1,8 +1,8 @@
 package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -21,7 +21,8 @@ public class UserBehaviorDTO {
     private Long productId;
 
     @NotNull(message = "行为类型不能为空")
-    @Min(1) @Max(3)
+    @Min(1)
+    @Max(3)
     @Schema(description = "行为类型：1-浏览 2-收藏 3-购买", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer behaviorType;
 
@@ -32,7 +33,8 @@ public class UserBehaviorDTO {
     @Schema(description = "停留时长（秒）", example = "60")
     private Integer duration = 0;
 
-    @DecimalMin("0.1") @DecimalMax("2.0")
+    @DecimalMin("0.1")
+    @DecimalMax("2.0")
     @Schema(description = "行为权重", example = "1.2")
     private Double weight = 0.5;
 } 

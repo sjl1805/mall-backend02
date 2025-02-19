@@ -35,9 +35,9 @@ public class ProductSkuController {
     public Result<Boolean> createSkus(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "SKU列表",
-                required = true,
-                content = @Content(schema = @Schema(implementation = ProductSku.class))
+                    description = "SKU列表",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ProductSku.class))
             )
             @RequestBody @NotEmpty List<@Valid ProductSku> skus) {
         return Result.success(productSkuService.batchCreateSkus(productId, skus));
@@ -57,7 +57,7 @@ public class ProductSkuController {
     public Result<Boolean> adjustStock(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @Parameter(description = "SKU ID", example = "1") @PathVariable @Min(1) Long skuId,
-            @Parameter(description = "调整数量（正数增加，负数减少）", example = "-5") 
+            @Parameter(description = "调整数量（正数增加，负数减少）", example = "-5")
             @RequestParam @NotNull Integer quantity) {
         return Result.success(productSkuService.adjustStock(productId, skuId, quantity));
     }
@@ -68,7 +68,7 @@ public class ProductSkuController {
     public Result<Boolean> increaseSales(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @Parameter(description = "SKU ID", example = "1") @PathVariable @Min(1) Long skuId,
-            @Parameter(description = "增加数量", example = "10") 
+            @Parameter(description = "增加数量", example = "10")
             @RequestParam @Min(1) Integer quantity) {
         return Result.success(productSkuService.increaseSales(productId, skuId, quantity));
     }

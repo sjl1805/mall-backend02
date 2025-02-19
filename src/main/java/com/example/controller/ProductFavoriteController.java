@@ -35,9 +35,9 @@ public class ProductFavoriteController {
     public Result<Boolean> addFavorite(
             @Parameter(description = "用户ID", example = "1") @PathVariable @Min(1) Long userId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "收藏信息",
-                required = true,
-                content = @Content(schema = @Schema(implementation = ProductFavoriteDTO.class))
+                    description = "收藏信息",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ProductFavoriteDTO.class))
             )
             @Valid @RequestBody ProductFavoriteDTO favoriteDTO) {
         return Result.success(productFavoriteService.addFavorite(userId, favoriteDTO));

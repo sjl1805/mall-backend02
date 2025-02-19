@@ -5,15 +5,15 @@
 <mapper namespace="com.example.mapper.UserCouponMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.UserCoupon">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="couponId" column="coupon_id" jdbcType="BIGINT"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-            <result property="getTime" column="get_time" jdbcType="TIMESTAMP"/>
-            <result property="useTime" column="use_time" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="couponId" column="coupon_id" jdbcType="BIGINT"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+        <result property="getTime" column="get_time" jdbcType="TIMESTAMP"/>
+        <result property="useTime" column="use_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -40,8 +40,8 @@
 
     <!-- 分页查询用户优惠券 -->
     <select id="selectUserCouponPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_coupon
         <where>
             <if test="query.userId != null">
@@ -57,7 +57,7 @@
                 AND get_time &lt;= #{query.getTimeEnd}
             </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -71,9 +71,9 @@
     <!-- 更新优惠券状态 -->
     <update id="updateCouponStatus">
         UPDATE user_coupon
-        SET status = #{status},
-            order_id = #{orderId},
-            use_time = CASE WHEN #{status} = 1 THEN NOW() ELSE use_time END,
+        SET status      = #{status},
+            order_id    = #{orderId},
+            use_time    = CASE WHEN #{status} = 1 THEN NOW() ELSE use_time END,
             update_time = NOW()
         WHERE id = #{userCouponId}
     </update>
@@ -81,21 +81,20 @@
     <!-- 新增批量过期优惠券 -->
     <update id="autoExpireCoupons">
         UPDATE user_coupon
-        SET status = 2,
+        SET status      = 2,
             update_time = NOW()
         WHERE status = 0
-          AND EXISTS (
-            SELECT 1 FROM coupon c 
-            WHERE c.id = coupon_id 
-            AND c.end_time &lt; NOW()
-          )
+          AND EXISTS (SELECT 1
+                      FROM coupon c
+                      WHERE c.id = coupon_id
+                        AND c.end_time &lt; NOW())
     </update>
 
     <!-- 检查优惠券有效性 -->
     <select id="checkCouponValid" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM user_coupon uc
-        INNER JOIN coupon c ON uc.coupon_id = c.id
+                 INNER JOIN coupon c ON uc.coupon_id = c.id
         WHERE uc.user_id = #{userId}
           AND uc.coupon_id = #{couponId}
           AND uc.status = 0

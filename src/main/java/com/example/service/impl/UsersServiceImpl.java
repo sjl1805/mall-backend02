@@ -29,15 +29,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author 31815
-* @description 针对表【users(用户表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:43:44
-*/
+ * @author 31815
+ * @description 针对表【users(用户表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:43:44
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "userService")
-public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> 
-    implements UsersService, UserDetailsService {
+public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
+        implements UsersService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
@@ -61,7 +61,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         if (user == null || user.getStatus() == 0) {
             throw new BusinessException(ResultCode.USER_NOT_FOUND);
         }
-        
+
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new BusinessException(ResultCode.PASSWORD_ERROR);
         }
@@ -73,10 +73,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         userInfo.put("role", getRoleName(user.getRole()));
 
         String token = jwtUtils.generateToken(user.getUsername(), user.getRole());
-        
+
         return Map.of(
-            "userInfo", userInfo,
-            "token", token
+                "userInfo", userInfo,
+                "token", token
         );
     }
 
@@ -99,7 +99,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         if (!registerDTO.getPhone().matches("^1[3-9]\\d{9}$")) {
             throw new BusinessException(ResultCode.INVALID_PHONE_FORMAT);
         }
-        
+
         if (checkUsernameExists(registerDTO.getUsername())) {
             throw new BusinessException(ResultCode.USERNAME_EXISTS);
         }
@@ -116,18 +116,18 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         }
 
         String token = jwtUtils.generateToken(newUser.getUsername(), newUser.getRole());
-        
+
         return Map.of(
-            "userId", newUser.getId(),
-            "username", newUser.getUsername(),
-            "token", token
+                "userId", newUser.getId(),
+                "username", newUser.getUsername(),
+                "token", token
         );
     }
 
     @Override
     @Caching(evict = {
-        @CacheEvict(key = "#userId"),
-        @CacheEvict(cacheNames = "userStats", allEntries = true)
+            @CacheEvict(key = "#userId"),
+            @CacheEvict(cacheNames = "userStats", allEntries = true)
     })
     public boolean updateUserStatus(Long userId, Integer status) {
         return lambdaUpdate()
@@ -145,11 +145,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public Map<String, Integer> getUserStatistics() {
         Map<String, Integer> stats = new LinkedHashMap<>();
         stats.put("totalUsers", (int) count());
-        
+
         List<Map<String, Object>> statusCounts = baseMapper.countUserStatus();
-        statusCounts.forEach(item -> 
-            stats.put("status_" + item.get("status"), 
-                ((Long)item.get("count")).intValue())
+        statusCounts.forEach(item ->
+                stats.put("status_" + item.get("status"),
+                        ((Long) item.get("count")).intValue())
         );
 
         return stats;
@@ -163,8 +163,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
     @Override
     @Caching(evict = {
-        @CacheEvict(key = "#user.id"),
-        @CacheEvict(cacheNames = "userStats", allEntries = true)
+            @CacheEvict(key = "#user.id"),
+            @CacheEvict(cacheNames = "userStats", allEntries = true)
     })
     public boolean updateById(Users user) {
         return super.updateById(user);

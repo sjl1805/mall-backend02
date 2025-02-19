@@ -2,6 +2,7 @@ package com.example.model.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
 import java.util.Date;
 
 @Data
@@ -13,8 +14,8 @@ public class ProductReviewPageDTO {
     @Schema(description = "用户ID（精确查询）", example = "456")
     private Long userId;
 
-    @Schema(description = "审核状态：0-待审核 1-已通过 2-已拒绝", 
-           allowableValues = {"0", "1", "2"}, example = "1")
+    @Schema(description = "审核状态：0-待审核 1-已通过 2-已拒绝",
+            allowableValues = {"0", "1", "2"}, example = "1")
     private Integer status;
 
     @Schema(description = "最低评分", example = "3")
@@ -35,13 +36,13 @@ public class ProductReviewPageDTO {
     @Schema(description = "每页数量", example = "10", defaultValue = "10")
     private Integer size = 10;
 
-    @Schema(description = "排序字段", 
-           allowableValues = {"create_time", "rating"}, 
-           example = "create_time")
+    @Schema(description = "排序字段",
+            allowableValues = {"create_time", "rating"},
+            example = "create_time")
     private String sortField;
 
-    @Schema(description = "排序方式", 
-           allowableValues = {"ASC", "DESC"}, 
-           example = "DESC")
+    @Schema(description = "排序方式",
+            allowableValues = {"ASC", "DESC"},
+            example = "DESC")
     private String sortOrder;
 } 

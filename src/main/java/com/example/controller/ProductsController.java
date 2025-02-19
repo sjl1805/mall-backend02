@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.product.ProductsPageDTO;
 import com.example.model.dto.product.ProductsDTO;
+import com.example.model.dto.product.ProductsPageDTO;
 import com.example.model.entity.Products;
 import com.example.service.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,9 +44,9 @@ public class ProductsController {
     @ApiResponse(responseCode = "201", description = "商品创建成功")
     public Result<Boolean> createProduct(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "商品数据",
-                required = true,
-                content = @Content(schema = @Schema(implementation = ProductsDTO.class))
+                    description = "商品数据",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ProductsDTO.class))
             )
             @Valid @RequestBody ProductsDTO productsDTO) {
         return Result.success(productsService.addProduct(productsDTO));

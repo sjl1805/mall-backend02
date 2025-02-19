@@ -1,8 +1,10 @@
 package com.example.model.dto.users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import jakarta.validation.constraints.*;
 
 import java.util.Date;
 
@@ -20,7 +22,8 @@ public class UserCouponDTO {
     @Schema(description = "优惠券ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "789")
     private Long couponId;
 
-    @Min(0) @Max(2)
+    @Min(0)
+    @Max(2)
     @Schema(description = "使用状态：0-未使用 1-已使用 2-已过期", defaultValue = "0", example = "0")
     private Integer status = 0;
 

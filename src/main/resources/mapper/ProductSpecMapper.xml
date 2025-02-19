@@ -5,12 +5,12 @@
 <mapper namespace="com.example.mapper.ProductSpecMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSpec">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="specName" column="spec_name" jdbcType="VARCHAR"/>
-            <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="specName" column="spec_name" jdbcType="VARCHAR"/>
+        <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -21,19 +21,19 @@
     <!-- 批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product_spec (
-            product_id, spec_name, spec_values
+        product_id, spec_name, spec_values
         ) VALUES
         <foreach collection="specs" item="spec" separator=",">
             (
-                #{spec.productId}, #{spec.specName}, #{spec.specValues}
+            #{spec.productId}, #{spec.specName}, #{spec.specValues}
             )
         </foreach>
     </insert>
 
     <!-- 根据商品ID查询 -->
     <select id="selectByProductId" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_spec
         WHERE product_id = #{productId}
         ORDER BY create_time ASC
@@ -56,8 +56,8 @@
 
     <!-- 分页查询 -->
     <select id="selectSpecPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_spec
         <where>
             product_id = #{query.productId}
@@ -71,7 +71,7 @@
                 AND create_time &lt;= #{query.createTimeEnd}
             </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}

@@ -1,8 +1,10 @@
 package com.example.model.dto.cart;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import jakarta.validation.constraints.*;
 
 @Data
 @Schema(description = "购物车商品数据传输对象")
@@ -16,7 +18,8 @@ public class CartDTO {
     @Schema(description = "商品数量", example = "2", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer quantity;
 
-    @Min(0) @Max(1)
+    @Min(0)
+    @Max(1)
     @Schema(description = "选中状态：0-未选中 1-选中", defaultValue = "1", example = "1")
     private Integer checked = 1;
 } 

@@ -2,12 +2,11 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.users.UserPageDTO;
+import com.example.exception.BusinessException;
 import com.example.model.dto.users.UserLoginDTO;
+import com.example.model.dto.users.UserPageDTO;
 import com.example.model.dto.users.UserRegisterDTO;
 import com.example.model.entity.Users;
-import com.example.exception.BusinessException;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Map;
 
@@ -25,6 +24,7 @@ public interface UsersService extends IService<Users> {
 
     /**
      * 用户登录（增强版）
+     *
      * @param loginDTO 登录参数
      * @return 包含过滤后的用户信息和访问令牌
      */
@@ -32,12 +32,14 @@ public interface UsersService extends IService<Users> {
 
     /**
      * 用户登出（无参版本）
+     *
      * @return 操作结果
      */
     Boolean logout();
 
     /**
      * 用户注册
+     *
      * @param registerDTO 注册信息传输对象
      * @return 包含新用户信息和访问令牌的Map
      * @throws BusinessException 当注册信息不符合要求时抛出
@@ -51,10 +53,10 @@ public interface UsersService extends IService<Users> {
 
     /**
      * 获取用户统计信息
+     *
      * @return 包含总用户数、状态分布等统计数据的Map
      * @Cacheable 注解实现缓存优化
      */
-    @Cacheable(key = "'userStats'")
     Map<String, Integer> getUserStatistics();
 
     /**

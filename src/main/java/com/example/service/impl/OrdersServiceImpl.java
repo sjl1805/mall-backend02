@@ -1,33 +1,34 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.OrdersService;
-import com.example.model.entity.Orders;
 import com.example.mapper.OrdersMapper;
+import com.example.model.dto.order.OrderCreateDTO;
+import com.example.model.entity.OrderItem;
+import com.example.model.entity.Orders;
+import com.example.service.OrderItemService;
+import com.example.service.OrdersService;
+import com.example.utils.OrderNoUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.example.service.OrderItemService;
-import com.example.model.dto.order.OrderCreateDTO;
-import com.example.utils.OrderNoUtils;
-import org.springframework.scheduling.annotation.Scheduled;
-import com.example.model.entity.OrderItem;
 
 /**
-* @author 31815
-* @description 针对表【orders(订单表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:18
-*/
+ * @author 31815
+ * @description 针对表【orders(订单表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:18
+ */
 @Service
 @CacheConfig(cacheNames = "orderService")
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
-    implements OrdersService {
+        implements OrdersService {
 
     private final OrderItemService orderItemService;
 
@@ -41,7 +42,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
     public String createOrder(OrderCreateDTO orderDTO) {
         // 生成订单号
         String orderNo = OrderNoUtils.generate("PC");
-        
+
         // 创建订单主表
         Orders order = new Orders();
         BeanUtils.copyProperties(orderDTO, order);
@@ -56,7 +57,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
             item.setOrderId(order.getId());
             return item;
         }).collect(Collectors.toList());
-        
+
         orderItemService.saveBatch(items);
 
         return orderNo;

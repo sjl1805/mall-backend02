@@ -1,8 +1,8 @@
 package com.example.model.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 @Data
 @Schema(description = "推荐商品数据传输对象")
@@ -15,7 +15,8 @@ public class RecommendProductDTO {
     private Long productId;
 
     @NotNull(message = "推荐类型不能为空")
-    @Min(1) @Max(5)
+    @Min(1)
+    @Max(5)
     @Schema(description = "推荐类型（1-首页推荐 2-猜你喜欢 3-热销推荐）", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer type;
 

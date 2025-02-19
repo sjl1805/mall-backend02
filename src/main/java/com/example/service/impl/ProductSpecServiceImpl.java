@@ -1,27 +1,29 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.ProductSpecService;
-import com.example.model.entity.ProductSpec;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.ProductSpecMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.model.dto.product.ProductSpecDTO;
+import com.example.model.entity.ProductSpec;
+import com.example.service.ProductSpecService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
-import com.example.model.dto.product.ProductSpecDTO;
-import com.example.common.ResultCode;
-import com.example.exception.BusinessException;
+
 /**
-* @author 31815
-* @description 针对表【product_spec(商品规格表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:05
-*/
+ * @author 31815
+ * @description 针对表【product_spec(商品规格表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:05
+ */
 @Service
 @CacheConfig(cacheNames = "productSpecService")
 public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper, ProductSpec>
-    implements ProductSpecService {
+        implements ProductSpecService {
 
     //private static final Logger logger = LoggerFactory.getLogger(ProductSpecServiceImpl.class);
 
@@ -34,7 +36,7 @@ public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper, Produ
             spec.setProductId(productId);
             validateSpec(spec);
         });
-        
+
         return baseMapper.batchInsert(specs) > 0;
     }
 

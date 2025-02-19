@@ -1,32 +1,33 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.service.FavoriteFolderService;
-import com.example.model.entity.FavoriteFolder;
+import com.example.common.ResultCode;
+import com.example.exception.BusinessException;
 import com.example.mapper.FavoriteFolderMapper;
-import org.springframework.stereotype.Service;
+import com.example.model.dto.favorite.FavoriteFolderDTO;
+import com.example.model.dto.favorite.FavoriteFolderPageDTO;
+import com.example.model.entity.FavoriteFolder;
+import com.example.service.FavoriteFolderService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.model.dto.favorite.FavoriteFolderDTO;
-import com.example.model.dto.favorite.FavoriteFolderPageDTO;
-import com.example.exception.BusinessException;
-import com.example.common.ResultCode;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
-* @author 31815
-* @description 针对表【favorite_folder(收藏夹表)】的数据库操作Service实现
-* @createDate 2025-02-18 23:44:24
-*/
+ * @author 31815
+ * @description 针对表【favorite_folder(收藏夹表)】的数据库操作Service实现
+ * @createDate 2025-02-18 23:44:24
+ */
 @Service
 @CacheConfig(cacheNames = "favoriteService")
 public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper, FavoriteFolder>
-    implements FavoriteFolderService {
+        implements FavoriteFolderService {
 
     //private static final Logger logger = LoggerFactory.getLogger(FavoriteFolderServiceImpl.class);
 

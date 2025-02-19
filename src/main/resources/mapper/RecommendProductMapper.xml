@@ -5,17 +5,17 @@
 <mapper namespace="com.example.mapper.RecommendProductMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.RecommendProduct">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="type" column="type" jdbcType="TINYINT"/>
-            <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
-            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
-            <result property="algorithmVersion" column="algorithm_version" jdbcType="VARCHAR"/>
-            <result property="recommendReason" column="recommend_reason" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="algorithmVersion" column="algorithm_version" jdbcType="VARCHAR"/>
+        <result property="recommendReason" column="recommend_reason" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -46,8 +46,8 @@
 
     <!-- 分页查询推荐商品 -->
     <select id="selectRecommendPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         <where>
             <if test="query.type != null">
@@ -79,27 +79,26 @@
 
     <!-- 根据类型和状态查询 -->
     <select id="selectByTypeAndStatus" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE type = #{type}
-          AND status = #{status}
+        AND status = #{status}
         ORDER BY sort ASC
     </select>
 
     <!-- 更新推荐状态 -->
     <update id="updateRecommendStatus">
         UPDATE recommend_product
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{id}
     </update>
 
     <!-- 统计有效推荐 -->
     <select id="countActiveRecommends" resultType="map">
-        SELECT 
-            type,
-            COUNT(*) AS count
+        SELECT type,
+               COUNT(*) AS count
         FROM recommend_product
         WHERE status = 1
           AND start_time &lt;= NOW()
@@ -109,15 +108,15 @@
 
     <!-- 检查时间冲突 -->
     <select id="checkTimeConflict" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM recommend_product
         WHERE product_id = #{productId}
-          AND (
-            (start_time BETWEEN #{startTime} AND #{endTime})
-            OR (end_time BETWEEN #{startTime} AND #{endTime})
-            OR (#{startTime} BETWEEN start_time AND end_time)
-            OR (#{endTime} BETWEEN start_time AND end_time)
-          )
+        AND (
+        (start_time BETWEEN #{startTime} AND #{endTime})
+        OR (end_time BETWEEN #{startTime} AND #{endTime})
+        OR (#{startTime} BETWEEN start_time AND end_time)
+        OR (#{endTime} BETWEEN start_time AND end_time)
+        )
         <if test="excludeId != null">
             AND id != #{excludeId}
         </if>
@@ -125,8 +124,8 @@
 
     <!-- 根据算法版本查询 -->
     <select id="selectByAlgorithmVersion" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE algorithm_version = #{version}
         ORDER BY create_time DESC
@@ -135,15 +134,15 @@
     <!-- 新增批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO recommend_product (
-            product_id, type, sort, 
-            status, start_time, end_time,
-            algorithm_version, recommend_reason
+        product_id, type, sort,
+        status, start_time, end_time,
+        algorithm_version, recommend_reason
         ) VALUES
         <foreach collection="recommends" item="item" separator=",">
             (
-                #{item.productId}, #{item.type}, #{item.sort},
-                #{item.status}, #{item.startTime}, #{item.endTime},
-                #{item.algorithmVersion}, #{item.recommendReason}
+            #{item.productId}, #{item.type}, #{item.sort},
+            #{item.status}, #{item.startTime}, #{item.endTime},
+            #{item.algorithmVersion}, #{item.recommendReason}
             )
         </foreach>
     </insert>

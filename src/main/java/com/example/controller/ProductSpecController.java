@@ -35,9 +35,9 @@ public class ProductSpecController {
     public Result<Boolean> createSpecs(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "规格列表",
-                required = true,
-                content = @Content(schema = @Schema(implementation = ProductSpecDTO.class))
+                    description = "规格列表",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ProductSpecDTO.class))
             )
             @RequestBody @NotEmpty List<@Valid ProductSpecDTO> specs) {
         return Result.success(productSpecService.batchCreateSpecs(productId, specs));
@@ -57,7 +57,7 @@ public class ProductSpecController {
     public Result<Boolean> updateSpecValues(
             @Parameter(description = "商品ID", example = "1") @PathVariable @Min(1) Long productId,
             @Parameter(description = "规格ID", example = "1") @PathVariable @Min(1) Long specId,
-            @Parameter(description = "新的规格值（逗号分隔）", example = "黑色,白色") 
+            @Parameter(description = "新的规格值（逗号分隔）", example = "黑色,白色")
             @RequestParam @NotNull String specValues) {
         return Result.success(productSpecService.updateSpecValues(productId, specId, specValues));
     }

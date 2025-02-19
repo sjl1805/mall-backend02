@@ -2,6 +2,7 @@ package com.example.model.dto.favorite;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
 import java.util.Date;
 
 @Data
@@ -13,8 +14,8 @@ public class FavoriteFolderPageDTO {
     @Schema(description = "收藏夹名称（模糊查询）", example = "我的收藏")
     private String name;
 
-    @Schema(description = "公开状态：0-私密 1-公开", 
-           allowableValues = {"0", "1"}, example = "1")
+    @Schema(description = "公开状态：0-私密 1-公开",
+            allowableValues = {"0", "1"}, example = "1")
     private Integer isPublic;
 
     @Schema(description = "创建时间起始", example = "2023-01-01")
@@ -29,13 +30,13 @@ public class FavoriteFolderPageDTO {
     @Schema(description = "每页数量", example = "10", defaultValue = "10")
     private Integer size = 10;
 
-    @Schema(description = "排序字段", 
-           allowableValues = {"sort", "createTime", "itemCount"}, 
-           example = "sort")
+    @Schema(description = "排序字段",
+            allowableValues = {"sort", "createTime", "itemCount"},
+            example = "sort")
     private String sortField;
 
-    @Schema(description = "排序方式", 
-           allowableValues = {"ASC", "DESC"}, 
-           example = "ASC")
+    @Schema(description = "排序方式",
+            allowableValues = {"ASC", "DESC"},
+            example = "ASC")
     private String sortOrder;
 } 

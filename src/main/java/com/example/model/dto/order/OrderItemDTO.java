@@ -1,8 +1,8 @@
 package com.example.model.dto.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -44,7 +44,8 @@ public class OrderItemDTO {
     @Schema(description = "商品总价", requiredMode = Schema.RequiredMode.REQUIRED, example = "3999.98")
     private BigDecimal totalAmount;
 
-    @Min(0) @Max(1)
+    @Min(0)
+    @Max(1)
     @Schema(description = "评价状态：0-未评价 1-已评价", defaultValue = "0", example = "1")
     private Integer commentStatus = 0;
 } 

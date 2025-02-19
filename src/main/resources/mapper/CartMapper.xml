@@ -5,13 +5,13 @@
 <mapper namespace="com.example.mapper.CartMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Cart">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="quantity" column="quantity" jdbcType="INTEGER"/>
-            <result property="checked" column="checked" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="checked" column="checked" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -24,9 +24,9 @@
     <update id="batchUpdateChecked">
         UPDATE cart
         SET checked = #{checked},
-            update_time = NOW()
+        update_time = NOW()
         WHERE user_id = #{userId}
-          AND product_id IN
+        AND product_id IN
         <foreach collection="productIds" item="productId" open="(" separator="," close=")">
             #{productId}
         </foreach>
@@ -34,7 +34,8 @@
 
     <!-- 清空选中商品 -->
     <delete id="clearCheckedItems">
-        DELETE FROM cart
+        DELETE
+        FROM cart
         WHERE user_id = #{userId}
           AND checked = 1
     </delete>
@@ -42,7 +43,7 @@
     <!-- 新增数量调整 -->
     <update id="adjustQuantity">
         UPDATE cart
-        SET quantity = quantity + #{delta},
+        SET quantity    = quantity + #{delta},
             update_time = NOW()
         WHERE id = #{cartId}
           AND user_id = #{userId}
@@ -50,8 +51,8 @@
 
     <!-- 优化分页查询 -->
     <select id="selectCartPage" resultMap="BaseResultMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM cart
         <where>
             <if test="query.userId != null">
@@ -70,7 +71,7 @@
                 AND create_time &lt;= #{query.createTimeEnd}
             </if>
         </where>
-        ORDER BY 
+        ORDER BY
         <choose>
             <when test="query.sortField != null and query.sortField != ''">
                 ${query.sortField} ${query.sortOrder}
@@ -90,7 +91,7 @@
 
     <!-- 检查购物车商品是否存在 -->
     <select id="checkCartItemExists" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM cart
         WHERE user_id = #{userId}
           AND product_id = #{productId}
@@ -98,7 +99,7 @@
 
     <delete id="batchDelete">
         DELETE FROM cart
-        WHERE id IN 
+        WHERE id IN
         <foreach collection="cartIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
