@@ -16,4 +16,5 @@ public interface UserAddressService extends IService<UserAddress> {
     boolean updateAddress(Long userId, UserAddress address);
     boolean deleteAddress(Long userId, Long addressId);
     List<UserAddress> listUserAddresses(Long userId);
+    boolean validateAddress(Long addressId);
 }

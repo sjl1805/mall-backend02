@@ -36,9 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain chain) throws IOException, ServletException {
-        // 直接放行登录和注册接口
         String path = request.getServletPath();
-        if ("/api/users/login".equals(path) || "/api/users/register".equals(path)) {
+        if ("/users/login".equals(path) || "/users/register".equals(path)) {
             chain.doFilter(request, response);
             return;
         }

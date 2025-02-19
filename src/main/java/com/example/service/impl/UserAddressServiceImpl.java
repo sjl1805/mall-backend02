@@ -97,12 +97,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
                 .count();
     }
 
-    private void checkAddressLimit(Long userId) {
-        Long count = countUserAddresses(userId);
-        if (count >= 20) { // 最多允许20个地址
-            throw new BusinessException(ResultCode.ADDRESS_LIMIT_EXCEEDED);
-        }
-    }
+    // private void checkAddressLimit(Long userId) {
+    //     Long count = countUserAddresses(userId);
+    //     if (count >= 20) { // 最多允许20个地址
+    //         throw new BusinessException(ResultCode.ADDRESS_LIMIT_EXCEEDED);
+    //     }
+    // }
 
     public boolean validateAddress(Long addressId) {
         return lambdaQuery()

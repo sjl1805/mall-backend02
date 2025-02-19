@@ -16,11 +16,13 @@ public enum ResultCode {
     
     // 业务状态码（1000-1999）
     USER_NOT_EXIST(1001, "User Not Exist", "用户不存在"),
-    PRODUCT_OFF_SHELF(1002, "Product Off Shelf", "商品已下架"),
-    STOCK_NOT_ENOUGH(1003, "Insufficient Stock", "库存不足"),
+    INVALID_PHONE_FORMAT(1002, "Invalid Phone Format", "手机号格式不正确"),
+    PRODUCT_OFF_SHELF(1003, "Product Off Shelf", "商品已下架"),
+    STOCK_NOT_ENOUGH(1004, "Insufficient Stock", "库存不足"),
     REPEAT_OPERATION(1006, "Repeat Operation", "重复操作"),
     USER_EXIST(1007, "User Exist", "用户已存在"),
-    USER_NAME_OR_PASSWORD_ERROR(1008, "User Name Or Password Error", "用户名或密码错误"),
+    USER_DISABLED(1008, "User Disabled", "用户已禁用"),
+    USER_NAME_OR_PASSWORD_ERROR(1009, "User Name Or Password Error", "用户名或密码错误"),
     
     // 新增用户相关错误码
     USER_NOT_FOUND(1001, "用户不存在"),

@@ -42,10 +42,12 @@ public class SecurityConfig {
         return http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/api/users/login",
-                    "/api/users/register",
-                    "/v3/api-docs/**",  // 添加Swagger白名单
-                    "/swagger-ui/**"
+                    "/users/login",
+                    "/users/register",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/webjars/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

@@ -59,32 +59,32 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      */
     @Override
     public Map<String, Object> login(UserLoginDTO loginDTO) {
-        // 查询有效用户（包含状态检查）
         Users user = baseMapper.selectByUsernameOrPhone(loginDTO.getAccount());
-        if (user == null) {
+        if (user == null || user.getStatus() == 0) {
             throw new BusinessException(ResultCode.USER_NOT_FOUND);
         }
         
-        // 密码验证（使用BCrypt加密校验）
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new BusinessException(ResultCode.PASSWORD_ERROR);
         }
 
+        // 过滤敏感信息
+        Map<String, Object> userInfo = new LinkedHashMap<>();
+        userInfo.put("id", user.getId());
+        userInfo.put("username", user.getUsername());
+        userInfo.put("avatar", user.getAvatar());
+        userInfo.put("role", getRoleName(user.getRole()));
 
-
-        // 生成访问令牌
-        String token = jwtUtils.generateToken(user.getUsername(),user.getRole());
-        System.out.println("token:\t"+token);
+        String token = jwtUtils.generateToken(user.getUsername(), user.getRole());
         
-        // 返回结果（过滤敏感信息）
         return Map.of(
-            "userInfo", user,
+            "userInfo", userInfo,
             "token", token
         );
     }
 
     @Override
-    public Boolean logout(Long userId) {
+    public Boolean logout() {
         // 示例实现：记录登出日志或使token失效
         return true; // 根据实际业务逻辑返回操作结果
     }
@@ -99,8 +99,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      * 4. 返回注册结果
      */
     @Override
-    @CacheEvict(allEntries = true)
+    @CacheEvict(cacheNames = {"userStats", "userDetails"}, allEntries = true)
     public Map<String, Object> registerUser(UserRegisterDTO registerDTO) {
+        // 增加手机号格式校验
+        if (!registerDTO.getPhone().matches("^1[3-9]\\d{9}$")) {
+            throw new BusinessException(ResultCode.INVALID_PHONE_FORMAT);
+        }
+        
         // 校验用户名唯一性
         if (checkUsernameExists(registerDTO.getUsername())) {
             throw new BusinessException(ResultCode.USERNAME_EXISTS);
@@ -177,8 +182,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     @Override
     public UserDetails loadUserByUsername(String username) {
         Users user = baseMapper.selectByUsernameOrPhone(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("用户不存在");
+        if (user == null || user.getStatus() == 0) {
+            throw new UsernameNotFoundException("用户不存在或已被禁用");
         }
         return User.builder()
                 .username(user.getUsername())

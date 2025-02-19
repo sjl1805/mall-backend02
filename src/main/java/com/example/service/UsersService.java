@@ -24,17 +24,17 @@ public interface UsersService extends IService<Users> {
     IPage<Users> listUsersByPage(UserPageDTO queryDTO);
 
     /**
-     * 用户登录认证
-     * @param loginDTO 登录传输对象（包含账号和密码）
-     * @return 包含用户信息和访问令牌的Map
-     * @throws BusinessException 当认证失败时抛出
+     * 用户登录（增强版）
+     * @param loginDTO 登录参数
+     * @return 包含过滤后的用户信息和访问令牌
      */
-    Map<String, Object> login(UserLoginDTO loginDTO) throws BusinessException;
+    Map<String, Object> login(UserLoginDTO loginDTO);
 
-    /*
-     * 登出
+    /**
+     * 用户登出（无参版本）
+     * @return 操作结果
      */
-    Boolean  logout (Long userId);
+    Boolean logout();
 
     /**
      * 用户注册
