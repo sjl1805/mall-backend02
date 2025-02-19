@@ -3,7 +3,8 @@ CREATE DATABASE
 IF
 	NOT EXISTS mall CHARACTER 
 	SET utf8mb4;
-USE mall;-- ===============================
+USE mall;
+-- ===============================
 -- 第一层：基础表（无外键依赖）
 -- ===============================
 -- 1. 用户表
@@ -53,14 +54,14 @@ CREATE TABLE products (
 	`images` JSON COMMENT '商品图片JSON数组',
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（带时区）',
 	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间（带时区）',
-	`status` TINYINT COMMENT '商品状态：0-下架 1-上架',
+	`status` TINYINT DEFAULT 1 COMMENT '商品状态：0-下架 1-上架',
 	PRIMARY KEY ( `id` ),
 	INDEX `idx_products_search` ( `name`, `category_id`, `price` ),
 	FOREIGN KEY ( `category_id` ) REFERENCES category ( `id` ) 
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品表';-- 添加商品表索引
-ALTER TABLE products ADD INDEX idx_category_status ( category_id, STATUS );
-ALTER TABLE products ADD INDEX idx_price ( price );
-ALTER TABLE products ADD FULLTEXT INDEX idx_product_search ( NAME, description );-- 4. 优惠券表
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品表';-- 修改商品表索引顺序
+ALTER TABLE products 
+    DROP INDEX idx_products_search,
+    ADD INDEX idx_products_search (category_id, name, price);-- 4. 优惠券表
 CREATE TABLE `coupon` (
 	`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '优惠券ID',
 	`name` VARCHAR ( 32 ) NOT NULL COMMENT '优惠券名称',
@@ -80,7 +81,7 @@ CREATE TABLE user_address (
 	`id` BIGINT NOT NULL AUTO_INCREMENT,
 	`user_id` BIGINT NOT NULL,
 	`is_default` TINYINT COMMENT '默认地址状态：0-非默认 1-默认',
-	`is_default_true` TINYINT GENERATED ALWAYS AS ( CASE WHEN is_default = 1 THEN 1 END ) VIRTUAL,
+	`is_default_true` TINYINT GENERATED ALWAYS AS (IF(is_default = 1, 1, NULL)) VIRTUAL,
 	`receiver_name` VARCHAR ( 32 ) NOT NULL,
 	`receiver_phone` VARCHAR ( 20 ) NOT NULL,
 	`province` VARCHAR ( 50 ) NOT NULL,
@@ -91,16 +92,14 @@ CREATE TABLE user_address (
 	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间（带时区）',
 	PRIMARY KEY ( `id` ),
 	FOREIGN KEY ( `user_id` ) REFERENCES users ( `id` ),
-	UNIQUE INDEX `idx_user_default` ( `user_id`, `is_default_true` ),
+	UNIQUE INDEX `uk_user_default` ( `user_id`, `is_default_true` ),
 	INDEX `idx_receiver_name` ( `receiver_name` ),
 	INDEX `idx_receiver_phone` ( `receiver_phone` ),
 	INDEX `idx_province` ( `province` ),
 	INDEX `idx_city` ( `city` ),
 	INDEX `idx_district` ( `district` ),
 	INDEX `idx_detail_address` ( `detail_address` ) 
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户收货地址表';-- 添加地址表索引
-ALTER TABLE user_address ADD INDEX idx_user_default ( user_id, is_default );
-ALTER TABLE user_address ADD INDEX idx_phone ( receiver_phone );-- 6. 收藏夹表
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户收货地址表';-- 6. 收藏夹表
 CREATE TABLE `favorite_folder` (
 	`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '收藏夹ID',
 	`user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -139,7 +138,7 @@ CREATE TABLE orders (
 	`user_id` BIGINT NOT NULL COMMENT '用户ID',
 	`total_amount` DECIMAL ( 10, 2 ) NOT NULL COMMENT '订单总金额',
 	`pay_amount` DECIMAL ( 10, 2 ) NOT NULL COMMENT '实付金额',
-	`status` TINYINT COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+	`status` TINYINT COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消 5-退款中',
 	`receiver_name` VARCHAR ( 32 ) NOT NULL COMMENT '收货人姓名',
 	`receiver_phone` VARCHAR ( 11 ) NOT NULL COMMENT '收货人电话',
 	`receiver_address` VARCHAR ( 255 ) NOT NULL COMMENT '收货地址',
@@ -213,8 +212,7 @@ CREATE TABLE `product_spec` (
 	FOREIGN KEY ( `product_id` ) REFERENCES products ( `id` ) ON DELETE CASCADE 
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品规格表';-- 添加商品规格表索引
 ALTER TABLE product_spec ADD INDEX idx_product_spec ( product_id, spec_name );
-ALTER TABLE product_spec ADD INDEX idx_spec_values (
-spec_values ( 64 ));-- 12. 商品SKU表（带默认主图）
+ALTER TABLE product_spec ADD INDEX idx_spec_name ( spec_name );-- 12. 商品SKU表（带默认主图）
 CREATE TABLE `product_sku` (
 	`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'SKU ID',
 	`product_id` BIGINT NOT NULL COMMENT '商品ID',
@@ -230,11 +228,12 @@ CREATE TABLE `product_sku` (
 	INDEX `idx_product_id` ( `product_id` ),
 	INDEX `idx_status_price` ( `status`, `price` ),
 	INDEX `idx_sales` ( `sales` ),
-	INDEX `idx_price_stock` ( `price`, `stock` ),
+	INDEX `idx_price_stock_status` ( `price`, `stock`, `status` ),
 	FOREIGN KEY ( `product_id` ) REFERENCES products ( `id` ) ON DELETE CASCADE 
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品SKU表';-- 添加SKU表索引
-ALTER TABLE product_sku ADD INDEX idx_product_status ( product_id, STATUS );
-ALTER TABLE product_sku ADD INDEX idx_price_stock ( price, stock );-- 13. 商品评价表（依赖订单、用户、商品）
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品SKU表';-- 修改商品SKU表索引定义
+ALTER TABLE product_sku 
+    DROP INDEX idx_price_stock_status,
+    ADD INDEX idx_price_stock_status (price, stock, status);-- 13. 商品评价表（依赖订单、用户、商品）
 CREATE TABLE `product_review` (
 	`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '评价ID',
 	`order_id` BIGINT NOT NULL COMMENT '订单ID',
@@ -307,7 +306,7 @@ CREATE TABLE user_behavior (
 	FOREIGN KEY ( `product_id` ) REFERENCES products ( `id` ) 
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户行为记录表';-- 在用户行为表创建语句后添加索引
 ALTER TABLE user_behavior ADD INDEX idx_user_behavior_type ( user_id, behavior_type );
-ALTER TABLE user_behavior ADD INDEX idx_behavior_time ( behavior_time );
+ALTER TABLE user_behavior ADD INDEX idx_behavior_type_time ( behavior_type, behavior_time );
 ALTER TABLE user_behavior ADD INDEX idx_product_behavior ( product_id, behavior_type );-- ===============================
 -- 测试数据（按依赖顺序插入）
 -- ===============================
