@@ -9,6 +9,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商品分类表
@@ -58,4 +59,9 @@ public class Category implements Serializable {
      * 更新时间（带时区）
      */
     private LocalDateTime updateTime;
+    /**
+     * 子分类集合
+     */
+    @TableField(exist = false)
+    private List<Category> children;
 }

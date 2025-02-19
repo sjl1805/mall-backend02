@@ -66,9 +66,11 @@ public interface CategoryMapper extends BaseMapper<Category> {
     /**
      * 查询分类树形结构
      *
+     * @param parentId 父分类ID
      * @return 树形结构分类列表
      */
-    List<Category> selectCategoryTree();
+    @Select("SELECT * FROM category WHERE parent_id = #{parentId} ORDER BY sort DESC")
+    List<Category> selectCategoryTree(@Param("parentId") Long parentId);
 }
 
 

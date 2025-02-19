@@ -19,8 +19,8 @@
 
     <!-- 树形结构映射（包含子分类集合） -->
     <resultMap id="TreeResultMap" type="com.example.model.entity.Category" extends="BaseResultMap">
-        <!-- 递归查询子分类，通过selectChildren方法实现 -->
-        <collection property="children" column="id" select="selectChildren"/>
+        <collection property="children" ofType="com.example.model.entity.Category" 
+                    column="{parentId=id}" select="selectCategoryTree"/>
     </resultMap>
 
     <!-- 通用查询字段（避免使用*） -->
@@ -115,7 +115,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM category
-        WHERE parent_id = 0  <!-- 从根分类开始查询 -->
+        WHERE parent_id = #{parentId}
         ORDER BY sort DESC
     </select>
 

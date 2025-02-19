@@ -10,6 +10,8 @@ import com.example.model.dto.category.CategoryDTO;
 import com.example.model.dto.category.CategoryPageDTO;
 import com.example.model.entity.Category;
 import com.example.service.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         implements CategoryService {
 
-    //private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     /**
      * 分页查询分类（带树形结构）
@@ -152,9 +154,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      * @implNote 使用Redis缓存树形结构数据，有效降低数据库压力
      */
     @Override
-    @Cacheable(key = "'tree'")
+    @Cacheable(key = "'tree'", unless = "#result == null || #result.isEmpty()")
     public List<Category> getCategoryTree() {
-        return baseMapper.selectCategoryTree();
+        log.debug("Building category tree from parentId: 0");
+        List<Category> tree = baseMapper.selectCategoryTree(0L);
+        log.debug("Category tree nodes count: {}", tree.size());
+        return tree;
     }
 
     /**
