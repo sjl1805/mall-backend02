@@ -24,8 +24,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 商品收藏服务实现类
+ * 
  * @author 31815
- * @description 针对表【product_favorite(商品收藏表)】的数据库操作Service实现
+ * @description 实现商品收藏核心业务逻辑，包含：
+ *              1. 收藏操作的事务管理
+ *              2. 收藏夹计数同步
+ *              3. 批量操作优化
+ *              4. 缓存策略应用
  * @createDate 2025-02-18 23:44:15
  */
 @Service
@@ -38,16 +44,25 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     @Autowired
     private FavoriteFolderService folderService;
 
+    /**
+     * 添加收藏（完整校验）
+     * @param userId 用户ID
+     * @param favoriteDTO 收藏信息
+     * @return 操作结果
+     * @implNote 业务逻辑：
+     *           1. 验证收藏夹归属
+     *           2. 检查重复收藏
+     *           3. 更新收藏夹计数
+     *           4. 清除用户缓存
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'user:' + #userId")
     public boolean addFavorite(Long userId, ProductFavoriteDTO favoriteDTO) {
-        // 校验收藏夹归属
         if (!folderService.checkFolderOwnership(userId, favoriteDTO.getFolderId())) {
             throw new BusinessException(ResultCode.FOLDER_ACCESS_DENIED);
         }
 
-        // 检查是否已收藏
         if (baseMapper.checkFavoriteExists(userId, favoriteDTO.getProductId()) > 0) {
             throw new BusinessException(ResultCode.FAVORITE_ALREADY_EXISTS);
         }
@@ -58,12 +73,21 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
         boolean success = save(favorite);
         if (success) {
-            // 更新收藏夹计数
             folderService.updateItemCount(userId, favoriteDTO.getFolderId(), 1);
         }
         return success;
     }
 
+    /**
+     * 移除收藏（级联操作）
+     * @param userId 用户ID
+     * @param favoriteId 收藏记录ID
+     * @return 操作结果
+     * @implNote 执行逻辑：
+     *           1. 验证收藏记录归属
+     *           2. 删除收藏记录
+     *           3. 更新收藏夹计数
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'user:' + #userId")
@@ -84,6 +108,16 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         return success;
     }
 
+    /**
+     * 分页查询收藏（缓存优化）
+     * @param userId 用户ID
+     * @param folderId 收藏夹ID
+     * @param queryDTO 分页参数
+     * @return 分页结果
+     * @implNote 缓存策略：
+     *           1. 缓存键：user:{userId}:folder:{folderId}
+     *           2. 缓存时间：10分钟
+     */
     @Override
     @Cacheable(key = "'user:' + #userId + ':folder:' + #folderId")
     public IPage<ProductFavorite> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO) {
@@ -93,16 +127,26 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         return baseMapper.selectFavoritePage(page, queryDTO);
     }
 
+    /**
+     * 批量转移收藏夹（事务管理）
+     * @param userId 用户ID
+     * @param favoriteIds 收藏记录ID列表
+     * @param targetFolderId 目标收藏夹ID
+     * @return 转移结果
+     * @implNote 执行步骤：
+     *           1. 验证目标收藏夹权限
+     *           2. 统计原收藏夹计数
+     *           3. 执行批量转移
+     *           4. 同步更新收藏夹计数
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'user:' + #userId")
     public boolean moveToFolder(Long userId, List<Long> favoriteIds, Long targetFolderId) {
-        // 校验目标收藏夹归属
         if (!folderService.checkFolderOwnership(userId, targetFolderId)) {
             throw new BusinessException(ResultCode.FOLDER_ACCESS_DENIED);
         }
 
-        // 获取原收藏夹ID用于更新计数
         List<ProductFavorite> favorites = listByIds(favoriteIds);
         Map<Long, Integer> folderCountMap = favorites.stream()
                 .filter(f -> f.getUserId().equals(userId))
@@ -111,10 +155,8 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
                         Collectors.summingInt(e -> 1)
                 ));
 
-        // 执行转移
         int affected = baseMapper.moveToFolder(favoriteIds, targetFolderId);
 
-        // 更新收藏夹计数
         folderCountMap.forEach((folderId, count) ->
                 folderService.updateItemCount(userId, folderId, -count)
         );
@@ -123,12 +165,25 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         return affected > 0;
     }
 
+    /**
+     * 获取用户收藏总数（独立缓存）
+     * @param userId 用户ID
+     * @return 收藏总数
+     * @implNote 使用独立缓存键避免全表扫描
+     */
     @Override
     @Cacheable(key = "'user:' + #userId + ':count'")
     public int getUserFavoriteCount(Long userId) {
         return baseMapper.countUserFavorites(userId);
     }
 
+    /**
+     * 检查收藏状态（快速查询）
+     * @param userId 用户ID
+     * @param productId 商品ID
+     * @return 是否已收藏
+     * @implNote 使用数据库存在性查询优化性能
+     */
     @Override
     public boolean checkFavoriteExists(Long userId, Long productId) {
         return baseMapper.checkFavoriteExists(userId, productId) > 0;

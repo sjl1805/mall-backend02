@@ -29,8 +29,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 用户服务实现类
+ * 
  * @author 31815
- * @description 针对表【users(用户表)】的数据库操作Service实现
+ * @description 实现用户核心业务逻辑，包含：
+ *              1. 安全认证实现
+ *              2. 缓存策略优化
+ *              3. 状态管理控制
  * @createDate 2025-02-18 23:43:44
  */
 @Service
@@ -42,6 +47,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
+    /**
+     * 分页查询用户（缓存优化）
+     * @param queryDTO 分页参数
+     * @return 分页结果
+     * @implNote 缓存策略：
+     *           1. 缓存键：page:{queryDTO.hashCode}
+     *           2. 缓存时间：15分钟
+     */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()", unless = "#result == null")
     public IPage<Users> listUsersByPage(UserPageDTO queryDTO) {
@@ -51,9 +64,12 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
     /**
      * 用户登录实现
-     * 1. 根据账号查询有效用户
-     * 2. 密码校验
-     * 3. 生成JWT令牌
+     * @param loginDTO 登录参数
+     * @return 用户信息和令牌
+     * @implNote 执行逻辑：
+     *           1. 查询有效用户
+     *           2. 密码校验
+     *           3. 生成JWT令牌
      */
     @Override
     public Map<String, Object> login(UserLoginDTO loginDTO) {
@@ -80,18 +96,15 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         );
     }
 
-    @Override
-    public Boolean logout() {
-        // 示例实现：记录登出日志或使token失效
-        return true; // 根据实际业务逻辑返回操作结果
-    }
-
     /**
      * 用户注册实现
-     * 1. 校验用户名唯一性
-     * 2. 密码加密处理
-     * 3. 保存用户信息
-     * 4. 返回注册结果
+     * @param registerDTO 注册信息
+     * @return 注册结果
+     * @implNote 业务逻辑：
+     *           1. 校验手机号格式
+     *           2. 检查用户名唯一性
+     *           3. 密码加密存储
+     *           4. 清除统计缓存
      */
     @Override
     @CacheEvict(cacheNames = {"userStats"}, allEntries = true)
@@ -124,6 +137,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         );
     }
 
+    /**
+     * 更新用户状态（带缓存清除）
+     * @param userId 用户ID
+     * @param status 新状态
+     * @return 操作结果
+     * @implNote 清除用户缓存和统计缓存
+     */
     @Override
     @Caching(evict = {
             @CacheEvict(key = "#userId"),
@@ -137,8 +157,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     /**
-     * 获取用户统计信息
-     * 包含：总用户数、各状态用户数、角色分布
+     * 获取用户统计信息（缓存优化）
+     * @return 统计结果
+     * @implNote 缓存策略：
+     *           1. 缓存键：stats
+     *           2. 缓存时间：2小时
      */
     @Override
     @Cacheable(key = "'stats'", cacheNames = "userStats", unless = "#result == null")
@@ -155,12 +178,26 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         return stats;
     }
 
+    /**
+     * 根据ID获取用户（缓存优化）
+     * @param id 用户ID
+     * @return 用户信息
+     * @implNote 缓存策略：
+     *           1. 缓存键：用户ID
+     *           2. 缓存时间：30分钟
+     */
     @Override
     @Cacheable(key = "#id", unless = "#result == null")
     public Users getById(Long id) {
         return super.getById(id);
     }
 
+    /**
+     * 更新用户（带缓存清除）
+     * @param user 用户信息
+     * @return 操作结果
+     * @implNote 清除用户缓存和统计缓存
+     */
     @Override
     @Caching(evict = {
             @CacheEvict(key = "#user.id"),
@@ -170,6 +207,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         return super.updateById(user);
     }
 
+    /**
+     * Spring Security用户加载实现
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = baseMapper.selectByUsernameOrPhone(username);
@@ -184,7 +224,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     /**
-     * 检查用户名是否存在（缓存优化版）
+     * 检查用户名唯一性（缓存优化）
      */
     private boolean checkUsernameExists(String username) {
         return lambdaQuery()
@@ -192,12 +232,21 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
                 .exists();
     }
 
+    /**
+     * 角色代码转角色名称
+     */
     private String getRoleName(Integer roleCode) {
         return switch (roleCode) {
             case 9 -> "ADMIN";
             case 2 -> "MERCHANT";
             default -> "USER";
         };
+    }
+
+    @Override
+    public Boolean logout() {
+        // 实际业务中需实现token失效逻辑
+        return true;
     }
 }
 

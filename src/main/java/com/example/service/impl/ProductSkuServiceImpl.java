@@ -15,8 +15,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 商品SKU服务实现类
+ * 
  * @author 31815
- * @description 针对表【product_sku(商品SKU表)】的数据库操作Service实现
+ * @description 实现商品SKU核心业务逻辑，包含：
+ *              1. 批量操作的原子性保证
+ *              2. 库存管理的安全校验
+ *              3. 缓存策略优化
  * @createDate 2025-02-18 23:44:08
  */
 @Service
@@ -26,25 +31,48 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     //private static final Logger logger = LoggerFactory.getLogger(ProductSkuServiceImpl.class);
 
+    /**
+     * 批量创建SKU（完整校验）
+     * @param productId 商品ID
+     * @param skus SKU列表
+     * @return 操作结果
+     * @implNote 业务逻辑：
+     *           1. 校验商品状态
+     *           2. 设置商品ID
+     *           3. 批量插入数据
+     *           4. 清除商品缓存
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'product:' + #productId")
     public boolean batchCreateSkus(Long productId, List<ProductSku> skus) {
-        // 校验商品状态
         validateProductStatus(productId);
-
-        // 设置商品ID
         skus.forEach(sku -> sku.setProductId(productId));
-
         return baseMapper.batchInsert(skus) > 0;
     }
 
+    /**
+     * 获取SKU列表（缓存优化）
+     * @param productId 商品ID
+     * @return SKU列表
+     * @implNote 缓存策略：
+     *           1. 缓存键：product:{productId}
+     *           2. 缓存时间：30分钟
+     */
     @Override
     @Cacheable(key = "'product:' + #productId")
     public List<ProductSku> getSkusByProductId(Long productId) {
         return baseMapper.selectByProductId(productId);
     }
 
+    /**
+     * 调整库存（安全操作）
+     * @param productId 商品ID
+     * @param skuId SKU ID
+     * @param quantity 调整数量
+     * @return 操作结果
+     * @implNote 使用数据库行锁保证原子性
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'product:' + #productId")
@@ -52,6 +80,14 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         return baseMapper.updateStockSafely(productId, skuId, quantity) > 0;
     }
 
+    /**
+     * 增加销量（原子操作）
+     * @param productId 商品ID
+     * @param skuId SKU ID
+     * @param quantity 增加数量
+     * @return 操作结果
+     * @implNote 使用乐观锁防止超卖
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'product:' + #productId")
@@ -59,6 +95,14 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         return baseMapper.increaseSales(skuId, quantity) > 0;
     }
 
+    /**
+     * 获取状态统计（缓存优化）
+     * @param productId 商品ID
+     * @return 统计结果
+     * @implNote 缓存策略：
+     *           1. 缓存键：stats:{productId}
+     *           2. 缓存时间：1小时
+     */
     @Override
     @Cacheable(key = "'stats:' + #productId")
     public Map<Integer, Long> getSkuStatusStats(Long productId) {
@@ -69,6 +113,14 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
                 ));
     }
 
+    /**
+     * 更新主图（批量操作）
+     * @param productId 商品ID
+     * @param oldImage 原图片
+     * @param newImage 新图片
+     * @return 操作结果
+     * @implNote 用于商品主图变更时的级联更新
+     */
     @Override
     @Transactional
     @CacheEvict(key = "'product:' + #productId")
