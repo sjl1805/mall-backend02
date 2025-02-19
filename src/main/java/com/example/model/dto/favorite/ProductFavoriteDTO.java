@@ -3,6 +3,7 @@ package com.example.model.dto.favorite;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 @Data
 @Schema(description = "商品收藏数据传输对象")
@@ -15,9 +16,13 @@ public class ProductFavoriteDTO {
     private Long userId;
 
     @NotNull(message = "商品ID不能为空")
-    @Schema(description = "商品ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "456")
+    @Schema(description = "商品ID", example = "1001", requiredMode = RequiredMode.REQUIRED)
     private Long productId;
 
-    @Schema(description = "收藏夹ID（空表示未分类）", example = "789")
+    @NotNull(message = "收藏夹ID不能为空")
+    @Schema(description = "收藏夹ID", example = "1", requiredMode = RequiredMode.REQUIRED)
     private Long folderId;
+
+    @Schema(description = "自定义标签（JSON格式）", example = "{\"重要程度\":\"高\"}")
+    private String tags;
 } 

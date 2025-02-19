@@ -18,7 +18,12 @@ public class JwtUtils {
 
     // 生成密钥
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        // 确保密钥长度符合HS512要求
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 64) {
+            throw new IllegalArgumentException("密钥长度必须至少为512位（64字符）");
+        }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // token生成方法

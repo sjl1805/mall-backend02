@@ -20,8 +20,8 @@ spring:
         max-idle: 8
         min-idle: 0
 jwt:
-  secret: "your-256-bit-secret-key-must-be-at-least-32-chars"
-  expiration: 86400000
+  secret: "your-512-bit-secret-key-must-be-at-least-64-characters-long-1234567890abcdefghijklmnopqrstuvwxyz"
+  expiration: 86400000  # 24小时
 # 添加Swagger配置
 springdoc:
   api-docs:

@@ -52,12 +52,12 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 转移收藏夹
-     * @param fromFolderId 原收藏夹ID
-     * @param toFolderId 目标收藏夹ID
+     * @param favoriteIds 收藏ID列表
+     * @param targetFolderId 目标收藏夹ID
      * @return 影响行数
      */
-    int moveToFolder(@Param("fromFolderId") Long fromFolderId,
-                   @Param("toFolderId") Long toFolderId);
+    int moveToFolder(@Param("favoriteIds") List<Long> favoriteIds,
+                   @Param("targetFolderId") Long targetFolderId);
 
     @Update("UPDATE product_favorite SET folder_id = #{folderId} " +
             "WHERE id = #{favoriteId} AND user_id = #{userId}")

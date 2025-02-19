@@ -49,6 +49,9 @@ public interface CouponMapper extends BaseMapper<Coupon> {
 
     @Select("SELECT * FROM coupon WHERE status = 1 AND start_time <= NOW() AND end_time >= NOW()")
     List<Coupon> selectAvailableCoupons();
+
+    List<Coupon> selectValidCouponsByUser(@Param("userId") Long userId,
+                                         @Param("currentTime") Date currentTime);
 }
 
 

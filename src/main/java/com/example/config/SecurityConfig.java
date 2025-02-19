@@ -41,7 +41,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                .requestMatchers(
+                    "/api/users/login",
+                    "/api/users/register",
+                    "/v3/api-docs/**",  // 添加Swagger白名单
+                    "/swagger-ui/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .cors(withDefaults())

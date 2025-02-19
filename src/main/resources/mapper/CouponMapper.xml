@@ -98,4 +98,15 @@
         WHERE status = 1
           AND end_time &lt; #{currentTime}
     </update>
+
+    <!-- 用户有效优惠券查询 -->
+    <select id="selectValidCouponsByUser" resultMap="BaseResultMap">
+        SELECT c.* 
+        FROM coupon c
+        JOIN user_coupon uc ON c.id = uc.coupon_id
+        WHERE uc.user_id = #{userId}
+          AND c.status = 1
+          AND c.start_time &lt;= #{currentTime}
+          AND c.end_time >= #{currentTime}
+    </select>
 </mapper>

@@ -2,6 +2,10 @@ package com.example.service;
 
 import com.example.model.entity.Coupon;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.List;
+import com.example.model.dto.coupon.CouponDTO;
+import com.example.model.dto.coupon.CouponPageDTO;
 
 /**
 * @author 31815
@@ -9,5 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-02-18 23:44:26
 */
 public interface CouponService extends IService<Coupon> {
-
+    boolean createCoupon(CouponDTO couponDTO);
+    IPage<Coupon> listCouponPage(CouponPageDTO queryDTO);
+    boolean updateStatus(Long couponId, Integer status);
+    boolean expireCoupons();
+    List<Coupon> getAvailableCoupons();
+    List<Coupon> getUserValidCoupons(Long userId);
 }

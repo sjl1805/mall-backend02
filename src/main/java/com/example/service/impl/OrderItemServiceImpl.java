@@ -5,6 +5,8 @@ import com.example.service.OrderItemService;
 import com.example.model.entity.OrderItem;
 import com.example.mapper.OrderItemMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 /**
 * @author 31815
@@ -15,6 +17,16 @@ import org.springframework.stereotype.Service;
 public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem>
     implements OrderItemService {
 
+    @Override
+    public List<OrderItem> listByOrderId(Long orderId) {
+        return baseMapper.selectByOrderId(orderId);
+    }
+
+    @Override
+    @Transactional
+    public boolean updateCommentStatus(Long orderId, Long productId) {
+        return baseMapper.updateCommentStatus(orderId, productId, 1) > 0;
+    }
 }
 
 

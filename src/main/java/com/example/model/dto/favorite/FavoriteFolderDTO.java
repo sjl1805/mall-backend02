@@ -15,19 +15,20 @@ public class FavoriteFolderDTO {
     private Long userId;
 
     @NotBlank(message = "收藏夹名称不能为空")
-    @Size(max = 32, message = "名称最长32个字符")
-    @Schema(description = "收藏夹名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "我的收藏")
+    @Size(max = 50, message = "名称最长50个字符")
+    @Schema(description = "收藏夹名称", example = "我的最爱", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    @Size(max = 128, message = "描述最长128个字符")
+    @Size(max = 200, message = "描述最长200个字符")
     @Schema(description = "收藏夹描述", example = "常用商品收藏")
     private String description;
 
+    @NotNull(message = "公开状态不能为空")
     @Min(0) @Max(1)
-    @Schema(description = "公开状态：0-私密 1-公开", defaultValue = "0", example = "1")
+    @Schema(description = "是否公开：0-私有 1-公开", example = "1", defaultValue = "0")
     private Integer isPublic = 0;
 
-    @Min(value = 0, message = "排序值不能为负数")
-    @Schema(description = "排序值", defaultValue = "0", example = "1")
+    @Min(0)
+    @Schema(description = "排序值", example = "100", defaultValue = "0")
     private Integer sort = 0;
 } 

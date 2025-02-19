@@ -7,32 +7,33 @@ import jakarta.validation.constraints.*;
 @Data
 @Schema(description = "商品评价数据传输对象")
 public class ProductReviewDTO {
-    @Schema(description = "评价ID（更新时必填）", example = "789")
+    @Schema(description = "评价ID（更新时必填）", example = "1")
     private Long id;
 
     @NotNull(message = "订单ID不能为空")
-    @Schema(description = "订单ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1001")
+    @Schema(description = "关联订单ID", example = "10001", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long orderId;
 
     @NotNull(message = "用户ID不能为空")
-    @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "456")
+    @Schema(description = "用户ID", example = "20001", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long userId;
 
     @NotNull(message = "商品ID不能为空")
-    @Schema(description = "商品ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "123")
+    @Schema(description = "商品ID", example = "3001", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long productId;
 
     @NotNull(message = "评分不能为空")
-    @Min(1) @Max(5)
-    @Schema(description = "评分：1-5分", requiredMode = Schema.RequiredMode.REQUIRED, example = "5")
+    @Min(value = 1, message = "评分最低1分")
+    @Max(value = 5, message = "评分最高5分")
+    @Schema(description = "评分（1-5分）", example = "5", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer rating;
 
-    @Size(max = 500, message = "评价内容最长500个字符")
-    @Schema(description = "评价内容", example = "商品质量非常好，物流速度快")
+    @NotBlank(message = "评价内容不能为空")
+    @Size(max = 500, message = "评价内容最多500个字符")
+    @Schema(description = "评价内容", example = "商品质量非常好", requiredMode = Schema.RequiredMode.REQUIRED)
     private String content;
 
-    @Schema(description = "评价图片（JSON数组）", 
-          example = "[\"https://example.com/image1.jpg\",\"https://example.com/image2.jpg\"]")
+    @Schema(description = "评价图片（JSON数组）", example = "['/images/review1.jpg','/images/review2.jpg']")
     private String images;
 
     @Min(0) @Max(2)

@@ -7,20 +7,20 @@ import jakarta.validation.constraints.*;
 @Data
 @Schema(description = "商品规格数据传输对象")
 public class ProductSpecDTO {
-    @Schema(description = "规格ID（更新时必填）", example = "456")
+    @Schema(description = "规格ID（更新时必填）", example = "1")
     private Long id;
 
     @NotNull(message = "商品ID不能为空")
-    @Schema(description = "商品ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "123")
+    @Schema(description = "关联商品ID", example = "1001", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long productId;
 
     @NotBlank(message = "规格名称不能为空")
-    @Size(max = 64, message = "规格名称最长64个字符")
-    @Schema(description = "规格名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "颜色")
+    @Size(max = 50, message = "规格名称最长50个字符")
+    @Schema(description = "规格名称", example = "颜色", requiredMode = Schema.RequiredMode.REQUIRED)
     private String specName;
 
     @NotBlank(message = "规格值不能为空")
-    @Schema(description = "规格值（JSON格式）", requiredMode = Schema.RequiredMode.REQUIRED, 
-          example = "[\"红色\",\"蓝色\",\"绿色\"]")
+    @Size(max = 500, message = "规格值最长500个字符")
+    @Schema(description = "规格可选值（JSON数组）", example = "[\"红色\",\"蓝色\",\"黑色\"]", requiredMode = Schema.RequiredMode.REQUIRED)
     private String specValues;
 } 

@@ -60,6 +60,11 @@ public interface CartMapper extends BaseMapper<Cart> {
     int updateCheckedStatus(@Param("userId") Long userId,
                            @Param("cartId") Long cartId,
                            @Param("checked") Integer checked);
+
+    int checkCartItemExists(@Param("userId") Long userId, 
+                           @Param("productId") Long productId);
+
+    int batchDelete(@Param("cartIds") List<Long> cartIds);
 }
 
 

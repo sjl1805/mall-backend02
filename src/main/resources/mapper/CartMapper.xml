@@ -87,4 +87,20 @@
         FROM cart
         WHERE user_id = #{userId}
     </select>
+
+    <!-- 检查购物车商品是否存在 -->
+    <select id="checkCartItemExists" resultType="int">
+        SELECT COUNT(*) 
+        FROM cart
+        WHERE user_id = #{userId}
+          AND product_id = #{productId}
+    </select>
+
+    <delete id="batchDelete">
+        DELETE FROM cart
+        WHERE id IN 
+        <foreach collection="cartIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

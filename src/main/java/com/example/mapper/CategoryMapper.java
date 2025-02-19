@@ -56,6 +56,12 @@ public interface CategoryMapper extends BaseMapper<Category> {
      */
     @Select("SELECT * FROM category WHERE parent_id = #{parentId} AND status = 1 ORDER BY sort DESC")
     List<Category> selectActiveChildren(@Param("parentId") Long parentId);
+
+    /**
+     * 查询分类树形结构
+     * @return 树形结构分类列表
+     */
+    List<Category> selectCategoryTree();
 }
 
 

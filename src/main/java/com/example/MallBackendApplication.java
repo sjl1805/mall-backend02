@@ -10,9 +10,8 @@ public class MallBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MallBackendApplication.class, args);
-        System.out.println("项目启动成功");
-        System.out.println("http://localhost:8080/swagger-ui/index.html");
-        System.out.println("http://localhost:8080/doc.html");
+        System.out.println("*********************项目启动成功*********************");
+        System.out.println("***********http://localhost:8080/swagger-ui/index.html");
         
     }
 

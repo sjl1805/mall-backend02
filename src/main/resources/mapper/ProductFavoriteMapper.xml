@@ -83,10 +83,11 @@
     <!-- 转移收藏夹 -->
     <update id="moveToFolder">
         UPDATE product_favorite
-        SET folder_id = #{toFolderId},
-            update_time = NOW()
-        WHERE folder_id = #{fromFolderId}
-          AND user_id = #{userId}
+        SET folder_id = #{targetFolderId}
+        WHERE id IN 
+        <foreach collection="favoriteIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
 
     <!-- 新增批量插入 -->

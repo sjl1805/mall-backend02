@@ -2,6 +2,11 @@ package com.example.service;
 
 import com.example.model.entity.ProductReview;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.product.ProductReviewDTO;
+import com.example.model.dto.product.ProductReviewPageDTO;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 31815
@@ -9,5 +14,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-02-18 23:44:11
 */
 public interface ProductReviewService extends IService<ProductReview> {
-
+    boolean createReview(ProductReviewDTO reviewDTO);
+    IPage<ProductReview> listReviewsPage(ProductReviewPageDTO queryDTO);
+    boolean updateReviewStatus(Long productId, Long reviewId, Integer status);
+    Map<String, Object> getProductRatingStats(Long productId);
+    boolean updateReviewContent(Long productId, Long userId, Long reviewId, String content, String images);
+    List<ProductReview> getLatestUserReviews(Long userId, Integer limit);
 }

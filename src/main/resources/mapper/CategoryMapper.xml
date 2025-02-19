@@ -27,19 +27,34 @@
         <collection property="children" column="id" select="selectChildren"/>
     </resultMap>
 
-    <!-- 条件查询字段 -->
+    <!-- 增强分页查询条件 -->
     <sql id="Condition_Column">
+        <!-- 名称模糊查询 -->
         <if test="query.name != null and query.name != ''">
             AND name LIKE CONCAT('%', #{query.name}, '%')
         </if>
+        
+        <!-- 状态过滤 -->
         <if test="query.status != null">
             AND status = #{query.status}
         </if>
+        
+        <!-- 层级过滤 -->
         <if test="query.level != null">
             AND level = #{query.level}
         </if>
+        
+        <!-- 父分类过滤 -->
         <if test="query.parentId != null">
             AND parent_id = #{query.parentId}
+        </if>
+        
+        <!-- 时间范围查询 -->
+        <if test="query.createTimeStart != null">
+            AND create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null">
+            AND create_time &lt;= #{query.createTimeEnd}
         </if>
     </sql>
 
@@ -89,11 +104,14 @@
         </if>
     </select>
 
-    <!-- 树形结构查询 -->
+    <!-- 优化树形查询 -->
     <select id="selectCategoryTree" resultMap="TreeResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM category
-        WHERE parent_id = 0 AND status = 1
+        WHERE parent_id = 0 
+        <if test="status != null">
+            AND status = #{status}
+        </if>
         ORDER BY sort DESC
     </select>
 
