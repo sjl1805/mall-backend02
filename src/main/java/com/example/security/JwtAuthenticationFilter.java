@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import com.example.utils.JwtUtils;
 import org.springframework.lang.NonNull;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -43,7 +45,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateToken(jwt)) {
+            if (jwt != null) {
+                if (!jwtUtils.validateToken(jwt)) {
+                    throw new JwtException("Invalid token");
+                }
                 String username = jwtUtils.getUsernameFromToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = 
@@ -55,8 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e) {
-            logger.error("Cannot set user authentication", e);
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token已过期");
+            return;
+        } catch (JwtException | IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "无效的Token");
+            return;
         }
         chain.doFilter(request, response);
     }

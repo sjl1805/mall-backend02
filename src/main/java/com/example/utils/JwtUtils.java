@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class JwtUtils {
@@ -19,19 +18,17 @@ public class JwtUtils {
 
     // 生成密钥
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     // token生成方法
     public String generateToken(String username, Integer role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
         return Jwts.builder()
-            .claims(claims)
+            .claim("role", role)
             .subject(username)
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + expiration))
-            .signWith(getSigningKey())
+            .signWith(getSigningKey(), Jwts.SIG.HS512)
             .compact();
     }
 

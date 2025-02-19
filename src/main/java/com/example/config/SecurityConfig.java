@@ -38,8 +38,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                .anyRequest().authenticated()
+            )
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(handling -> handling
@@ -48,21 +52,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/users/login",
-                    "/api/users/register",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/swagger-resources/**",
-                    "/webjars/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        
-        return http.build();
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean

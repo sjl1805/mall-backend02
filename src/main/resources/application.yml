@@ -20,8 +20,8 @@ spring:
         max-idle: 8
         min-idle: 0
 jwt:
-  secret: 1your-256-bit-secret-key-must-be-at-least-32-characters
-  expiration: 3600
+  secret: "your-256-bit-secret-key-must-be-at-least-32-chars"
+  expiration: 86400000
 # 添加Swagger配置
 springdoc:
   api-docs:
@@ -43,3 +43,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/**/*.xml
+
+logging:
+  level:
+    com.example.security: DEBUG
+    org.springframework.security: DEBUG
