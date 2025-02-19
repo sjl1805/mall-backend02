@@ -57,7 +57,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      */
     @Override
     public Map<String, Object> login(UserLoginDTO loginDTO) {
-        Users user = baseMapper.selectByUsernameOrPhone(loginDTO.getAccount());
+        Users user = baseMapper.selectByUsernameOrPhone(loginDTO.getUsername());
         if (user == null || user.getStatus() == 0) {
             throw new BusinessException(ResultCode.USER_NOT_FOUND);
         }

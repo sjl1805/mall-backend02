@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 public class UserLoginDTO {
     @NotBlank(message = "账号不能为空")
     @Schema(description = "用户名/手机号", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String account;
+    private String username;
 
     @NotBlank(message = "密码不能为空")
     @Schema(description = "密码", example = "123456", requiredMode = Schema.RequiredMode.REQUIRED)
