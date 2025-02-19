@@ -8,6 +8,10 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1h # 全局默认缓存时间
 
   # 添加Redis配置
   redis:
