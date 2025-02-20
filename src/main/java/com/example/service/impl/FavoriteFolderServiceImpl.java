@@ -78,7 +78,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
                 .orderByAsc(FavoriteFolder::getSort)
                 .list()
                 .stream()
-                .map(this::convertToDTO)
+                .map(FavoriteFolderDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -175,7 +175,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
     public IPage<FavoriteFolderDTO> listPublicFolders(FavoriteFolderPageDTO queryDTO) {
         Page<FavoriteFolder> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<FavoriteFolder> folderPage = baseMapper.selectFolderPage(page, queryDTO);
-        return folderPage.convert(this::convertToDTO);
+        return folderPage.convert(FavoriteFolderDTO::fromEntity);
     }
 
     /**
@@ -208,11 +208,6 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
                 .exists();
     }
 
-    private FavoriteFolderDTO convertToDTO(FavoriteFolder folder) {
-        FavoriteFolderDTO dto = new FavoriteFolderDTO();
-        BeanUtils.copyProperties(folder, dto);
-        return dto;
-    }
 }
 
 

@@ -72,7 +72,7 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
     @Cacheable(key = "'user:' + #userId + ':recent'")
     public List<UserBehaviorDTO> getRecentBehaviors(Long userId, Integer limit) {
         return baseMapper.selectRecentBehaviors(userId, limit).stream()
-                .map(this::convertToDTO)
+                .map(UserBehaviorDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -129,24 +129,6 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
         return baseMapper.batchInsert(behaviors) > 0;
     }
 
-    // @Override
-    // @Scheduled(cron = "0 0 4 * * ?") // 每天凌晨4点执行
-    // @Transactional
-    // @CacheEvict(allEntries = true)
-    // public void analyzeBehaviors() {
-    //     Date end = new Date();
-    //     Date start = DateUtils.addDays(end, -7);
-    //     List<Map<String, Object>> patterns = baseMapper.analyzeBehaviorPattern(
-    //         start, end, 30
-    //     );
-    //     // 将分析结果存储到数据库或发送到消息队列
-    // }
-
-    private UserBehaviorDTO convertToDTO(UserBehavior behavior) {
-        UserBehaviorDTO dto = new UserBehaviorDTO();
-        BeanUtils.copyProperties(behavior, dto);
-        return dto;
-    }
 }
 
 

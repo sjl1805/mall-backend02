@@ -125,7 +125,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         queryDTO.setFolderId(folderId);
         Page<ProductFavorite> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<ProductFavorite> favoritePage = baseMapper.selectFavoritePage(page, queryDTO);
-        return favoritePage.convert(this::convertToDTO);
+        return favoritePage.convert(ProductFavoriteDTO::fromEntity);
     }
 
     /**
@@ -190,11 +190,6 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         return baseMapper.checkFavoriteExists(userId, productId) > 0;
     }
 
-    private ProductFavoriteDTO convertToDTO(ProductFavorite favorite) {
-        ProductFavoriteDTO dto = new ProductFavoriteDTO();
-        BeanUtils.copyProperties(favorite, dto);
-        return dto;
-    }
 }
 
 

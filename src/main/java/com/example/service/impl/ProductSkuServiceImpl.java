@@ -5,7 +5,6 @@ import com.example.mapper.ProductSkuMapper;
 import com.example.model.dto.product.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -51,7 +50,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         validateProductStatus(productId);
         List<ProductSkuDTO> entities = skus.stream()
                 .map(dto -> {
-                    ProductSkuDTO sku = convertToEntity(dto);
+                    ProductSkuDTO sku = dto;
                     sku.setProductId(productId);
                     return sku;
                 })
@@ -146,12 +145,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         // }
     }
 
-
-    private ProductSkuDTO convertToEntity(ProductSkuDTO dto) {
-        ProductSkuDTO sku = new ProductSkuDTO();
-        BeanUtils.copyProperties(dto, sku);
-        return sku;
-    }
 }
 
 

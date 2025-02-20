@@ -94,7 +94,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
                 .orderByDesc(UserCoupon::getGetTime)
                 .list()
                 .stream()
-                .map(this::convertToDTO)
+                .map(UserCouponDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -131,16 +131,6 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
         return baseMapper.updateStatusByUser(userId, userCouponId, 0, null) > 0;
     }
 
-    private UserCouponDTO convertToDTO(UserCoupon userCoupon) {
-        UserCouponDTO dto = new UserCouponDTO();
-        dto.setId(userCoupon.getId());
-        dto.setUserId(userCoupon.getUserId());
-        dto.setCouponId(userCoupon.getCouponId());
-        dto.setStatus(userCoupon.getStatus());
-        dto.setOrderId(userCoupon.getOrderId());
-        dto.setUseTime(userCoupon.getUseTime());
-        return dto;
-    }
 }
 
 

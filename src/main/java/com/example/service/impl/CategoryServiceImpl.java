@@ -54,7 +54,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     public IPage<CategoryDTO> listCategoryPage(CategoryPageDTO queryDTO) {
         Page<Category> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<Category> categoryPage = baseMapper.selectCategoryPage(page, queryDTO);
-        return categoryPage.convert(this::convertToDTO);
+        return categoryPage.convert(CategoryDTO::fromEntity);
     }
 
     /**
@@ -157,7 +157,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     public List<CategoryDTO> getCategoryTree(Long parentId) {
         List<Category> tree = baseMapper.selectCategoryTree(parentId);
         return tree.stream()
-                .map(this::convertToDTO)
+                .map(CategoryDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -226,13 +226,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         return baseMapper.checkNameUnique(name, parentId, excludeId) > 0;
     }
 
-    private CategoryDTO convertToDTO(Category category) {
-        if (category == null) return null;
-        
-        CategoryDTO dto = new CategoryDTO();
-        BeanUtils.copyProperties(category, dto);
-        return dto;
-    }
+
 }
 
 

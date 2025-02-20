@@ -5,7 +5,6 @@ import com.example.mapper.OrderItemMapper;
 import com.example.model.entity.OrderItem;
 import com.example.model.dto.order.OrderItemDTO;
 import com.example.service.OrderItemService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +34,7 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem
     @Override
     public List<OrderItemDTO> listByOrderId(Long orderId) {
         return baseMapper.selectByOrderId(orderId).stream()
-                .map(this::convertToDTO)
+                .map(OrderItemDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -59,11 +58,6 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem
         return baseMapper.selectByOrderId(orderId);
     }
 
-    private OrderItemDTO convertToDTO(OrderItem item) {
-        OrderItemDTO dto = new OrderItemDTO();
-        BeanUtils.copyProperties(item, dto);
-        return dto;
-    }
 }
 
 

@@ -8,7 +8,6 @@ import com.example.model.dto.users.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -83,7 +82,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     @Transactional
     @CacheEvict(key = "'user:' + #address.userId")
     public boolean addAddress(UserAddressDTO address) {
-        UserAddress entity = convertToEntity(address);
+        UserAddress entity = address.toEntity();
         if (countUserAddresses(entity.getUserId()) == 0) {
             entity.setIsDefault(1);
         }
@@ -107,7 +106,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         if (!checkAddressOwnership(userId, address.getId())) {
             throw new BusinessException(ResultCode.ADDRESS_ACCESS_DENIED);
         }
-        UserAddress entity = convertToEntity(address);
+        UserAddress entity = address.toEntity();
         return updateById(entity);
     }
 
@@ -193,11 +192,6 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     }
 
 
-    private UserAddress convertToEntity(UserAddressDTO dto) {
-        UserAddress entity = new UserAddress();
-        BeanUtils.copyProperties(dto, entity);
-        return entity;
-    }
 }
 
 

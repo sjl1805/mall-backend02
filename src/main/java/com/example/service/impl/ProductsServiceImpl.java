@@ -59,7 +59,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
     public IPage<ProductsDTO> listProductsPage(ProductsPageDTO queryDTO) {
         Page<Products> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<Products> productPage = baseMapper.selectProductPage(page, queryDTO);
-        return productPage.convert(this::convertToDTO);
+        return productPage.convert(ProductsDTO::fromEntity);
     }
 
     /**
@@ -176,11 +176,6 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         return baseMapper.checkNameUnique(name, excludeId) > 0;
     }
 
-    private ProductsDTO convertToDTO(Products product) {
-        ProductsDTO dto = new ProductsDTO();
-        BeanUtils.copyProperties(product, dto);
-        return dto;
-    }
 }
 
 

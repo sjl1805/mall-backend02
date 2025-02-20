@@ -73,7 +73,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     public IPage<CouponDTO> listCouponPage(CouponPageDTO queryDTO) {
         Page<Coupon> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<Coupon> couponPage = baseMapper.selectCouponPage(page, queryDTO);
-        return couponPage.convert(this::convertToDTO);
+        return couponPage.convert(CouponDTO::fromEntity);
     }
 
     /**
@@ -117,7 +117,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     @Cacheable(key = "'available'")
     public List<CouponDTO> getAvailableCoupons() {
         return baseMapper.selectAvailableCoupons().stream()
-                .map(this::convertToDTO)
+                .map(CouponDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -134,17 +134,10 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     @Cacheable(key = "'user:' + #userId")
     public List<CouponDTO> getUserValidCoupons(Long userId) {
         return baseMapper.selectValidCouponsByUser(userId, new Date()).stream()
-                .map(this::convertToDTO)
+                .map(CouponDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    private CouponDTO convertToDTO(Coupon coupon) {
-        if (coupon == null) return null;
-        
-        CouponDTO dto = new CouponDTO();
-        BeanUtils.copyProperties(coupon, dto);
-        return dto;
-    }
 }
 
 

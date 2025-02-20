@@ -157,18 +157,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
         // 转换嵌套的订单项
         if (order.getItems() != null) {
             List<OrderItemDTO> itemDTOs = order.getItems().stream()
-                    .map(this::convertItemToDTO)
+                    .map(OrderItemDTO::fromEntity)
                     .collect(Collectors.toList());
             dto.setItems(itemDTOs);
         }
         return dto;
     }
 
-    private OrderItemDTO convertItemToDTO(OrderItem item) {
-        OrderItemDTO dto = new OrderItemDTO();
-        BeanUtils.copyProperties(item, dto);
-        return dto;
-    }
 }
 
 

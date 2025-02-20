@@ -125,7 +125,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
                 .orderByDesc(Cart::getUpdateTime)
                 .list()
                 .stream()
-                .map(this::convertToDTO)
+                .map(CartDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -159,11 +159,6 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
         return baseMapper.batchDelete(cartIds) > 0;
     }
 
-    private CartDTO convertToDTO(Cart cart) {
-        CartDTO dto = new CartDTO();
-        BeanUtils.copyProperties(cart, dto);
-        return dto;
-    }
 }
 
 

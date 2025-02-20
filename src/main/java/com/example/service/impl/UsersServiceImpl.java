@@ -62,7 +62,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public IPage<UserDTO> listUsersByPage(UserPageDTO queryDTO) {
         Page<Users> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<Users> usersPage = baseMapper.selectUserPage(page, queryDTO);
-        return usersPage.convert(this::convertToDTO);
+        return usersPage.convert(UserDTO::fromEntity);
     }
 
     /**
@@ -193,7 +193,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     @Cacheable(key = "#id", unless = "#result == null")
     public UserDTO getById(Long id) {
         Users user = super.getById(id);
-        return convertToDTO(user);
+        return UserDTO.fromEntity(user);
     }
 
     /**
@@ -267,23 +267,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public Boolean logout() {
         SecurityContextHolder.clearContext();
         return true;
-    }
-
-    private UserDTO convertToDTO(Users user) {
-        if (user == null) return null;
-        
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setPassword(null); // 清空敏感信息
-        dto.setNickname(user.getNickname());
-        dto.setPhone(user.getPhone());
-        dto.setEmail(user.getEmail());
-        dto.setAvatar(user.getAvatar());
-        dto.setGender(user.getGender());
-        dto.setStatus(user.getStatus());
-        dto.setRole(user.getRole());
-        return dto;
     }
 }
 

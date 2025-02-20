@@ -71,7 +71,7 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
     public IPage<ProductReviewDTO> listReviewsPage(ProductReviewPageDTO queryDTO) {
         Page<ProductReview> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         IPage<ProductReview> reviewPage = baseMapper.selectReviewPage(page, queryDTO);
-        return reviewPage.convert(this::convertToDTO);
+        return reviewPage.convert(ProductReviewDTO::fromEntity);
     }
 
     /**
@@ -137,11 +137,6 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
         return baseMapper.selectLatestUserReviews(userId, limit);
     }
 
-    private ProductReviewDTO convertToDTO(ProductReview review) {
-        ProductReviewDTO dto = new ProductReviewDTO();
-        BeanUtils.copyProperties(review, dto);
-        return dto;
-    }
 }
 
 

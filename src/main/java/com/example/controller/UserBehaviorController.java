@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.common.Result;
 import com.example.model.dto.users.UserBehaviorDTO;
-import com.example.model.entity.UserBehavior;
 import com.example.service.UserBehaviorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
