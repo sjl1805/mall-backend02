@@ -75,6 +75,7 @@ public class FileController {
             @Parameter(description = "文件名", example = "backend.png", required = true)
             @PathVariable String fileName) {
         try {
+            System.out.println("****************************"+fileName);
             return FileDownloadUtil.prepareFileResponse(fileName);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

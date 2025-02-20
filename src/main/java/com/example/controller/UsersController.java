@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -152,7 +153,6 @@ public class UsersController {
     /**
      * 更新用户基本信息
      * @param id 用户ID（路径参数）
-     * @param user 更新数据（忽略ID、密码、角色等敏感字段）
      * @return 操作结果
      * @throws BusinessException 可能异常：
      *         - USER_NOT_FOUND(1001): 用户不存在

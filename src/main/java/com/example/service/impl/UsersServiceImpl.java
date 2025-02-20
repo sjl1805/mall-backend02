@@ -87,7 +87,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         }
 
         Map<String, Object> userInfo = new LinkedHashMap<>();
-        userInfo.put("id", user.getId());
+        userInfo.put("id", user.getId().toString());
         userInfo.put("username", user.getUsername());
         userInfo.put("avatar", user.getAvatar());
         userInfo.put("role", getRoleName(user.getRole()));

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.io.Serial;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @Data
 @TableName("users")
 public class Users implements Serializable {
-    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
