@@ -1,10 +1,14 @@
 package com.example.model.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.example.model.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
+
+import java.util.List;
+
 /**
  * 分类数据传输对象
  *
@@ -45,6 +49,9 @@ public class CategoryDTO {
     @Schema(description = "状态：0-禁用 1-启用", example = "1", defaultValue = "1")
     private Integer status = 1;
 
+    @Schema(description = "子分类列表")
+    @TableField(exist = false)
+    private List<Category> children;
     public static CategoryDTO fromEntity(Category category) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(category.getId());
@@ -54,6 +61,7 @@ public class CategoryDTO {
         dto.setLevel(category.getLevel());
         dto.setSort(category.getSort());
         dto.setStatus(category.getStatus());
+        dto.setChildren(category.getChildren());
         return dto;
     }
 

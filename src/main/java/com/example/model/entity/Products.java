@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -61,7 +60,7 @@ public class Products implements Serializable {
      * 商品图片JSON数组
      */
     @Schema(description = "商品图片列表", example = "[\"/images/products/mate50_1.jpg\"]")
-    @TableField(typeHandler = com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler.class)
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private List<String> images;
     /**
      * 创建时间（带时区）

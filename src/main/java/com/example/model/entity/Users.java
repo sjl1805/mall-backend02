@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @TableName("users")
 public class Users implements Serializable {
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     /**
@@ -32,7 +34,7 @@ public class Users implements Serializable {
     /**
      * BCrypt加密后的密码哈希值
      */
-    @Schema(description = "加密后的密码", example = "$2a$10$k6n948le92ccts2LWj4mrubCqe4XaS3Yi8K6EiiBmAuMIy5m/B5zq")
+    @Schema(description = "加密后的密码", example = "$2a$10$k6n948le92cuts2LWj4mrubyCqe4XaS3Yi8K6EiiBmAuMIy5m/B5zq")
     private String password;
     /**
      * 用户昵称

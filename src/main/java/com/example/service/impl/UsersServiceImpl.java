@@ -75,6 +75,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      *           3. 生成JWT令牌
      */
     @Override
+    @Cacheable(key = "'login:' + #loginDTO.username", unless = "#result == null")
     public Map<String, Object> login(UserLoginDTO loginDTO) {
         Users user = baseMapper.selectByUsernameOrPhone(loginDTO.getUsername());
         if (user == null || user.getStatus() == 0) {
@@ -198,7 +199,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
     /**
      * 更新用户（带缓存清除）
-     * @param user 用户信息
+     * @param userDTO 用户信息
      * @return 操作结果
      * @implNote 清除用户缓存和统计缓存
      */
