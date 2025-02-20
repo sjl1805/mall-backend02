@@ -3,11 +3,14 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.OrderItemMapper;
 import com.example.model.entity.OrderItem;
+import com.example.model.dto.order.OrderItemDTO;
 import com.example.service.OrderItemService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单项服务实现类
@@ -30,8 +33,10 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem
      * @implNote 使用MyBatis关联查询获取商品快照数据
      */
     @Override
-    public List<OrderItem> listByOrderId(Long orderId) {
-        return baseMapper.selectByOrderId(orderId);
+    public List<OrderItemDTO> listByOrderId(Long orderId) {
+        return baseMapper.selectByOrderId(orderId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -47,6 +52,17 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem
     @Transactional
     public boolean updateCommentStatus(Long orderId, Long productId) {
         return baseMapper.updateCommentStatus(orderId, productId, 1) > 0;
+    }
+
+    @Override
+    public List<OrderItem> listByOrderIdEntities(Long orderId) {
+        return baseMapper.selectByOrderId(orderId);
+    }
+
+    private OrderItemDTO convertToDTO(OrderItem item) {
+        OrderItemDTO dto = new OrderItemDTO();
+        BeanUtils.copyProperties(item, dto);
+        return dto;
     }
 }
 

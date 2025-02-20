@@ -2,6 +2,7 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.model.dto.product.ProductSkuDTO;
 import com.example.model.dto.product.ProductSkuPageDTO;
 import com.example.model.entity.ProductSku;
 import org.apache.ibatis.annotations.Param;
@@ -24,7 +25,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
      * @param skus SKU实体列表（包含规格、价格等信息）
      * @return 成功插入的记录数
      */
-    int batchInsert(@Param("skus") List<ProductSku> skus);
+    int batchInsert(@Param("skus") List<ProductSkuDTO> skus);
 
     /**
      * 根据商品ID查询SKU（按价格升序排列）

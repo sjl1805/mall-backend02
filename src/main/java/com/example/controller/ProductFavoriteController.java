@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
 import com.example.model.dto.favorite.ProductFavoriteDTO;
 import com.example.model.dto.favorite.ProductFavoritePageDTO;
-import com.example.model.entity.ProductFavorite;
 import com.example.service.ProductFavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -99,7 +98,7 @@ public class ProductFavoriteController {
     @GetMapping("/folders/{folderId}")
     @Operation(summary = "收藏分页查询", description = "分页获取指定收藏夹中的商品接口")
     @ApiResponse(responseCode = "200", description = "成功返回收藏列表")
-    public Result<IPage<ProductFavorite>> listFavorites(
+    public Result<IPage<ProductFavoriteDTO>> listFavorites(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId,
             @Parameter(description = "收藏夹ID", example = "1", required = true)

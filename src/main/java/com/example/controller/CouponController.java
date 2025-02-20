@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
 import com.example.model.dto.coupon.CouponDTO;
 import com.example.model.dto.coupon.CouponPageDTO;
-import com.example.model.entity.Coupon;
 import com.example.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,7 +76,7 @@ public class CouponController {
     @GetMapping
     @Operation(summary = "优惠券分页查询", description = "分页获取优惠券列表接口")
     @ApiResponse(responseCode = "200", description = "成功返回优惠券列表")
-    public Result<IPage<Coupon>> listCoupons(
+    public Result<IPage<CouponDTO>> listCoupons(
             @Parameter(description = "分页查询参数") @Valid CouponPageDTO queryDTO) {
         return Result.success(couponService.listCouponPage(queryDTO));
     }
@@ -122,7 +121,7 @@ public class CouponController {
     @GetMapping("/available")
     @Operation(summary = "可用优惠券查询", description = "查询当前可领取的优惠券接口")
     @ApiResponse(responseCode = "200", description = "成功返回优惠券列表")
-    public Result<List<Coupon>> getAvailableCoupons() {
+    public Result<List<CouponDTO>> getAvailableCoupons() {
         return Result.success(couponService.getAvailableCoupons());
     }
 
@@ -135,7 +134,7 @@ public class CouponController {
     @GetMapping("/user/{userId}")
     @Operation(summary = "用户优惠券查询", description = "查询用户当前可用的优惠券接口")
     @ApiResponse(responseCode = "200", description = "成功返回优惠券列表")
-    public Result<List<Coupon>> getUserValidCoupons(
+    public Result<List<CouponDTO>> getUserValidCoupons(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId) {
         return Result.success(couponService.getUserValidCoupons(userId));

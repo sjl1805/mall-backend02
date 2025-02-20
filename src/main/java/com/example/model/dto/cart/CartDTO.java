@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import com.example.model.entity.Cart;
 
 @Data
 @Schema(description = "购物车商品数据传输对象")
@@ -22,4 +23,20 @@ public class CartDTO {
     @Max(1)
     @Schema(description = "选中状态：0-未选中 1-选中", defaultValue = "1", example = "1")
     private Integer checked = 1;
+
+    public static CartDTO fromEntity(Cart cart) {
+        CartDTO dto = new CartDTO();
+        dto.setProductId(cart.getProductId());
+        dto.setQuantity(cart.getQuantity());
+        dto.setChecked(cart.getChecked());
+        return dto;
+    }
+
+    public Cart toEntity() {
+        Cart cart = new Cart();
+        cart.setProductId(this.productId);
+        cart.setQuantity(this.quantity);
+        cart.setChecked(this.checked);
+        return cart;
+    }
 } 

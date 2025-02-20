@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 收藏夹服务实现类
@@ -71,11 +72,14 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
      */
     @Override
     @Cacheable(key = "'user:' + #userId")
-    public List<FavoriteFolder> getUserFolders(Long userId) {
+    public List<FavoriteFolderDTO> getUserFolders(Long userId) {
         return lambdaQuery()
                 .eq(FavoriteFolder::getUserId, userId)
                 .orderByAsc(FavoriteFolder::getSort)
-                .list();
+                .list()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -168,9 +172,10 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
      */
     @Override
     @Cacheable(key = "'public:page:' + #queryDTO.hashCode()")
-    public IPage<FavoriteFolder> listPublicFolders(FavoriteFolderPageDTO queryDTO) {
+    public IPage<FavoriteFolderDTO> listPublicFolders(FavoriteFolderPageDTO queryDTO) {
         Page<FavoriteFolder> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectFolderPage(page, queryDTO);
+        IPage<FavoriteFolder> folderPage = baseMapper.selectFolderPage(page, queryDTO);
+        return folderPage.convert(this::convertToDTO);
     }
 
     /**
@@ -201,6 +206,12 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
                 .eq(FavoriteFolder::getId, folderId)
                 .eq(FavoriteFolder::getUserId, userId)
                 .exists();
+    }
+
+    private FavoriteFolderDTO convertToDTO(FavoriteFolder folder) {
+        FavoriteFolderDTO dto = new FavoriteFolderDTO();
+        BeanUtils.copyProperties(folder, dto);
+        return dto;
     }
 }
 

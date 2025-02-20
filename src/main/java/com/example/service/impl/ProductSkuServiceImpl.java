@@ -2,8 +2,10 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductSkuMapper;
+import com.example.model.dto.product.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -45,10 +47,16 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
     @Override
     @Transactional
     @CacheEvict(key = "'product:' + #productId")
-    public boolean batchCreateSkus(Long productId, List<ProductSku> skus) {
+    public boolean batchCreateSkus(Long productId, List<ProductSkuDTO> skus) {
         validateProductStatus(productId);
-        skus.forEach(sku -> sku.setProductId(productId));
-        return baseMapper.batchInsert(skus) > 0;
+        List<ProductSkuDTO> entities = skus.stream()
+                .map(dto -> {
+                    ProductSkuDTO sku = convertToEntity(dto);
+                    sku.setProductId(productId);
+                    return sku;
+                })
+                .collect(Collectors.toList());
+        return baseMapper.batchInsert(entities) > 0;
     }
 
     /**
@@ -61,8 +69,10 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
      */
     @Override
     @Cacheable(key = "'product:' + #productId")
-    public List<ProductSku> getSkusByProductId(Long productId) {
-        return baseMapper.selectByProductId(productId);
+    public List<ProductSkuDTO> getSkusByProductId(Long productId) {
+        return baseMapper.selectByProductId(productId).stream()
+                .map(ProductSkuDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -134,6 +144,13 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         // if (!productsService.isProductActive(productId)) {
         //     throw new BusinessException(ResultCode.PRODUCT_STATUS_ERROR);
         // }
+    }
+
+
+    private ProductSkuDTO convertToEntity(ProductSkuDTO dto) {
+        ProductSkuDTO sku = new ProductSkuDTO();
+        BeanUtils.copyProperties(dto, sku);
+        return sku;
     }
 }
 

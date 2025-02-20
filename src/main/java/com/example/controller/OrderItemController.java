@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.entity.OrderItem;
+import com.example.model.dto.order.OrderItemDTO;
 import com.example.service.OrderItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +40,7 @@ public class OrderItemController {
     @Operation(summary = "订单商品查询", description = "查询订单包含的商品明细接口")
     @ApiResponse(responseCode = "200", description = "成功返回商品列表")
     @ApiResponse(responseCode = "404", description = "订单不存在")
-    public Result<List<OrderItem>> getOrderItems(
+    public Result<List<OrderItemDTO>> getOrderItems(
             @Parameter(description = "订单ID", example = "1", required = true)
             @PathVariable @Min(1) Long orderId) {
         return Result.success(orderItemService.listByOrderId(orderId));

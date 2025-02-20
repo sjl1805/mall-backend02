@@ -3,6 +3,7 @@ package com.example.model.dto.users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.UserAddress;
 
 @Data
 @Schema(description = "用户地址数据传输对象")
@@ -49,4 +50,32 @@ public class UserAddressDTO {
     @Max(1)
     @Schema(description = "默认地址：0-否 1-是", defaultValue = "0", example = "1")
     private Integer isDefault = 0;
+
+    public static UserAddressDTO fromEntity(UserAddress address) {
+        UserAddressDTO dto = new UserAddressDTO();
+        dto.setId(address.getId());
+        dto.setUserId(address.getUserId());
+        dto.setReceiverName(address.getReceiverName());
+        dto.setReceiverPhone(address.getReceiverPhone());
+        dto.setProvince(address.getProvince());
+        dto.setCity(address.getCity());
+        dto.setDistrict(address.getDistrict());
+        dto.setDetailAddress(address.getDetailAddress());
+        dto.setIsDefault(address.getIsDefault());
+        return dto;
+    }
+
+    public UserAddress toEntity() {
+        UserAddress address = new UserAddress();
+        address.setId(this.id);
+        address.setUserId(this.userId);
+        address.setReceiverName(this.receiverName);
+        address.setReceiverPhone(this.receiverPhone);
+        address.setProvince(this.province);
+        address.setCity(this.city);
+        address.setDistrict(this.district);
+        address.setDetailAddress(this.detailAddress);
+        address.setIsDefault(this.isDefault);
+        return address;
+    }
 } 

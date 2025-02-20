@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UsersMapper;
+import com.example.model.dto.users.UserDTO;
 import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.dto.users.UserPageDTO;
 import com.example.model.dto.users.UserRegisterDTO;
@@ -58,9 +59,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()", unless = "#result == null")
-    public IPage<Users> listUsersByPage(UserPageDTO queryDTO) {
+    public IPage<UserDTO> listUsersByPage(UserPageDTO queryDTO) {
         Page<Users> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectUserPage(page, queryDTO);
+        IPage<Users> usersPage = baseMapper.selectUserPage(page, queryDTO);
+        return usersPage.convert(this::convertToDTO);
     }
 
     /**
@@ -189,8 +191,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      */
     @Override
     @Cacheable(key = "#id", unless = "#result == null")
-    public Users getById(Long id) {
-        return super.getById(id);
+    public UserDTO getById(Long id) {
+        Users user = super.getById(id);
+        return convertToDTO(user);
     }
 
     /**
@@ -204,7 +207,22 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
             @CacheEvict(key = "#user.id"),
             @CacheEvict(cacheNames = "userStats", allEntries = true)
     })
-    public boolean updateById(Users user) {
+    public boolean updateById(UserDTO userDTO) {
+        Users user = new Users();
+        user.setId(userDTO.getId());
+        user.setUsername(userDTO.getUsername());
+        user.setNickname(userDTO.getNickname());
+        user.setPhone(userDTO.getPhone());
+        user.setEmail(userDTO.getEmail());
+        user.setAvatar(userDTO.getAvatar());
+        user.setGender(userDTO.getGender());
+        user.setStatus(userDTO.getStatus());
+        user.setRole(userDTO.getRole());
+        
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+        
         return super.updateById(user);
     }
 
@@ -249,6 +267,23 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public Boolean logout() {
         SecurityContextHolder.clearContext();
         return true;
+    }
+
+    private UserDTO convertToDTO(Users user) {
+        if (user == null) return null;
+        
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setPassword(null); // 清空敏感信息
+        dto.setNickname(user.getNickname());
+        dto.setPhone(user.getPhone());
+        dto.setEmail(user.getEmail());
+        dto.setAvatar(user.getAvatar());
+        dto.setGender(user.getGender());
+        dto.setStatus(user.getStatus());
+        dto.setRole(user.getRole());
+        return dto;
     }
 }
 

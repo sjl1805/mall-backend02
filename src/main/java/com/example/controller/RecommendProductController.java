@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
 import com.example.model.dto.product.RecommendProductDTO;
 import com.example.model.dto.product.RecommendProductPageDTO;
-import com.example.model.entity.RecommendProduct;
 import com.example.service.RecommendProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -79,7 +78,7 @@ public class RecommendProductController {
     @GetMapping
     @Operation(summary = "分页查询推荐", description = "管理端推荐商品分页查询接口")
     @ApiResponse(responseCode = "200", description = "成功返回推荐列表")
-    public Result<IPage<RecommendProduct>> listRecommends(
+    public Result<IPage<RecommendProductDTO>> listRecommends(
             @Valid RecommendProductPageDTO queryDTO) {
         return Result.success(recommendProductService.listRecommendPage(queryDTO));
     }
@@ -132,7 +131,7 @@ public class RecommendProductController {
     @GetMapping("/active")
     @Operation(summary = "有效推荐查询", description = "获取当前生效的推荐商品接口")
     @ApiResponse(responseCode = "200", description = "成功返回推荐列表")
-    public Result<List<RecommendProduct>> getActiveRecommends(
+    public Result<List<RecommendProductDTO>> getActiveRecommends(
             @Parameter(description = "推荐类型", example = "1", schema = @Schema(allowableValues = {"1", "2"}))
             @RequestParam(required = false) Integer type) {
         return Result.success(recommendProductService.getActiveRecommends(type));

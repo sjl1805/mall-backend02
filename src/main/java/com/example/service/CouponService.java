@@ -42,7 +42,7 @@ public interface CouponService extends IService<Coupon> {
      *                 - name: 券名称模糊查询
      * @return 分页结果（包含券基本信息及状态）
      */
-    IPage<Coupon> listCouponPage(CouponPageDTO queryDTO);
+    IPage<CouponDTO> listCouponPage(CouponPageDTO queryDTO);
 
     /**
      * 更新优惠券状态（启用/禁用）
@@ -65,7 +65,7 @@ public interface CouponService extends IService<Coupon> {
      * @return 有效且未过期的优惠券列表
      * @implNote 结果缓存优化，有效期5分钟
      */
-    List<Coupon> getAvailableCoupons();
+    List<CouponDTO> getAvailableCoupons();
 
     /**
      * 获取用户有效优惠券（用户中心）
@@ -75,5 +75,5 @@ public interface CouponService extends IService<Coupon> {
      *           1. 未使用（usageStatus=0）
      *           2. 有效期大于当前时间
      */
-    List<Coupon> getUserValidCoupons(Long userId);
+    List<CouponDTO> getUserValidCoupons(Long userId);
 }

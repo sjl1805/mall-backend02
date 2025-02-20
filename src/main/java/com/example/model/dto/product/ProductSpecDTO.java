@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import com.example.model.entity.ProductSpec;
 
 @Data
 @Schema(description = "商品规格数据传输对象")
@@ -25,4 +26,22 @@ public class ProductSpecDTO {
     @Size(max = 500, message = "规格值最长500个字符")
     @Schema(description = "规格可选值（JSON数组）", example = "[\"红色\",\"蓝色\",\"黑色\"]", requiredMode = Schema.RequiredMode.REQUIRED)
     private String specValues;
+
+    public static ProductSpecDTO fromEntity(ProductSpec spec) {
+        ProductSpecDTO dto = new ProductSpecDTO();
+        dto.setId(spec.getId());
+        dto.setProductId(spec.getProductId());
+        dto.setSpecName(spec.getSpecName());
+        dto.setSpecValues(spec.getSpecValues());
+        return dto;
+    }
+
+    public ProductSpec toEntity() {
+        ProductSpec spec = new ProductSpec();
+        spec.setId(this.id);
+        spec.setProductId(this.productId);
+        spec.setSpecName(this.specName);
+        spec.setSpecValues(this.specValues);
+        return spec;
+    }
 } 

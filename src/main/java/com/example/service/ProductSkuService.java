@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.ProductSku;
+import com.example.model.dto.product.ProductSkuDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public interface ProductSkuService extends IService<ProductSku> {
      * @return 操作是否成功
      * @throws com.example.exception.BusinessException 当商品状态不可编辑时抛出
      */
-    boolean batchCreateSkus(Long productId, List<ProductSku> skus);
+    boolean batchCreateSkus(Long productId, List<ProductSkuDTO> skus);
 
     /**
      * 获取商品SKU列表（带缓存）
@@ -33,7 +34,7 @@ public interface ProductSkuService extends IService<ProductSku> {
      * @return SKU列表（按创建时间排序）
      * @implNote 结果缓存优化，有效期30分钟
      */
-    List<ProductSku> getSkusByProductId(Long productId);
+    List<ProductSkuDTO> getSkusByProductId(Long productId);
 
     /**
      * 调整库存（原子操作）

@@ -3,6 +3,7 @@ package com.example.model.dto.product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.ProductReview;
 
 @Data
 @Schema(description = "商品评价数据传输对象")
@@ -40,4 +41,30 @@ public class ProductReviewDTO {
     @Max(2)
     @Schema(description = "审核状态：0-待审核 1-已通过 2-已拒绝", example = "0")
     private Integer status;
+
+    public static ProductReviewDTO fromEntity(ProductReview review) {
+        ProductReviewDTO dto = new ProductReviewDTO();
+        dto.setId(review.getId());
+        dto.setOrderId(review.getOrderId());
+        dto.setUserId(review.getUserId());
+        dto.setProductId(review.getProductId());
+        dto.setRating(review.getRating());
+        dto.setContent(review.getContent());
+        dto.setImages(review.getImages());
+        dto.setStatus(review.getStatus());
+        return dto;
+    }
+
+    public ProductReview toEntity() {
+        ProductReview review = new ProductReview();
+        review.setId(this.id);
+        review.setOrderId(this.orderId);
+        review.setUserId(this.userId);
+        review.setProductId(this.productId);
+        review.setRating(this.rating);
+        review.setContent(this.content);
+        review.setImages(this.images);
+        review.setStatus(this.status);
+        return review;
+    }
 } 

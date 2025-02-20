@@ -22,7 +22,7 @@ public interface CategoryService extends IService<Category> {
      * @param queryDTO 分页查询参数，包含页码、页大小及过滤条件
      * @return 分页结果对象，包含当前页数据和分页信息
      */
-    IPage<Category> listCategoryPage(CategoryPageDTO queryDTO);
+    IPage<CategoryDTO> listCategoryPage(CategoryPageDTO queryDTO);
 
     /**
      * 新增商品分类
@@ -51,7 +51,7 @@ public interface CategoryService extends IService<Category> {
      * 获取全部分类树形结构
      * @return 嵌套结构的分类列表，适合前端树形控件展示
      */
-    List<Category> getCategoryTree(Long parentId);
+    List<CategoryDTO> getCategoryTree(Long parentId);
 
     /**
      * 切换分类状态（启用/禁用）

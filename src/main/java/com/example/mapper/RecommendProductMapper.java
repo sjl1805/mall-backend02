@@ -8,7 +8,7 @@ import com.example.model.entity.RecommendProduct;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -75,9 +75,9 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @param endTime   推荐结束时间（需晚于开始时间）
      * @return 存在时间冲突返回冲突数量，否则返回0
      */
-    int checkTimeConflict(@Param("productId") Long productId,
-                          @Param("startTime") String startTime,
-                          @Param("endTime") String endTime);
+    int    checkTimeConflict(@Param("productId") Long productId,
+                          @Param("startTime") LocalDateTime startTime,
+                          @Param("endTime") LocalDateTime endTime);
 
     /**
      * 根据算法版本查询推荐（AB测试使用）
@@ -96,8 +96,8 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @return 符合时间范围的推荐列表
      */
     List<RecommendProduct> selectByTypeAndTimeRange(@Param("type") Integer type,
-                                                    @Param("start") Date start,
-                                                    @Param("end") Date end);
+                                                    @Param("start") LocalDateTime start,
+                                                    @Param("end") LocalDateTime end);
 
     /**
      * 批量插入推荐记录（支持导入功能）

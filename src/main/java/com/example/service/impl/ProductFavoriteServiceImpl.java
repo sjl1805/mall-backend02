@@ -120,11 +120,12 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':folder:' + #folderId")
-    public IPage<ProductFavorite> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO) {
+    public IPage<ProductFavoriteDTO> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO) {
         queryDTO.setUserId(userId);
         queryDTO.setFolderId(folderId);
         Page<ProductFavorite> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectFavoritePage(page, queryDTO);
+        IPage<ProductFavorite> favoritePage = baseMapper.selectFavoritePage(page, queryDTO);
+        return favoritePage.convert(this::convertToDTO);
     }
 
     /**
@@ -187,6 +188,12 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     @Override
     public boolean checkFavoriteExists(Long userId, Long productId) {
         return baseMapper.checkFavoriteExists(userId, productId) > 0;
+    }
+
+    private ProductFavoriteDTO convertToDTO(ProductFavorite favorite) {
+        ProductFavoriteDTO dto = new ProductFavoriteDTO();
+        BeanUtils.copyProperties(favorite, dto);
+        return dto;
     }
 }
 

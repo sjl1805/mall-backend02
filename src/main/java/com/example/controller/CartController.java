@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.common.Result;
 import com.example.model.dto.cart.CartDTO;
-import com.example.model.entity.Cart;
 import com.example.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -139,7 +138,7 @@ public class CartController {
     @GetMapping
     @Operation(summary = "购物车列表查询", description = "查询用户的完整购物车信息接口")
     @ApiResponse(responseCode = "200", description = "成功返回购物车列表")
-    public Result<List<Cart>> getCart(
+    public Result<List<CartDTO>> getCart(
             @Parameter(description = "用户ID", example = "1", required = true)
             @RequestParam @Min(1) Long userId) {
         return Result.success(cartService.getUserCart(userId));

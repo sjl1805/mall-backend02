@@ -3,8 +3,10 @@ package com.example.model.dto.users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.UserBehavior;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Data
 @Schema(description = "用户行为记录DTO")
@@ -27,7 +29,7 @@ public class UserBehaviorDTO {
     private Integer behaviorType;
 
     @Schema(description = "行为时间", example = "2023-08-01 12:30:45")
-    private Date behaviorTime;
+    private LocalDateTime behaviorTime;
 
     @Min(value = 0, message = "停留时长不能为负数")
     @Schema(description = "停留时长（秒）", example = "60")
@@ -36,5 +38,29 @@ public class UserBehaviorDTO {
     @DecimalMin("0.1")
     @DecimalMax("2.0")
     @Schema(description = "行为权重", example = "1.2")
-    private Double weight = 0.5;
+    private Integer weight = 0;
+
+    public static UserBehaviorDTO fromEntity(UserBehavior behavior) {
+        UserBehaviorDTO dto = new UserBehaviorDTO();
+        dto.setId(behavior.getId());
+        dto.setUserId(behavior.getUserId());
+        dto.setProductId(behavior.getProductId());
+        dto.setBehaviorType(behavior.getBehaviorType());
+        dto.setBehaviorTime(behavior.getBehaviorTime());
+        dto.setDuration(behavior.getDuration());
+        dto.setWeight(behavior.getWeight());
+        return dto;
+    }
+
+    public UserBehavior toEntity() {
+        UserBehavior behavior = new UserBehavior();
+        behavior.setId(this.id);
+        behavior.setUserId(this.userId);
+        behavior.setProductId(this.productId);
+        behavior.setBehaviorType(this.behaviorType);
+        behavior.setBehaviorTime(this.behaviorTime);
+        behavior.setDuration(this.duration);
+        behavior.setWeight(this.weight);
+        return behavior;
+    }
 } 

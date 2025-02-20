@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.OrderItem;
+import com.example.model.dto.order.OrderItemDTO;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface OrderItemService extends IService<OrderItem> {
      * @return 订单项列表（包含商品详情）
      * @implNote 用于订单详情页展示
      */
-    List<OrderItem> listByOrderId(Long orderId);
+    List<OrderItemDTO> listByOrderId(Long orderId);
 
     /**
      * 更新评价状态
@@ -32,4 +33,12 @@ public interface OrderItemService extends IService<OrderItem> {
      * @implNote 将指定订单项标记为已评价
      */
     boolean updateCommentStatus(Long orderId, Long productId);
+
+    /**
+     * 根据订单ID查询订单项（返回实体）
+     * @param orderId 订单ID
+     * @return 订单项列表（包含商品详情）
+     * @implNote 用于订单详情页展示
+     */
+    List<OrderItem> listByOrderIdEntities(Long orderId);
 }

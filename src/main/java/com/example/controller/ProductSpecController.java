@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.common.Result;
 import com.example.model.dto.product.ProductSpecDTO;
-import com.example.model.entity.ProductSpec;
 import com.example.service.ProductSpecService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -73,7 +72,7 @@ public class ProductSpecController {
     @GetMapping
     @Operation(summary = "商品规格查询", description = "获取指定商品的所有规格信息接口")
     @ApiResponse(responseCode = "200", description = "成功返回规格列表")
-    public Result<List<ProductSpec>> getSpecs(
+    public Result<List<ProductSpecDTO>> getSpecs(
             @Parameter(description = "商品ID", example = "1", required = true)
             @PathVariable @Min(1) Long productId) {
         return Result.success(productSpecService.getSpecsByProductId(productId));

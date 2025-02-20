@@ -6,7 +6,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import com.example.model.entity.UserCoupon;
 
 @Data
 @Schema(description = "用户优惠券数据传输对象")
@@ -31,5 +32,27 @@ public class UserCouponDTO {
     private Long orderId;
 
     @Schema(description = "使用时间（自动更新）", example = "2023-08-15 14:30:00")
-    private Date useTime;
+    private LocalDateTime useTime;
+
+    public static UserCouponDTO fromEntity(UserCoupon userCoupon) {
+        UserCouponDTO dto = new UserCouponDTO();
+        dto.setId(userCoupon.getId());
+        dto.setUserId(userCoupon.getUserId());
+        dto.setCouponId(userCoupon.getCouponId());
+        dto.setStatus(userCoupon.getStatus());
+        dto.setOrderId(userCoupon.getOrderId());
+        dto.setUseTime(userCoupon.getUseTime());
+        return dto;
+    }
+
+    public UserCoupon toEntity() {
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setId(this.id);
+        userCoupon.setUserId(this.userId);
+        userCoupon.setCouponId(this.couponId);
+        userCoupon.setStatus(this.status);
+        userCoupon.setOrderId(this.orderId);
+        userCoupon.setUseTime(this.useTime);
+        return userCoupon;
+    }
 } 

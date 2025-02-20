@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.UserCoupon;
+import com.example.model.dto.users.UserCouponDTO;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public interface UserCouponService extends IService<UserCoupon> {
      * @return 有效优惠券列表（按领取时间倒序）
      * @implNote 结果缓存优化，有效期30分钟
      */
-    List<UserCoupon> getValidCoupons(Long userId);
+    List<UserCouponDTO> getValidCoupons(Long userId);
 
     /**
      * 自动过期优惠券（定时任务）

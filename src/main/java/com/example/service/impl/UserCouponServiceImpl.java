@@ -5,6 +5,7 @@ import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UserCouponMapper;
 import com.example.model.entity.UserCoupon;
+import com.example.model.dto.users.UserCouponDTO;
 import com.example.service.UserCouponService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户优惠券服务实现类
@@ -85,12 +87,15 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':valid'")
-    public List<UserCoupon> getValidCoupons(Long userId) {
+    public List<UserCouponDTO> getValidCoupons(Long userId) {
         return lambdaQuery()
                 .eq(UserCoupon::getUserId, userId)
                 .eq(UserCoupon::getStatus, 0)
                 .orderByDesc(UserCoupon::getGetTime)
-                .list();
+                .list()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -124,6 +129,17 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
     @CacheEvict(key = "'user:' + #userId")
     public boolean returnCoupon(Long userId, Long userCouponId) {
         return baseMapper.updateStatusByUser(userId, userCouponId, 0, null) > 0;
+    }
+
+    private UserCouponDTO convertToDTO(UserCoupon userCoupon) {
+        UserCouponDTO dto = new UserCouponDTO();
+        dto.setId(userCoupon.getId());
+        dto.setUserId(userCoupon.getUserId());
+        dto.setCouponId(userCoupon.getCouponId());
+        dto.setStatus(userCoupon.getStatus());
+        dto.setOrderId(userCoupon.getOrderId());
+        dto.setUseTime(userCoupon.getUseTime());
+        return dto;
     }
 }
 

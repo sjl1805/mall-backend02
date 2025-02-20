@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UserAddressMapper;
+import com.example.model.dto.users.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户地址服务实现类
@@ -59,8 +63,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':default'")
-    public UserAddress getDefaultAddress(Long userId) {
-        return baseMapper.selectDefaultByUserId(userId);
+    public UserAddressDTO getDefaultAddress(Long userId) {
+        UserAddress address = baseMapper.selectDefaultByUserId(userId);
+        if (address == null) {
+            return null;
+        }
+        return UserAddressDTO.fromEntity(address);
     }
 
     /**
@@ -74,11 +82,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     @Override
     @Transactional
     @CacheEvict(key = "'user:' + #address.userId")
-    public boolean addAddress(UserAddress address) {
-        if (countUserAddresses(address.getUserId()) == 0) {
-            address.setIsDefault(1);
+    public boolean addAddress(UserAddressDTO address) {
+        UserAddress entity = convertToEntity(address);
+        if (countUserAddresses(entity.getUserId()) == 0) {
+            entity.setIsDefault(1);
         }
-        return save(address);
+        return save(entity);
     }
 
     /**
@@ -94,11 +103,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     @Override
     @Transactional
     @CacheEvict(key = "'user:' + #userId + ':list'", beforeInvocation = true)
-    public boolean updateAddress(Long userId, UserAddress address) {
+    public boolean updateAddress(Long userId, UserAddressDTO address) {
         if (!checkAddressOwnership(userId, address.getId())) {
             throw new BusinessException(ResultCode.ADDRESS_ACCESS_DENIED);
         }
-        return updateById(address);
+        UserAddress entity = convertToEntity(address);
+        return updateById(entity);
     }
 
     /**
@@ -131,12 +141,15 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':list'")
-    public List<UserAddress> listUserAddresses(Long userId) {
+    public List<UserAddressDTO> listUserAddresses(Long userId) {
         return lambdaQuery()
                 .eq(UserAddress::getUserId, userId)
                 .orderByDesc(UserAddress::getIsDefault)
                 .orderByDesc(UserAddress::getUpdateTime)
-                .list();
+                .list()
+                .stream()
+                .map(UserAddressDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -177,6 +190,13 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
                 .isNotNull(UserAddress::getDistrict)
                 .isNotNull(UserAddress::getDetailAddress)
                 .exists();
+    }
+
+
+    private UserAddress convertToEntity(UserAddressDTO dto) {
+        UserAddress entity = new UserAddress();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
     }
 }
 

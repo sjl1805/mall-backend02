@@ -39,7 +39,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
      * @return 按排序值升序排列的收藏夹列表
      * @implNote 结果缓存优化，有效期15分钟
      */
-    List<FavoriteFolder> getUserFolders(Long userId);
+    List<FavoriteFolderDTO> getUserFolders(Long userId);
 
     /**
      * 更新收藏夹信息
@@ -89,7 +89,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
      * @return 分页结果（包含收藏夹基本信息）
      * @implNote 结果缓存优化，有效期5分钟
      */
-    IPage<FavoriteFolder> listPublicFolders(FavoriteFolderPageDTO queryDTO);
+    IPage<FavoriteFolderDTO> listPublicFolders(FavoriteFolderPageDTO queryDTO);
 
     /**
      * 更新收藏项数量（原子操作）

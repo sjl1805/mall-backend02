@@ -11,7 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.List;
 /**
  * 商品表
  *
@@ -59,7 +59,7 @@ public class Products implements Serializable {
      * 商品图片JSON数组
      */
     @Schema(description = "商品图片列表", example = "[\"/images/products/mate50_1.jpg\"]")
-    private Object images;
+    private List<String> images;
     /**
      * 创建时间（带时区）
      */

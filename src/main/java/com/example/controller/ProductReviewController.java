@@ -82,7 +82,7 @@ public class ProductReviewController {
     @GetMapping
     @Operation(summary = "评价分页查询", description = "管理端商品评价分页查询接口")
     @ApiResponse(responseCode = "200", description = "成功返回评价列表")
-    public Result<IPage<ProductReview>> listReviews(
+    public Result<IPage<ProductReviewDTO>> listReviews(
             @Parameter(description = "商品ID", example = "1", required = true)
             @PathVariable @Min(1) Long productId,
             @Valid ProductReviewPageDTO queryDTO) {

@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.UserAddress;
+import com.example.model.dto.users.UserAddressDTO;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * @return 默认地址信息
      * @implNote 结果缓存优化，有效期30分钟
      */
-    UserAddress getDefaultAddress(Long userId);
+    UserAddressDTO getDefaultAddress(Long userId);
 
     /**
      * 添加地址（自动设置默认）
@@ -40,7 +41,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * @return 操作是否成功
      * @implNote 首次添加自动设为默认地址
      */
-    boolean addAddress(UserAddress address);
+    boolean addAddress(UserAddressDTO address);
 
     /**
      * 更新地址（带权限校验）
@@ -49,7 +50,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * @return 操作是否成功
      * @throws com.example.exception.BusinessException 当地址不属于用户时抛出
      */
-    boolean updateAddress(Long userId, UserAddress address);
+    boolean updateAddress(Long userId, UserAddressDTO address);
 
     /**
      * 删除地址（带权限校验）
@@ -66,7 +67,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * @return 地址列表（默认地址优先）
      * @implNote 结果缓存优化，有效期1小时
      */
-    List<UserAddress> listUserAddresses(Long userId);
+    List<UserAddressDTO> listUserAddresses(Long userId);
 
     /**
      * 校验地址有效性

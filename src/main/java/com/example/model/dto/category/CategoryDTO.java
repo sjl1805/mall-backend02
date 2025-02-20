@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
-
+import com.example.model.entity.Category;
 /**
  * 分类数据传输对象
  *
@@ -44,4 +44,28 @@ public class CategoryDTO {
     @Max(value = 1, message = "状态参数错误")
     @Schema(description = "状态：0-禁用 1-启用", example = "1", defaultValue = "1")
     private Integer status = 1;
+
+    public static CategoryDTO fromEntity(Category category) {
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(category.getId());
+        dto.setParentId(category.getParentId());
+        dto.setName(category.getName());
+        dto.setIcon(category.getIcon());
+        dto.setLevel(category.getLevel());
+        dto.setSort(category.getSort());
+        dto.setStatus(category.getStatus());
+        return dto;
+    }
+
+    public Category toEntity() {
+        Category category = new Category();
+        category.setId(this.id);
+        category.setParentId(this.parentId);
+        category.setName(this.name);
+        category.setIcon(this.icon);
+        category.setLevel(this.level);
+        category.setSort(this.sort);
+        category.setStatus(this.status);
+        return category;
+    }
 } 

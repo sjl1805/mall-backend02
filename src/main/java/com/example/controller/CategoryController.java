@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
 import com.example.model.dto.category.CategoryDTO;
 import com.example.model.dto.category.CategoryPageDTO;
-import com.example.model.entity.Category;
 import com.example.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,7 +50,7 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "分类分页查询", description = "获取带分页的分类列表接口")
     @ApiResponse(responseCode = "200", description = "成功返回分页数据")
-    public Result<IPage<Category>> listCategories(
+    public Result<IPage<CategoryDTO>> listCategories(
             @Parameter(description = "分页查询参数") @Valid CategoryPageDTO queryDTO) {
         return Result.success(categoryService.listCategoryPage(queryDTO));
     }
@@ -129,7 +128,7 @@ public class CategoryController {
     @GetMapping("/tree")
     @Operation(summary = "分类树查询", description = "获取全部分类的树形结构接口")
     @ApiResponse(responseCode = "200", description = "成功返回树形结构")
-    public Result<List<Category>> getCategoryTree(
+    public Result<List<CategoryDTO>> getCategoryTree(
             @Parameter(description = "父分类ID", example = "0", required = true)
             @RequestParam(required = false, defaultValue = "0") Long parentId) {
         return Result.success(categoryService.getCategoryTree(parentId));

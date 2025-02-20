@@ -68,9 +68,10 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
      */
     @Override
     @Cacheable(key = "'product:' + #queryDTO.productId + ':page:' + #queryDTO.hashCode()")
-    public IPage<ProductReview> listReviewsPage(ProductReviewPageDTO queryDTO) {
+    public IPage<ProductReviewDTO> listReviewsPage(ProductReviewPageDTO queryDTO) {
         Page<ProductReview> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectReviewPage(page, queryDTO);
+        IPage<ProductReview> reviewPage = baseMapper.selectReviewPage(page, queryDTO);
+        return reviewPage.convert(this::convertToDTO);
     }
 
     /**
@@ -134,6 +135,12 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
     @Cacheable(key = "'user:' + #userId + ':reviews'")
     public List<ProductReview> getLatestUserReviews(Long userId, Integer limit) {
         return baseMapper.selectLatestUserReviews(userId, limit);
+    }
+
+    private ProductReviewDTO convertToDTO(ProductReview review) {
+        ProductReviewDTO dto = new ProductReviewDTO();
+        BeanUtils.copyProperties(review, dto);
+        return dto;
     }
 }
 

@@ -3,6 +3,8 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.OrdersMapper;
 import com.example.model.dto.order.OrderCreateDTO;
+import com.example.model.dto.order.OrderItemDTO;
+import com.example.model.dto.order.OrdersDTO;
 import com.example.model.entity.OrderItem;
 import com.example.model.entity.Orders;
 import com.example.service.OrderItemService;
@@ -124,14 +126,14 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
      */
     @Override
     @Cacheable(key = "'order:' + #orderNo")
-    public Orders getOrderDetail(String orderNo) {
+    public OrdersDTO getOrderDetail(String orderNo) {
         Orders order = lambdaQuery()
                 .eq(Orders::getOrderNo, orderNo)
                 .one();
         if (order != null) {
-            order.setItems(orderItemService.listByOrderId(order.getId()));
+            order.setItems(orderItemService.listByOrderIdEntities(order.getId()));
         }
-        return order;
+        return convertToDTO(order);
     }
 
     /**
@@ -147,6 +149,25 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
     @CacheEvict(allEntries = true)
     public void autoCancelUnpaidOrders() {
         baseMapper.autoCancelOrders(30);
+    }
+
+    private OrdersDTO convertToDTO(Orders order) {
+        OrdersDTO dto = new OrdersDTO();
+        BeanUtils.copyProperties(order, dto);
+        // 转换嵌套的订单项
+        if (order.getItems() != null) {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                    .map(this::convertItemToDTO)
+                    .collect(Collectors.toList());
+            dto.setItems(itemDTOs);
+        }
+        return dto;
+    }
+
+    private OrderItemDTO convertItemToDTO(OrderItem item) {
+        OrderItemDTO dto = new OrderItemDTO();
+        BeanUtils.copyProperties(item, dto);
+        return dto;
     }
 }
 

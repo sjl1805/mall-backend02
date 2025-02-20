@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.entity.UserCoupon;
+import com.example.model.dto.users.UserCouponDTO;
 import com.example.service.UserCouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -93,7 +93,7 @@ public class UserCouponController {
     @Operation(summary = "有效优惠券查询", description = "获取用户可用优惠券列表")
     @ApiResponse(responseCode = "200", description = "成功返回优惠券列表")
     @ApiResponse(responseCode = "400", description = "参数校验失败")
-    public Result<List<UserCoupon>> getValidCoupons(
+    public Result<List<UserCouponDTO>> getValidCoupons(
             @Parameter(description = "用户ID", example = "1", required = true) 
             @PathVariable @Min(1) Long userId) {
         return Result.success(userCouponService.getValidCoupons(userId));

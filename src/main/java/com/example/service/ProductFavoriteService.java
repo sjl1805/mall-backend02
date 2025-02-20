@@ -51,7 +51,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
      * @return 分页结果（包含商品基本信息）
      * @implNote 结果缓存优化，有效期10分钟
      */
-    IPage<ProductFavorite> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO);
+    IPage<ProductFavoriteDTO> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO);
 
     /**
      * 批量转移收藏夹

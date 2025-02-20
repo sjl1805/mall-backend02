@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 用户行为服务实现类
@@ -69,8 +70,10 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':recent'")
-    public List<UserBehavior> getRecentBehaviors(Long userId, Integer limit) {
-        return baseMapper.selectRecentBehaviors(userId, limit);
+    public List<UserBehaviorDTO> getRecentBehaviors(Long userId, Integer limit) {
+        return baseMapper.selectRecentBehaviors(userId, limit).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -138,6 +141,12 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
     //     );
     //     // 将分析结果存储到数据库或发送到消息队列
     // }
+
+    private UserBehaviorDTO convertToDTO(UserBehavior behavior) {
+        UserBehaviorDTO dto = new UserBehaviorDTO();
+        BeanUtils.copyProperties(behavior, dto);
+        return dto;
+    }
 }
 
 

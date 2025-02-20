@@ -3,6 +3,7 @@ package com.example.model.dto.order;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.OrderItem;
 
 import java.math.BigDecimal;
 
@@ -48,4 +49,30 @@ public class OrderItemDTO {
     @Max(1)
     @Schema(description = "评价状态：0-未评价 1-已评价", defaultValue = "0", example = "1")
     private Integer commentStatus = 0;
+
+    public static OrderItemDTO fromEntity(OrderItem item ) {
+        OrderItemDTO dto = new OrderItemDTO();
+        dto.setId(item.getId());
+        dto.setOrderId(item.getOrderId());
+        dto.setProductId(item.getProductId());
+        dto.setProductName(item.getProductName());
+        dto.setProductImage(item.getProductImage());
+        dto.setPrice(item.getPrice());
+        dto.setQuantity(item.getQuantity());
+        dto.setTotalAmount(item.getTotalAmount());
+        return dto;
+    }
+
+    public OrderItem toEntity() {
+        OrderItem item = new OrderItem();
+        item.setId(this.id);
+        item.setOrderId(this.orderId);
+        item.setProductId(this.productId);
+        item.setProductName(this.productName);
+        item.setProductImage(this.productImage);
+        item.setPrice(this.price);
+        item.setQuantity(this.quantity);
+        item.setTotalAmount(this.totalAmount);
+        return item;
+    }
 } 

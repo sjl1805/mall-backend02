@@ -9,7 +9,6 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -69,5 +68,5 @@ public class UserBehavior implements Serializable {
      * 行为权重
      */
     @Schema(description = "行为权重系数", example = "0.8")
-    private BigDecimal weight;
+    private Integer weight;
 }

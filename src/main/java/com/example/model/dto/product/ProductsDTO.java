@@ -3,6 +3,7 @@ package com.example.model.dto.product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.Products;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,4 +43,30 @@ public class ProductsDTO {
     @Max(value = 1, message = "状态参数错误")
     @Schema(description = "状态：0-下架 1-上架", example = "1", defaultValue = "1")
     private Integer status = 1;
+
+    public static ProductsDTO fromEntity(Products product) {
+        ProductsDTO dto = new ProductsDTO();
+        dto.setId(product.getId());
+        dto.setCategoryId(product.getCategoryId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStock(product.getStock());
+        dto.setImages(product.getImages());
+        dto.setStatus(product.getStatus());
+        return dto;
+    }
+
+    public Products toEntity() {
+        Products product = new Products();
+        product.setId(this.id);
+        product.setCategoryId(this.categoryId);
+        product.setName(this.name);
+        product.setDescription(this.description);
+        product.setPrice(this.price);
+        product.setStock(this.stock);
+        product.setImages(this.images);
+        product.setStatus(this.status);
+        return product;
+    }
 } 

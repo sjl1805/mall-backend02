@@ -44,7 +44,7 @@ public interface ProductReviewService extends IService<ProductReview> {
      * @return 分页结果（包含评价详情）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<ProductReview> listReviewsPage(ProductReviewPageDTO queryDTO);
+    IPage<ProductReviewDTO> listReviewsPage(ProductReviewPageDTO queryDTO);
 
     /**
      * 更新评价状态（管理端）

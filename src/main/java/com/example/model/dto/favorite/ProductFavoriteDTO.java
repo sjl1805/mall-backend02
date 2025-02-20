@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import com.example.model.entity.ProductFavorite;
 
 @Data
 @Schema(description = "商品收藏数据传输对象")
@@ -23,6 +24,22 @@ public class ProductFavoriteDTO {
     @Schema(description = "收藏夹ID", example = "1", requiredMode = RequiredMode.REQUIRED)
     private Long folderId;
 
-    @Schema(description = "自定义标签（JSON格式）", example = "{\"重要程度\":\"高\"}")
-    private String tags;
+
+    public static ProductFavoriteDTO fromEntity(ProductFavorite favorite) {
+        ProductFavoriteDTO dto = new ProductFavoriteDTO();
+        dto.setId(favorite.getId());
+        dto.setUserId(favorite.getUserId());
+        dto.setProductId(favorite.getProductId());
+        dto.setFolderId(favorite.getFolderId());
+        return dto;
+    }
+
+    public ProductFavorite toEntity() {
+        ProductFavorite favorite = new ProductFavorite();
+        favorite.setId(this.id);
+        favorite.setUserId(this.userId);
+        favorite.setProductId(this.productId);
+        favorite.setFolderId(this.folderId);
+        return favorite;
+    }
 } 

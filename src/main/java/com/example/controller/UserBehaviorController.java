@@ -75,7 +75,7 @@ public class UserBehaviorController {
     @Operation(summary = "近期行为查询", description = "获取用户最近行为记录接口")
     @ApiResponse(responseCode = "200", description = "成功返回行为列表")
     @ApiResponse(responseCode = "400", description = "参数校验失败")
-    public Result<List<UserBehavior>> getRecentBehaviors(
+    public Result<List<UserBehaviorDTO>> getRecentBehaviors(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId,
             @Parameter(description = "查询数量", example = "10", schema = @Schema(maximum = "100")) 

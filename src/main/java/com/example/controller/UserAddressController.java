@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
+import com.example.model.dto.users.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,7 +62,7 @@ public class UserAddressController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = UserAddress.class))
             )
-            @Valid @RequestBody UserAddress address) {
+            @Valid @RequestBody UserAddressDTO address) {
         address.setUserId(userId);
         return Result.success(userAddressService.addAddress(address));
     }
@@ -86,7 +87,7 @@ public class UserAddressController {
             @PathVariable @Min(1) Long userId,
             @Parameter(description = "地址ID", example = "1", required = true)
             @PathVariable @Min(1) Long addressId,
-            @Valid @RequestBody UserAddress address) {
+            @Valid @RequestBody UserAddressDTO address) {
         address.setId(addressId);
         address.setUserId(userId);
         return Result.success(userAddressService.updateAddress(userId, address));
@@ -120,7 +121,7 @@ public class UserAddressController {
     @GetMapping
     @Operation(summary = "地址列表查询", description = "获取用户所有收货地址接口")
     @ApiResponse(responseCode = "200", description = "成功返回地址列表")
-    public Result<List<UserAddress>> listAddresses(
+    public Result<List<UserAddressDTO>> listAddresses(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId) {
         return Result.success(userAddressService.listUserAddresses(userId));
@@ -156,7 +157,7 @@ public class UserAddressController {
     @Operation(summary = "默认地址查询", description = "获取用户默认收货地址接口")
     @ApiResponse(responseCode = "200", description = "成功返回默认地址")
     @ApiResponse(responseCode = "404", description = "未设置默认地址")
-    public Result<UserAddress> getDefaultAddress(
+    public Result<UserAddressDTO> getDefaultAddress(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId) {
         return Result.success(userAddressService.getDefaultAddress(userId));

@@ -41,7 +41,7 @@ public interface RecommendProductService extends IService<RecommendProduct> {
      * @return 分页结果（包含推荐详情）
      * @implNote 结果缓存优化，有效期10分钟
      */
-    IPage<RecommendProduct> listRecommendPage(RecommendProductPageDTO queryDTO);
+    IPage<RecommendProductDTO> listRecommendPage(RecommendProductPageDTO queryDTO);
 
     /**
      * 更新推荐状态（管理端）
@@ -66,7 +66,7 @@ public interface RecommendProductService extends IService<RecommendProduct> {
      * @return 推荐列表（按排序值倒序）
      * @implNote 结果缓存优化，有效期30分钟
      */
-    List<RecommendProduct> getActiveRecommends(Integer type);
+    List<RecommendProductDTO> getActiveRecommends(Integer type);
 
     /**
      * 获取推荐统计（带缓存）

@@ -72,9 +72,10 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<RecommendProduct> listRecommendPage(RecommendProductPageDTO queryDTO) {
+    public IPage<RecommendProductDTO> listRecommendPage(RecommendProductPageDTO queryDTO) {
         Page<RecommendProduct> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectRecommendPage(page, queryDTO);
+        IPage<RecommendProduct> recommendPage = baseMapper.selectRecommendPage(page, queryDTO);
+        return recommendPage.convert(this::convertToDTO);
     }
 
     /**
@@ -115,8 +116,10 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
      */
     @Override
     @Cacheable(key = "'active:' + #type")
-    public List<RecommendProduct> getActiveRecommends(Integer type) {
-        return baseMapper.selectByTypeAndStatus(type, 1);
+    public List<RecommendProductDTO> getActiveRecommends(Integer type) {
+        return baseMapper.selectByTypeAndStatus(type, 1).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -160,6 +163,13 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
         });
         return baseMapper.batchInsert(recommends) > 0;
     }
+
+    private RecommendProductDTO convertToDTO(RecommendProduct recommend) {
+        RecommendProductDTO dto = new RecommendProductDTO();
+        BeanUtils.copyProperties(recommend, dto);
+        return dto;
+    }
+
 }
 
 

@@ -3,6 +3,7 @@ package com.example.model.dto.users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.Users;
 
 @Data
 @Schema(description = "用户信息传输对象")
@@ -51,4 +52,32 @@ public class UserDTO {
             allowableValues = {"0", "1", "2", "9"},
             defaultValue = "1")
     private Integer role = 1;
+
+    public static UserDTO fromEntity(Users user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setNickname(user.getNickname());
+        dto.setPhone(user.getPhone());
+        dto.setEmail(user.getEmail());
+        dto.setAvatar(user.getAvatar());
+        dto.setGender(user.getGender());
+        dto.setStatus(user.getStatus());
+        dto.setRole(user.getRole());
+        return dto;
+    }
+
+    public Users toEntity() {
+        Users user = new Users();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        user.setNickname(this.nickname);
+        user.setPhone(this.phone);
+        user.setEmail(this.email);
+        user.setAvatar(this.avatar);
+        user.setGender(this.gender);
+        user.setStatus(this.status);
+        user.setRole(this.role);
+        return user;
+    }
 } 

@@ -64,7 +64,7 @@ public interface CartService extends IService<Cart> {
      * @return 按更新时间倒序排列的购物车项列表
      * @implNote 结果缓存优化，有效期10分钟
      */
-    List<Cart> getUserCart(Long userId);
+    List<CartDTO> getUserCart(Long userId);
 
     /**
      * 获取购物车商品总数

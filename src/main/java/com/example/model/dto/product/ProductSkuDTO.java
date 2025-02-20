@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
+import com.example.model.entity.ProductSku;
 
 import java.math.BigDecimal;
 
@@ -43,4 +44,30 @@ public class ProductSkuDTO {
     @Max(value = 1, message = "状态参数错误")
     @Schema(description = "状态：0-下架 1-上架", example = "1", defaultValue = "1")
     private Integer status = 1;
+
+    public static ProductSkuDTO fromEntity(ProductSku sku) {
+        ProductSkuDTO dto = new ProductSkuDTO();
+        dto.setId(sku.getId());
+        dto.setProductId(sku.getProductId());
+        dto.setSpecValues(sku.getSpecValues());
+        dto.setPrice(sku.getPrice());
+        dto.setStock(sku.getStock());
+        dto.setSales(sku.getSales());
+        dto.setMainImage(sku.getMainImage());
+        dto.setStatus(sku.getStatus());
+        return dto;
+    }
+
+    public ProductSku toEntity() {
+        ProductSku sku = new ProductSku();
+        sku.setId(this.id);
+        sku.setProductId(this.productId);
+        sku.setSpecValues(this.specValues);
+        sku.setPrice(this.price);
+        sku.setStock(this.stock);
+        sku.setSales(this.sales);
+        sku.setMainImage(this.mainImage);
+        sku.setStatus(this.status);
+        return sku;
+    }
 } 

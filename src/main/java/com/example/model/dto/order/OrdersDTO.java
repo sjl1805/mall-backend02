@@ -7,6 +7,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.example.model.entity.Orders;
+
 @Data
 @Schema(description = "订单数据传输对象")
 public class OrdersDTO {
@@ -70,4 +72,38 @@ public class OrdersDTO {
     @Size(max = 64, message = "运单号过长")
     @Schema(description = "运单号", example = "SF123456789")
     private String trackingNumber;
+
+    public static OrdersDTO fromEntity(Orders order) {
+        OrdersDTO dto = new OrdersDTO();
+        dto.setId(order.getId());
+        dto.setOrderNo(order.getOrderNo());
+        dto.setUserId(order.getUserId());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setPayAmount(order.getPayAmount());
+        dto.setStatus(order.getStatus());
+        dto.setReceiverName(order.getReceiverName());
+        dto.setReceiverPhone(order.getReceiverPhone());
+        dto.setReceiverAddress(order.getReceiverAddress());
+        dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setLogisticsCompany(order.getLogisticsCompany());
+        dto.setTrackingNumber(order.getTrackingNumber());
+        return dto;
+    }
+
+    public Orders toEntity() {
+        Orders order = new Orders();
+        order.setId(this.id);
+        order.setOrderNo(this.orderNo);
+        order.setUserId(this.userId);
+        order.setTotalAmount(this.totalAmount);
+        order.setPayAmount(this.payAmount);
+        order.setStatus(this.status);
+        order.setReceiverName(this.receiverName);
+        order.setReceiverPhone(this.receiverPhone);
+        order.setReceiverAddress(this.receiverAddress);
+        order.setPaymentMethod(this.paymentMethod);
+        order.setLogisticsCompany(this.logisticsCompany);
+        order.setTrackingNumber(this.trackingNumber);
+        return order;
+    }
 } 

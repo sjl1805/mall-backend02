@@ -3,6 +3,7 @@ package com.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.dto.order.OrderCreateDTO;
 import com.example.model.entity.Orders;
+import com.example.model.dto.order.OrdersDTO;
 
 /**
  * 订单服务接口
@@ -50,7 +51,7 @@ public interface OrdersService extends IService<Orders> {
      * @return 完整订单信息（包含订单项列表）
      * @implNote 结果缓存优化，有效期30分钟
      */
-    Orders getOrderDetail(String orderNo);
+    OrdersDTO getOrderDetail(String orderNo);
 
     /**
      * 自动取消未支付订单（定时任务）

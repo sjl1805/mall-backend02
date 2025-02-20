@@ -33,7 +33,7 @@ public interface ProductSpecService extends IService<ProductSpec> {
      * @return 规格列表（按创建时间排序）
      * @implNote 结果缓存优化，有效期30分钟
      */
-    List<ProductSpec> getSpecsByProductId(Long productId);
+    List<ProductSpecDTO> getSpecsByProductId(Long productId);
 
     /**
      * 更新规格值（原子操作）

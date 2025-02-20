@@ -37,7 +37,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
      * @return 行为列表（按时间倒序）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    List<UserBehavior> getRecentBehaviors(Long userId, Integer limit);
+    List<UserBehaviorDTO> getRecentBehaviors(Long userId, Integer limit);
 
     /**
      * 计算用户权重（带缓存）

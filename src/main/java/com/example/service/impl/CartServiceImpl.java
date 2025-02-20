@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 购物车服务实现类
@@ -118,11 +119,14 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
      */
     @Override
     @Cacheable(key = "'user:' + #userId")
-    public List<Cart> getUserCart(Long userId) {
+    public List<CartDTO> getUserCart(Long userId) {
         return lambdaQuery()
                 .eq(Cart::getUserId, userId)
                 .orderByDesc(Cart::getUpdateTime)
-                .list();
+                .list()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -153,6 +157,12 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
     @CacheEvict(key = "'user:' + #userId")
     public boolean removeCartItems(Long userId, List<Long> cartIds) {
         return baseMapper.batchDelete(cartIds) > 0;
+    }
+
+    private CartDTO convertToDTO(Cart cart) {
+        CartDTO dto = new CartDTO();
+        BeanUtils.copyProperties(cart, dto);
+        return dto;
     }
 }
 

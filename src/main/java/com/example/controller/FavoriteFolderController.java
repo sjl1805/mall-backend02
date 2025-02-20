@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
 import com.example.model.dto.favorite.FavoriteFolderDTO;
 import com.example.model.dto.favorite.FavoriteFolderPageDTO;
-import com.example.model.entity.FavoriteFolder;
 import com.example.service.FavoriteFolderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,7 +76,7 @@ public class FavoriteFolderController {
     @GetMapping("/folders")
     @Operation(summary = "用户收藏夹查询", description = "查询用户的所有收藏夹列表接口")
     @ApiResponse(responseCode = "200", description = "成功返回收藏夹列表")
-    public Result<List<FavoriteFolder>> getUserFolders(
+    public Result<List<FavoriteFolderDTO>> getUserFolders(
             @Parameter(description = "用户ID", example = "1", required = true)
             @PathVariable @Min(1) Long userId) {
         return Result.success(favoriteFolderService.getUserFolders(userId));
@@ -187,7 +186,7 @@ public class FavoriteFolderController {
     @GetMapping("/public-folders")
     @Operation(summary = "公开收藏夹浏览", description = "分页查看公开的收藏夹接口")
     @ApiResponse(responseCode = "200", description = "成功返回公开收藏夹列表")
-    public Result<IPage<FavoriteFolder>> listPublicFolders(
+    public Result<IPage<FavoriteFolderDTO>> listPublicFolders(
             @Parameter(description = "分页查询参数") @Valid FavoriteFolderPageDTO queryDTO) {
         return Result.success(favoriteFolderService.listPublicFolders(queryDTO));
     }

@@ -56,9 +56,10 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<Products> listProductsPage(ProductsPageDTO queryDTO) {
+    public IPage<ProductsDTO> listProductsPage(ProductsPageDTO queryDTO) {
         Page<Products> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectProductPage(page, queryDTO);
+        IPage<Products> productPage = baseMapper.selectProductPage(page, queryDTO);
+        return productPage.convert(this::convertToDTO);
     }
 
     /**
@@ -173,6 +174,12 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
      */
     private boolean checkNameExists(String name, Long excludeId) {
         return baseMapper.checkNameUnique(name, excludeId) > 0;
+    }
+
+    private ProductsDTO convertToDTO(Products product) {
+        ProductsDTO dto = new ProductsDTO();
+        BeanUtils.copyProperties(product, dto);
+        return dto;
     }
 }
 

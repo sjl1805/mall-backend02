@@ -53,7 +53,7 @@ public class ProductsController {
     @GetMapping
     @Operation(summary = "商品分页查询", description = "管理端商品分页查询接口")
     @ApiResponse(responseCode = "200", description = "成功返回分页数据")
-    public Result<IPage<Products>> listProducts(
+    public Result<IPage<ProductsDTO>> listProducts(
             @Parameter(description = "分页查询参数") @Valid ProductsPageDTO queryDTO) {
         return Result.success(productsService.listProductsPage(queryDTO));
     }

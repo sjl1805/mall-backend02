@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import com.example.model.entity.Coupon;
+
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Schema(description = "优惠券数据传输对象")
@@ -36,15 +38,41 @@ public class CouponDTO {
     @NotNull(message = "开始时间不能为空")
     @FutureOrPresent(message = "开始时间必须大于等于当前时间")
     @Schema(description = "生效时间", example = "2025-03-01 00:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @NotNull(message = "结束时间不能为空")
     @Future(message = "结束时间必须大于当前时间")
     @Schema(description = "过期时间", example = "2025-03-31 23:59:59", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Date endTime;
+    private LocalDateTime endTime;
 
     @Min(value = 0, message = "状态参数错误")
     @Max(value = 1, message = "状态参数错误")
     @Schema(description = "状态：0-失效 1-生效", defaultValue = "1")
     private Integer status = 1;
+
+    public static CouponDTO fromEntity(Coupon coupon) {
+        CouponDTO dto = new CouponDTO();
+        dto.setId(coupon.getId());
+        dto.setName(coupon.getName());
+        dto.setType(coupon.getType());
+        dto.setValue(coupon.getValue());
+        dto.setMinAmount(coupon.getMinAmount());
+        dto.setStartTime(coupon.getStartTime());
+        dto.setEndTime(coupon.getEndTime());
+        dto.setStatus(coupon.getStatus());
+        return dto;
+    }
+
+    public Coupon toEntity() {
+        Coupon coupon = new Coupon();
+        coupon.setId(this.id);
+        coupon.setName(this.name);
+        coupon.setType(this.type);
+        coupon.setValue(this.value);
+        coupon.setMinAmount(this.minAmount);
+        coupon.setStartTime(this.startTime);
+        coupon.setEndTime(this.endTime);
+        coupon.setStatus(this.status);
+        return coupon;
+    }
 } 

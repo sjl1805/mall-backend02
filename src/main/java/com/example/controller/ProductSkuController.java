@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
+import com.example.model.dto.product.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +61,7 @@ public class ProductSkuController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = ProductSku.class))
             )
-            @RequestBody @NotEmpty List<@Valid ProductSku> skus) {
+            @RequestBody @NotEmpty List<@Valid ProductSkuDTO> skus) {
         return Result.success(productSkuService.batchCreateSkus(productId, skus));
     }
 
@@ -73,7 +74,7 @@ public class ProductSkuController {
     @GetMapping
     @Operation(summary = "商品SKU查询", description = "获取指定商品的所有SKU信息接口")
     @ApiResponse(responseCode = "200", description = "成功返回SKU列表")
-    public Result<List<ProductSku>> getSkus(
+    public Result<List<ProductSkuDTO>> getSkus(
             @Parameter(description = "商品ID", example = "1", required = true)
             @PathVariable @Min(1) Long productId) {
         return Result.success(productSkuService.getSkusByProductId(productId));

@@ -29,7 +29,7 @@ public interface ProductsService extends IService<Products> {
      * @return 分页结果（包含商品基本信息）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<Products> listProductsPage(ProductsPageDTO queryDTO);
+    IPage<ProductsDTO> listProductsPage(ProductsPageDTO queryDTO);
 
     /**
      * 添加商品（事务操作）

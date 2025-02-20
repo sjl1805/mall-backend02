@@ -5,7 +5,7 @@ import com.example.common.Result;
 import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.dto.users.UserPageDTO;
 import com.example.model.dto.users.UserRegisterDTO;
-import com.example.model.entity.Users;
+import com.example.model.dto.users.UserDTO;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -54,7 +54,7 @@ public class UsersController {
     @GetMapping
     @Operation(summary = "分页查询用户", description = "管理端用户分页查询接口")
     @ApiResponse(responseCode = "200", description = "查询成功，返回分页数据")
-    public Result<IPage<Users>> listUsers(
+    public Result<IPage<UserDTO>> listUsers(
             @Parameter(hidden = true) UserPageDTO query) {
         return Result.success(usersService.listUsersByPage(query));
     }
@@ -113,7 +113,7 @@ public class UsersController {
     @Parameter(name = "id", description = "用户ID", example = "123", required = true)
     @ApiResponse(responseCode = "200", description = "查询成功")
     @ApiResponse(responseCode = "404", description = "用户不存在")
-    public Result<Users> getUserById(
+    public Result<UserDTO> getUserById(
             @PathVariable @Min(1) Long id) {
         return Result.success(usersService.getById(id));
     }
@@ -163,9 +163,9 @@ public class UsersController {
     @ApiResponse(responseCode = "404", description = "用户不存在")
     public Result<Boolean> updateUser(
             @PathVariable Long id,
-            @RequestBody Users user) {
-        user.setId(id);
-        return Result.success(usersService.updateById(user));
+            @RequestBody UserDTO userDTO) {
+        userDTO.setId(id);
+        return Result.success(usersService.updateById(userDTO));
     }
 
     /**

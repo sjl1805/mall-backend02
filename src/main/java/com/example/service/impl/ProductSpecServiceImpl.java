@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 商品规格服务实现类
@@ -64,8 +65,10 @@ public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper, Produ
      */
     @Override
     @Cacheable(key = "'product:' + #productId")
-    public List<ProductSpec> getSpecsByProductId(Long productId) {
-        return baseMapper.selectByProductId(productId);
+    public List<ProductSpecDTO> getSpecsByProductId(Long productId) {
+        return baseMapper.selectByProductId(productId).stream()
+                .map(ProductSpecDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -122,7 +125,10 @@ public class ProductSpecServiceImpl extends ServiceImpl<ProductSpecMapper, Produ
                 .ne(excludeId != null, ProductSpec::getId, excludeId)
                 .exists();
     }
+
 }
+
+
 
 
 

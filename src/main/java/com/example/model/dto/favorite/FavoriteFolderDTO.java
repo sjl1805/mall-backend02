@@ -3,6 +3,7 @@ package com.example.model.dto.favorite;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import com.example.model.entity.FavoriteFolder;
 
 @Data
 @Schema(description = "收藏夹数据传输对象")
@@ -32,4 +33,26 @@ public class FavoriteFolderDTO {
     @Min(0)
     @Schema(description = "排序值", example = "100", defaultValue = "0")
     private Integer sort = 0;
+
+    public static FavoriteFolderDTO fromEntity(FavoriteFolder folder) {
+        FavoriteFolderDTO dto = new FavoriteFolderDTO();
+        dto.setId(folder.getId());
+        dto.setUserId(folder.getUserId());
+        dto.setName(folder.getName());
+        dto.setDescription(folder.getDescription());
+        dto.setIsPublic(folder.getIsPublic());
+        dto.setSort(folder.getSort());
+        return dto;
+    }
+
+    public FavoriteFolder toEntity() {
+        FavoriteFolder folder = new FavoriteFolder();
+        folder.setId(this.id);
+        folder.setUserId(this.userId);
+        folder.setName(this.name);
+        folder.setDescription(this.description);
+        folder.setIsPublic(this.isPublic);
+        folder.setSort(this.sort);
+        return folder;
+    }
 } 

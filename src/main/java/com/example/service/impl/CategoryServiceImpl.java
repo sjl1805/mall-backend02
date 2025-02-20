@@ -10,8 +10,7 @@ import com.example.model.dto.category.CategoryDTO;
 import com.example.model.dto.category.CategoryPageDTO;
 import com.example.model.entity.Category;
 import com.example.service.CategoryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +38,6 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         implements CategoryService {
 
-    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     /**
      * 分页查询分类（带树形结构）
@@ -53,9 +51,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<Category> listCategoryPage(CategoryPageDTO queryDTO) {
+    public IPage<CategoryDTO> listCategoryPage(CategoryPageDTO queryDTO) {
         Page<Category> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        return baseMapper.selectCategoryPage(page, queryDTO);
+        IPage<Category> categoryPage = baseMapper.selectCategoryPage(page, queryDTO);
+        return categoryPage.convert(this::convertToDTO);
     }
 
     /**
@@ -155,11 +154,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Cacheable(key = "'tree'", unless = "#result == null || #result.isEmpty()")
-    public List<Category> getCategoryTree(Long parentId) {
-        log.debug("Building category tree from parentId: {}", parentId);
+    public List<CategoryDTO> getCategoryTree(Long parentId) {
         List<Category> tree = baseMapper.selectCategoryTree(parentId);
-        log.debug("Category tree nodes count: {}", tree.size());
-        return tree;
+        return tree.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -225,6 +224,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     private boolean checkNameExists(String name, Long parentId, Long excludeId) {
         return baseMapper.checkNameUnique(name, parentId, excludeId) > 0;
+    }
+
+    private CategoryDTO convertToDTO(Category category) {
+        if (category == null) return null;
+        
+        CategoryDTO dto = new CategoryDTO();
+        BeanUtils.copyProperties(category, dto);
+        return dto;
     }
 }
 
