@@ -155,9 +155,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Cacheable(key = "'tree'", unless = "#result == null || #result.isEmpty()")
-    public List<Category> getCategoryTree() {
-        log.debug("Building category tree from parentId: 0");
-        List<Category> tree = baseMapper.selectCategoryTree(0L);
+    public List<Category> getCategoryTree(Long parentId) {
+        log.debug("Building category tree from parentId: {}", parentId);
+        List<Category> tree = baseMapper.selectCategoryTree(parentId);
         log.debug("Category tree nodes count: {}", tree.size());
         return tree;
     }

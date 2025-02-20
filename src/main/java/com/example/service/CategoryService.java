@@ -51,7 +51,7 @@ public interface CategoryService extends IService<Category> {
      * 获取全部分类树形结构
      * @return 嵌套结构的分类列表，适合前端树形控件展示
      */
-    List<Category> getCategoryTree();
+    List<Category> getCategoryTree(Long parentId);
 
     /**
      * 切换分类状态（启用/禁用）

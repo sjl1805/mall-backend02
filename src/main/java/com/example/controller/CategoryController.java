@@ -129,8 +129,10 @@ public class CategoryController {
     @GetMapping("/tree")
     @Operation(summary = "分类树查询", description = "获取全部分类的树形结构接口")
     @ApiResponse(responseCode = "200", description = "成功返回树形结构")
-    public Result<List<Category>> getCategoryTree() {
-        return Result.success(categoryService.getCategoryTree());
+    public Result<List<Category>> getCategoryTree(
+            @Parameter(description = "父分类ID", example = "0", required = true)
+            @RequestParam(required = false, defaultValue = "0") Long parentId) {
+        return Result.success(categoryService.getCategoryTree(parentId));
     }
 
     /**

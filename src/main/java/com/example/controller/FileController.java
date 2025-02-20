@@ -72,7 +72,7 @@ public class FileController {
                 content = @Content(schema = @Schema(type = "string", format = "binary")))
     @ApiResponse(responseCode = "404", description = "文件未找到")
     public ResponseEntity<?> downloadFile(
-            @Parameter(description = "文件名", example = "example.jpg", required = true)
+            @Parameter(description = "文件名", example = "backend.png", required = true)
             @PathVariable String fileName) {
         try {
             return FileDownloadUtil.prepareFileResponse(fileName);
