@@ -7,6 +7,7 @@ import com.example.model.dto.users.UserLoginDTO;
 import com.example.model.dto.users.UserPageDTO;
 import com.example.model.dto.users.UserRegisterDTO;
 import com.example.model.entity.Users;
+import com.example.model.dto.users.UserDTO;
 
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public interface UsersService extends IService<Users> {
      * @return 分页结果（包含用户基本信息）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<Users> listUsersByPage(UserPageDTO queryDTO);
+    IPage<UserDTO> listUsersByPage(UserPageDTO queryDTO);
 
     /**
      * 用户登录（增强版）
@@ -82,12 +83,12 @@ public interface UsersService extends IService<Users> {
      * @return 用户详细信息
      * @implNote 结果缓存优化，有效期30分钟
      */
-    Users getById(Long id);
+    UserDTO getById(Long id);
 
     /**
      * 更新用户（带缓存清除）
      * @param user 用户信息（必须包含ID）
      * @return 操作是否成功
      */
-    boolean updateById(Users user);
+    boolean updateById(UserDTO user);
 }

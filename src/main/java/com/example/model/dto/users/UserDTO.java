@@ -47,7 +47,7 @@ public class UserDTO {
 
     @Min(value = 0, message = "角色参数错误")
     @Max(value = 9, message = "角色参数错误")
-    @Schema(description = "角色：0-超级管理员 1-普通用户 2-商家 9-测试账号",
+    @Schema(description = "角色：0-游客 1-普通用户 2-商家 9管理员",
             allowableValues = {"0", "1", "2", "9"},
             defaultValue = "1")
     private Integer role = 1;
