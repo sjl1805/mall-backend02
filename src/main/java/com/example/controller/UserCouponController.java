@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.dto.users.UserCouponDTO;
+import com.example.model.dto.UserCouponDTO;
 import com.example.service.UserCouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

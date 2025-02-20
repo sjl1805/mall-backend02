@@ -7,8 +7,8 @@ import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.CategoryMapper;
 import com.example.mapper.ProductsMapper;
-import com.example.model.dto.product.ProductsDTO;
-import com.example.model.dto.product.ProductsPageDTO;
+import com.example.model.dto.ProductsDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Category;
 import com.example.model.entity.Products;
 import com.example.service.ProductsService;
@@ -56,9 +56,9 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<ProductsDTO> listProductsPage(ProductsPageDTO queryDTO) {
-        Page<Products> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<Products> productPage = baseMapper.selectProductPage(page, queryDTO);
+    public IPage<ProductsDTO> listProductsPage(PageDTO<ProductsDTO> queryDTO) {
+        Page<Products> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<Products> productPage = baseMapper.selectProductPage(page, queryDTO.getQuery());
         return productPage.convert(ProductsDTO::fromEntity);
     }
 

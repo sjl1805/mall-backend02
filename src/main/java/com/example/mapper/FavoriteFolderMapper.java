@@ -2,7 +2,7 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.favorite.FavoriteFolderPageDTO;
+import com.example.model.dto.FavoriteFolderDTO;
 import com.example.model.entity.FavoriteFolder;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -23,7 +23,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
      * @return 分页结果（包含收藏夹列表和分页信息）
      */
     IPage<FavoriteFolder> selectFolderPage(IPage<FavoriteFolder> page,
-                                           @Param("query") FavoriteFolderPageDTO queryDTO);
+                                           @Param("query") FavoriteFolderDTO queryDTO);
 
     /**
      * 更新收藏夹公开状态（同时更新修改时间）

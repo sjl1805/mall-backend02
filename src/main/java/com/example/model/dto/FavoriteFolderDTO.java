@@ -1,9 +1,9 @@
-package com.example.model.dto.favorite;
+package com.example.model.dto;
 
+import com.example.model.entity.FavoriteFolder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.example.model.entity.FavoriteFolder;
 
 @Data
 @Schema(description = "收藏夹数据传输对象")

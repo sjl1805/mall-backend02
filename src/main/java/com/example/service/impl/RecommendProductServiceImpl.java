@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.RecommendProductMapper;
-import com.example.model.dto.product.RecommendProductDTO;
-import com.example.model.dto.product.RecommendProductPageDTO;
+import com.example.model.dto.RecommendProductDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.RecommendProduct;
 import com.example.service.RecommendProductService;
 import org.springframework.beans.BeanUtils;
@@ -72,9 +72,9 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<RecommendProductDTO> listRecommendPage(RecommendProductPageDTO queryDTO) {
-        Page<RecommendProduct> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<RecommendProduct> recommendPage = baseMapper.selectRecommendPage(page, queryDTO);
+    public IPage<RecommendProductDTO> listRecommendPage(PageDTO<RecommendProductDTO> queryDTO) {
+        Page<RecommendProduct> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<RecommendProduct> recommendPage = baseMapper.selectRecommendPage(page, queryDTO.getQuery());
         return recommendPage.convert(RecommendProductDTO::fromEntity);
     }
 

@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.category.CategoryDTO;
-import com.example.model.dto.category.CategoryPageDTO;
+import com.example.model.dto.CategoryDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Category;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface CategoryService extends IService<Category> {
      * @param queryDTO 分页查询参数，包含页码、页大小及过滤条件
      * @return 分页结果对象，包含当前页数据和分页信息
      */
-    IPage<CategoryDTO> listCategoryPage(CategoryPageDTO queryDTO);
+    IPage<CategoryDTO> listCategoryPage(PageDTO<CategoryDTO> queryDTO);
 
     /**
      * 新增商品分类

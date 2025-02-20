@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.coupon.CouponDTO;
-import com.example.model.dto.coupon.CouponPageDTO;
+import com.example.model.dto.CouponDTO;
+import com.example.model.dto.PageDTO;
 import com.example.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,7 +77,7 @@ public class CouponController {
     @Operation(summary = "优惠券分页查询", description = "分页获取优惠券列表接口")
     @ApiResponse(responseCode = "200", description = "成功返回优惠券列表")
     public Result<IPage<CouponDTO>> listCoupons(
-            @Parameter(description = "分页查询参数") @Valid CouponPageDTO queryDTO) {
+            @Parameter(description = "分页查询参数") @Valid PageDTO<CouponDTO> queryDTO) {
         return Result.success(couponService.listCouponPage(queryDTO));
     }
 

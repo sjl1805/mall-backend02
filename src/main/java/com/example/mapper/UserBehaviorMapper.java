@@ -2,8 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.users.UserBehaviorDTO;
-import com.example.model.dto.users.UserBehaviorPageDTO;
+import com.example.model.dto.PageDTO;
+import com.example.model.dto.UserBehaviorDTO;
 import com.example.model.entity.UserBehavior;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -28,7 +28,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
      * @return 分页结果（包含行为记录和分页信息）
      */
     IPage<UserBehavior> selectBehaviorPage(IPage<UserBehavior> page,
-                                           @Param("query") UserBehaviorPageDTO queryDTO);
+                                           @Param("query") PageDTO<UserBehaviorDTO> queryDTO);
 
     /**
      * 计算用户行为权重（用于推荐系统）

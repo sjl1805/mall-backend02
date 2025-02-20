@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.dto.order.OrderCreateDTO;
-import com.example.model.dto.order.OrdersDTO;
+import com.example.model.dto.OrderCreateDTO;
+import com.example.model.dto.OrdersDTO;
 import com.example.service.OrdersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

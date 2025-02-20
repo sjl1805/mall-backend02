@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.favorite.FavoriteFolderDTO;
-import com.example.model.dto.favorite.FavoriteFolderPageDTO;
+import com.example.model.dto.FavoriteFolderDTO;
+import com.example.model.dto.PageDTO;
 import com.example.service.FavoriteFolderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -187,7 +187,7 @@ public class FavoriteFolderController {
     @Operation(summary = "公开收藏夹浏览", description = "分页查看公开的收藏夹接口")
     @ApiResponse(responseCode = "200", description = "成功返回公开收藏夹列表")
     public Result<IPage<FavoriteFolderDTO>> listPublicFolders(
-            @Parameter(description = "分页查询参数") @Valid FavoriteFolderPageDTO queryDTO) {
+            @Parameter(description = "分页查询参数") @Valid PageDTO<FavoriteFolderDTO> queryDTO) {
         return Result.success(favoriteFolderService.listPublicFolders(queryDTO));
     }
 

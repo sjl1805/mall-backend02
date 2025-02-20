@@ -2,7 +2,7 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.cart.CartPageDTO;
+import com.example.model.dto.CartDTO;
 import com.example.model.entity.Cart;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -45,7 +45,7 @@ public interface CartMapper extends BaseMapper<Cart> {
      * @return 分页结果（包含购物车商品列表和分页信息）
      */
     IPage<Cart> selectCartPage(IPage<Cart> page,
-                               @Param("query") CartPageDTO queryDTO);
+                               @Param("query") CartDTO queryDTO);
 
     /**
      * 调整商品数量（增加或减少）

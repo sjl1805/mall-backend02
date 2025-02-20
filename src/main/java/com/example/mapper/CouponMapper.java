@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.coupon.CouponPageDTO;
+import com.example.model.dto.CouponDTO;
+
 import com.example.model.entity.Coupon;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -25,7 +26,7 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @param queryDTO 查询条件DTO（包含名称、类型、状态等过滤条件）
      * @return 分页结果（包含优惠券列表和分页信息）
      */
-    IPage<Coupon> selectCouponPage(IPage<Coupon> page, @Param("query") CouponPageDTO queryDTO);
+    IPage<Coupon> selectCouponPage(IPage<Coupon> page, @Param("query") CouponDTO queryDTO);
 
     /**
      * 更新优惠券状态（同时更新修改时间）

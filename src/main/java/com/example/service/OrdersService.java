@@ -1,9 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.order.OrderCreateDTO;
+import com.example.model.dto.OrderCreateDTO;
+import com.example.model.dto.OrdersDTO;
 import com.example.model.entity.Orders;
-import com.example.model.dto.order.OrdersDTO;
 
 /**
  * 订单服务接口

@@ -1,11 +1,11 @@
-package com.example.model.dto.cart;
+package com.example.model.dto;
 
+import com.example.model.entity.Cart;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import com.example.model.entity.Cart;
 
 @Data
 @Schema(description = "购物车商品数据传输对象")

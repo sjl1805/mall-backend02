@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.users.UserAddressPageDTO;
+import com.example.model.dto.PageDTO;
+import com.example.model.dto.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -23,7 +24,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
      * @return 分页结果（包含地址列表和分页信息）
      */
     IPage<UserAddress> selectAddressPage(IPage<UserAddress> page,
-                                         @Param("query") UserAddressPageDTO queryDTO);
+                                         @Param("query") PageDTO<UserAddressDTO> queryDTO);
 
     /**
      * 设置用户默认地址（事务操作）

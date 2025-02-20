@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.product.ProductReviewDTO;
-import com.example.model.dto.product.ProductReviewPageDTO;
+import com.example.model.dto.ProductReviewDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.ProductReview;
 import com.example.service.ProductReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,7 +85,7 @@ public class ProductReviewController {
     public Result<IPage<ProductReviewDTO>> listReviews(
             @Parameter(description = "商品ID", example = "1", required = true)
             @PathVariable @Min(1) Long productId,
-            @Valid ProductReviewPageDTO queryDTO) {
+            @Valid @Parameter(description = "分页查询参数") PageDTO<ProductReviewDTO> queryDTO) {
         return Result.success(productReviewService.listReviewsPage(queryDTO));
     }
 

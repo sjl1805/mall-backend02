@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.ProductSpecMapper;
-import com.example.model.dto.product.ProductSpecDTO;
+import com.example.model.dto.ProductSpecDTO;
 import com.example.model.entity.ProductSpec;
 import com.example.service.ProductSpecService;
 import org.springframework.cache.annotation.CacheConfig;

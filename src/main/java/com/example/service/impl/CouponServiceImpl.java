@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.CouponMapper;
-import com.example.model.dto.coupon.CouponDTO;
-import com.example.model.dto.coupon.CouponPageDTO;
+import com.example.model.dto.CouponDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Coupon;
 import com.example.service.CouponService;
 import org.springframework.beans.BeanUtils;
@@ -70,9 +70,9 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<CouponDTO> listCouponPage(CouponPageDTO queryDTO) {
-        Page<Coupon> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<Coupon> couponPage = baseMapper.selectCouponPage(page, queryDTO);
+    public IPage<CouponDTO> listCouponPage(PageDTO<CouponDTO> queryDTO) {
+        Page<Coupon> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<Coupon> couponPage = baseMapper.selectCouponPage(page, queryDTO.getQuery());
         return couponPage.convert(CouponDTO::fromEntity);
     }
 

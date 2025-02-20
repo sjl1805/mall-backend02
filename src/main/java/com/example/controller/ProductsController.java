@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.product.ProductsDTO;
-import com.example.model.dto.product.ProductsPageDTO;
+import com.example.model.dto.ProductsDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Products;
 import com.example.service.ProductsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,7 +54,7 @@ public class ProductsController {
     @Operation(summary = "商品分页查询", description = "管理端商品分页查询接口")
     @ApiResponse(responseCode = "200", description = "成功返回分页数据")
     public Result<IPage<ProductsDTO>> listProducts(
-            @Parameter(description = "分页查询参数") @Valid ProductsPageDTO queryDTO) {
+            @Parameter(description = "分页查询参数") @Valid PageDTO<ProductsDTO> queryDTO) {
         return Result.success(productsService.listProductsPage(queryDTO));
     }
 

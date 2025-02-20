@@ -1,9 +1,9 @@
-package com.example.model.dto.product;
+package com.example.model.dto;
 
+import com.example.model.entity.Products;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.example.model.entity.Products;
 
 import java.math.BigDecimal;
 import java.util.List;

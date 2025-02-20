@@ -6,11 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.CategoryMapper;
-import com.example.model.dto.category.CategoryDTO;
-import com.example.model.dto.category.CategoryPageDTO;
+import com.example.model.dto.CategoryDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Category;
 import com.example.service.CategoryService;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -51,9 +50,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()")
-    public IPage<CategoryDTO> listCategoryPage(CategoryPageDTO queryDTO) {
-        Page<Category> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<Category> categoryPage = baseMapper.selectCategoryPage(page, queryDTO);
+    public IPage<CategoryDTO> listCategoryPage(PageDTO<CategoryDTO> queryDTO) {
+        Page<Category> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<Category> categoryPage = baseMapper.selectCategoryPage(page, queryDTO.getQuery());
         return categoryPage.convert(CategoryDTO::fromEntity);
     }
 

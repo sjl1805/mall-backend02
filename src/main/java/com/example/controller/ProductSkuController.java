@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.dto.product.ProductSkuDTO;
+import com.example.model.dto.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
 import io.swagger.v3.oas.annotations.Operation;

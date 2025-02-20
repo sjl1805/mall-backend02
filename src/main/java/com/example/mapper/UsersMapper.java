@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.users.UserPageDTO;
+
+import com.example.model.dto.UserDTO;
 import com.example.model.entity.Users;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -25,7 +26,7 @@ public interface UsersMapper extends BaseMapper<Users> {
      * @param queryDTO 查询条件DTO（包含用户名、手机号、状态等）
      * @return 分页结果（包含用户列表和分页信息）
      */
-    IPage<Users> selectUserPage(IPage<Users> page, @Param("query") UserPageDTO queryDTO);
+    IPage<Users> selectUserPage(IPage<Users> page, @Param("query") UserDTO queryDTO);
 
     /**
      * 根据手机号查询用户（精确匹配）

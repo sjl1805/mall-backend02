@@ -1,9 +1,9 @@
-package com.example.model.dto.users;
+package com.example.model.dto;
 
+import com.example.model.entity.UserBehavior;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.example.model.entity.UserBehavior;
 
 import java.time.LocalDateTime;
 

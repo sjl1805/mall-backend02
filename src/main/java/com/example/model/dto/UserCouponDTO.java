@@ -1,5 +1,6 @@
-package com.example.model.dto.users;
+package com.example.model.dto;
 
+import com.example.model.entity.UserCoupon;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -7,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import com.example.model.entity.UserCoupon;
 
 @Data
 @Schema(description = "用户优惠券数据传输对象")

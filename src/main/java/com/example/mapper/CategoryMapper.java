@@ -2,7 +2,7 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.category.CategoryPageDTO;
+import com.example.model.dto.CategoryDTO;
 import com.example.model.entity.Category;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -23,7 +23,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @param queryDTO 查询条件
      * @return 分页结果
      */
-    IPage<Category> selectCategoryPage(IPage<Category> page, @Param("query") CategoryPageDTO queryDTO);
+    IPage<Category> selectCategoryPage(IPage<Category> page, @Param("query") CategoryDTO queryDTO);
 
     /**
      * 查询子分类列表

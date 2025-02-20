@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.product.ProductReviewPageDTO;
+
+import com.example.model.dto.ProductReviewDTO;
 import com.example.model.entity.ProductReview;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -26,7 +27,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      * @return 分页结果（包含评价列表和分页信息）
      */
     IPage<ProductReview> selectReviewPage(IPage<ProductReview> page,
-                                        @Param("query") ProductReviewPageDTO queryDTO);
+                                        @Param("query") ProductReviewDTO queryDTO);
 
     /**
      * 更新评价状态（管理员审核使用）

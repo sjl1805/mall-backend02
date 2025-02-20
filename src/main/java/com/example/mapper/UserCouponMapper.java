@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.users.UserCouponPageDTO;
+import com.example.model.dto.PageDTO;
+import com.example.model.dto.UserCouponDTO;
 import com.example.model.entity.UserCoupon;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -23,7 +24,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
      * @return 分页结果（包含优惠券列表和分页信息）
      */
     IPage<UserCoupon> selectUserCouponPage(IPage<UserCoupon> page,
-                                         @Param("query") UserCouponPageDTO queryDTO);
+                                         @Param("query") PageDTO<UserCouponDTO> queryDTO);
 
     /**
      * 用户使用优惠券（事务操作）

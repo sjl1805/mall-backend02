@@ -1,8 +1,8 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.model.dto.UserCouponDTO;
 import com.example.model.entity.UserCoupon;
-import com.example.model.dto.users.UserCouponDTO;
 
 import java.util.List;
 

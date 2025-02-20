@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.CartMapper;
-import com.example.model.dto.cart.CartDTO;
+import com.example.model.dto.CartDTO;
 import com.example.model.entity.Cart;
 import com.example.service.CartService;
 import org.springframework.beans.BeanUtils;

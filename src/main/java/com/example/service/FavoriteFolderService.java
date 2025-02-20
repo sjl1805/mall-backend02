@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.favorite.FavoriteFolderDTO;
-import com.example.model.dto.favorite.FavoriteFolderPageDTO;
+import com.example.model.dto.FavoriteFolderDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.FavoriteFolder;
 
 import java.util.List;
@@ -89,7 +89,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
      * @return 分页结果（包含收藏夹基本信息）
      * @implNote 结果缓存优化，有效期5分钟
      */
-    IPage<FavoriteFolderDTO> listPublicFolders(FavoriteFolderPageDTO queryDTO);
+    IPage<FavoriteFolderDTO> listPublicFolders(PageDTO<FavoriteFolderDTO> queryDTO);
 
     /**
      * 更新收藏项数量（原子操作）

@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.product.ProductsPageDTO;
+
+import com.example.model.dto.ProductsDTO;
 import com.example.model.entity.Products;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -24,7 +25,7 @@ public interface ProductsMapper extends BaseMapper<Products> {
      * @param queryDTO 查询条件DTO（包含关键词、分类、价格区间等）
      * @return 分页结果（包含商品列表和分页信息）
      */
-    IPage<Products> selectProductPage(IPage<Products> page, @Param("query") ProductsPageDTO queryDTO);
+    IPage<Products> selectProductPage(IPage<Products> page, @Param("query") ProductsDTO queryDTO);
 
     /**
      * 更新商品状态（上下架操作）

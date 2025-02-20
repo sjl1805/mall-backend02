@@ -2,7 +2,7 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductSkuMapper;
-import com.example.model.dto.product.ProductSkuDTO;
+import com.example.model.dto.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
 import org.springframework.cache.annotation.CacheConfig;

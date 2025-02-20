@@ -2,8 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.product.ProductSpecDTO;
-import com.example.model.dto.product.ProductSpecPageDTO;
+import com.example.model.dto.PageDTO;
+import com.example.model.dto.ProductSpecDTO;
 import com.example.model.entity.ProductSpec;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -60,7 +60,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
      * @return 分页结果（包含规格列表和分页信息）
      */
     IPage<ProductSpec> selectSpecPage(IPage<ProductSpec> page,
-                                     @Param("query") ProductSpecPageDTO queryDTO);
+                                     @Param("query") PageDTO<ProductSpecDTO> queryDTO);
 
     /**
      * 安全更新规格值（带商品ID校验）

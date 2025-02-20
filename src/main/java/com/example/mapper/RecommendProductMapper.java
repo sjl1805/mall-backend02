@@ -2,8 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.product.RecommendProductDTO;
-import com.example.model.dto.product.RecommendProductPageDTO;
+
+import com.example.model.dto.RecommendProductDTO;
 import com.example.model.entity.RecommendProduct;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -28,7 +28,7 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @return 分页结果（包含推荐列表和分页信息）
      */
     IPage<RecommendProduct> selectRecommendPage(IPage<RecommendProduct> page,
-                                                @Param("query") RecommendProductPageDTO queryDTO);
+                                                @Param("query") RecommendProductDTO queryDTO);
 
     /**
      * 根据类型和状态查询有效推荐（前台展示用）

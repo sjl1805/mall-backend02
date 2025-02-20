@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.product.ProductsDTO;
-import com.example.model.dto.product.ProductsPageDTO;
+import com.example.model.dto.ProductsDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Products;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public interface ProductsService extends IService<Products> {
      * @return 分页结果（包含商品基本信息）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<ProductsDTO> listProductsPage(ProductsPageDTO queryDTO);
+    IPage<ProductsDTO> listProductsPage(PageDTO<ProductsDTO> queryDTO);
 
     /**
      * 添加商品（事务操作）

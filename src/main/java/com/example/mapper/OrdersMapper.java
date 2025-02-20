@@ -2,7 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.order.OrdersPageDTO;
+import com.example.model.dto.OrdersDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Orders;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -25,7 +26,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @return 分页结果（包含订单列表和分页信息）
      */
     IPage<Orders> selectOrderPage(IPage<Orders> page,
-                                 @Param("query") OrdersPageDTO queryDTO);
+                                 @Param("query") PageDTO<OrdersDTO> queryDTO);
 
     /**
      * 用户更新订单状态（如取消订单）
@@ -79,7 +80,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @param queryDTO 统计条件DTO（包含时间范围、状态等）
      * @return 符合条件的订单总金额（BigDecimal类型保证精度）
      */
-    BigDecimal sumOrderAmount(@Param("query") OrdersPageDTO queryDTO);
+    BigDecimal sumOrderAmount(@Param("query") PageDTO<OrdersDTO> queryDTO);
 }
 
 

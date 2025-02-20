@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.coupon.CouponDTO;
-import com.example.model.dto.coupon.CouponPageDTO;
+import com.example.model.dto.CouponDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Coupon;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public interface CouponService extends IService<Coupon> {
      *                 - name: 券名称模糊查询
      * @return 分页结果（包含券基本信息及状态）
      */
-    IPage<CouponDTO> listCouponPage(CouponPageDTO queryDTO);
+    IPage<CouponDTO> listCouponPage(PageDTO<CouponDTO> queryDTO);
 
     /**
      * 更新优惠券状态（启用/禁用）

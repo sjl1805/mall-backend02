@@ -2,8 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.favorite.ProductFavoriteDTO;
-import com.example.model.dto.favorite.ProductFavoritePageDTO;
+
+import com.example.model.dto.ProductFavoriteDTO;
 import com.example.model.entity.ProductFavorite;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -26,7 +26,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
      * @return 分页结果（包含收藏列表和分页信息）
      */
     IPage<ProductFavorite> selectFavoritePage(IPage<ProductFavorite> page,
-                                             @Param("query") ProductFavoritePageDTO queryDTO);
+                                             @Param("query") ProductFavoriteDTO queryDTO);
 
     /**
      * 统计用户收藏总数（用于个人中心展示）

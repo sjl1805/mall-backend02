@@ -1,10 +1,10 @@
-package com.example.model.dto.category;
+package com.example.model.dto;
 
+import com.example.model.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
-import com.example.model.entity.Category;
 /**
  * 分类数据传输对象
  *

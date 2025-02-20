@@ -1,8 +1,8 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.model.dto.UserAddressDTO;
 import com.example.model.entity.UserAddress;
-import com.example.model.dto.users.UserAddressDTO;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.FavoriteFolderMapper;
-import com.example.model.dto.favorite.FavoriteFolderDTO;
-import com.example.model.dto.favorite.FavoriteFolderPageDTO;
+import com.example.model.dto.FavoriteFolderDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.FavoriteFolder;
 import com.example.service.FavoriteFolderService;
 import org.springframework.beans.BeanUtils;
@@ -172,9 +172,9 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
      */
     @Override
     @Cacheable(key = "'public:page:' + #queryDTO.hashCode()")
-    public IPage<FavoriteFolderDTO> listPublicFolders(FavoriteFolderPageDTO queryDTO) {
-        Page<FavoriteFolder> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<FavoriteFolder> folderPage = baseMapper.selectFolderPage(page, queryDTO);
+    public IPage<FavoriteFolderDTO> listPublicFolders(PageDTO<FavoriteFolderDTO> queryDTO) {
+        Page<FavoriteFolder> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<FavoriteFolder> folderPage = baseMapper.selectFolderPage(page, queryDTO.getQuery());
         return folderPage.convert(FavoriteFolderDTO::fromEntity);
     }
 

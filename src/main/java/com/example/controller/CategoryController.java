@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.category.CategoryDTO;
-import com.example.model.dto.category.CategoryPageDTO;
+import com.example.model.dto.CategoryDTO;
+import com.example.model.dto.PageDTO;
 import com.example.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,7 +51,7 @@ public class CategoryController {
     @Operation(summary = "分类分页查询", description = "获取带分页的分类列表接口")
     @ApiResponse(responseCode = "200", description = "成功返回分页数据")
     public Result<IPage<CategoryDTO>> listCategories(
-            @Parameter(description = "分页查询参数") @Valid CategoryPageDTO queryDTO) {
+            @Parameter(description = "分页查询参数") @Valid PageDTO<CategoryDTO> queryDTO) {
         return Result.success(categoryService.listCategoryPage(queryDTO));
     }
 

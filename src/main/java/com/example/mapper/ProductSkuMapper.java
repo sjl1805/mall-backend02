@@ -2,8 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.model.dto.product.ProductSkuDTO;
-import com.example.model.dto.product.ProductSkuPageDTO;
+import com.example.model.dto.PageDTO;
+import com.example.model.dto.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -53,7 +53,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
      * @return 分页结果（包含SKU列表和分页信息）
      */
     IPage<ProductSku> selectSkuPage(IPage<ProductSku> page,
-                                   @Param("query") ProductSkuPageDTO queryDTO);
+                                   @Param("query") PageDTO<ProductSkuDTO> queryDTO);
 
     /**
      * 增加销量（订单完成时调用）

@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.ProductReviewMapper;
-import com.example.model.dto.product.ProductReviewDTO;
-import com.example.model.dto.product.ProductReviewPageDTO;
+import com.example.model.dto.ProductReviewDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.ProductReview;
 import com.example.service.ProductReviewService;
 import org.springframework.beans.BeanUtils;
@@ -68,9 +68,9 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
      */
     @Override
     @Cacheable(key = "'product:' + #queryDTO.productId + ':page:' + #queryDTO.hashCode()")
-    public IPage<ProductReviewDTO> listReviewsPage(ProductReviewPageDTO queryDTO) {
-        Page<ProductReview> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<ProductReview> reviewPage = baseMapper.selectReviewPage(page, queryDTO);
+    public IPage<ProductReviewDTO> listReviewsPage(PageDTO<ProductReviewDTO> queryDTO) {
+        Page<ProductReview> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<ProductReview> reviewPage = baseMapper.selectReviewPage(page, queryDTO.getQuery());
         return reviewPage.convert(ProductReviewDTO::fromEntity);
     }
 

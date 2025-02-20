@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.ProductFavoriteMapper;
-import com.example.model.dto.favorite.ProductFavoriteDTO;
-import com.example.model.dto.favorite.ProductFavoritePageDTO;
+import com.example.model.dto.ProductFavoriteDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.ProductFavorite;
 import com.example.service.FavoriteFolderService;
 import com.example.service.ProductFavoriteService;
@@ -120,11 +120,11 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
      */
     @Override
     @Cacheable(key = "'user:' + #userId + ':folder:' + #folderId")
-    public IPage<ProductFavoriteDTO> listFavorites(Long userId, Long folderId, ProductFavoritePageDTO queryDTO) {
-        queryDTO.setUserId(userId);
-        queryDTO.setFolderId(folderId);
-        Page<ProductFavorite> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<ProductFavorite> favoritePage = baseMapper.selectFavoritePage(page, queryDTO);
+    public IPage<ProductFavoriteDTO> listFavorites(Long userId, Long folderId, PageDTO<ProductFavoriteDTO> queryDTO) {
+        queryDTO.getQuery().setUserId(userId);
+        queryDTO.getQuery().setFolderId(folderId);
+        Page<ProductFavorite> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<ProductFavorite> favoritePage = baseMapper.selectFavoritePage(page, queryDTO.getQuery());
         return favoritePage.convert(ProductFavoriteDTO::fromEntity);
     }
 

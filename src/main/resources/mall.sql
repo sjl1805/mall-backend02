@@ -51,7 +51,7 @@ CREATE TABLE products (
 	`description` TEXT COMMENT '商品描述',
 	`price` DECIMAL ( 10, 2 ) NOT NULL COMMENT '价格',
 	`stock` INT DEFAULT 0 COMMENT '库存',
-	`images` JSON COMMENT '商品图片JSON数组',
+	`images` VARCHAR(2000) COMMENT '商品图片JSON数组',
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（带时区）',
 	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间（带时区）',
 	`status` TINYINT DEFAULT 1 COMMENT '商品状态：0-下架 1-上架',

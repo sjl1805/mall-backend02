@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.favorite.ProductFavoriteDTO;
-import com.example.model.dto.favorite.ProductFavoritePageDTO;
+import com.example.model.dto.ProductFavoriteDTO;
+import com.example.model.dto.PageDTO;
 import com.example.service.ProductFavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -103,7 +103,7 @@ public class ProductFavoriteController {
             @PathVariable @Min(1) Long userId,
             @Parameter(description = "收藏夹ID", example = "1", required = true)
             @PathVariable @Min(1) Long folderId,
-            @Valid ProductFavoritePageDTO queryDTO) {
+            @Valid @Parameter(description = "分页查询参数") PageDTO<ProductFavoriteDTO> queryDTO) {
         return Result.success(productFavoriteService.listFavorites(userId, folderId, queryDTO));
     }
 

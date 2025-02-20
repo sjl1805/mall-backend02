@@ -3,11 +3,11 @@ package com.example.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.exception.BusinessException;
-import com.example.model.dto.users.UserLoginDTO;
-import com.example.model.dto.users.UserPageDTO;
-import com.example.model.dto.users.UserRegisterDTO;
+import com.example.model.dto.UserDTO;
+import com.example.model.dto.UserLoginDTO;
+import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Users;
-import com.example.model.dto.users.UserDTO;
 
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public interface UsersService extends IService<Users> {
      * @return 分页结果（包含用户基本信息）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<UserDTO> listUsersByPage(UserPageDTO queryDTO);
+    IPage<UserDTO> listUsersByPage(PageDTO<UserDTO> queryDTO);
 
     /**
      * 用户登录（增强版）

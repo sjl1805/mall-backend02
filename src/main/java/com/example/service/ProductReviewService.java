@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.product.ProductReviewDTO;
-import com.example.model.dto.product.ProductReviewPageDTO;
+import com.example.model.dto.ProductReviewDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.ProductReview;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public interface ProductReviewService extends IService<ProductReview> {
      * @return 分页结果（包含评价详情）
      * @implNote 结果缓存优化，有效期15分钟
      */
-    IPage<ProductReviewDTO> listReviewsPage(ProductReviewPageDTO queryDTO);
+    IPage<ProductReviewDTO> listReviewsPage(PageDTO<ProductReviewDTO> queryDTO);
 
     /**
      * 更新评价状态（管理端）

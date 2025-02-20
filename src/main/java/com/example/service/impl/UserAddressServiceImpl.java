@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UserAddressMapper;
-import com.example.model.dto.users.UserAddressDTO;
+import com.example.model.dto.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
-
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

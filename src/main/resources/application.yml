@@ -68,10 +68,12 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true # 开启驼峰命名转换
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # SQL日志输出
+    default-enum-type-handler: org.apache.ibatis.type.EnumTypeHandler
   mapper-locations: classpath*:mapper/**/*.xml # Mapper文件位置
   global-config:
     db-config:
       id-type: auto # 主键生成策略（数据库自增）
+  type-handlers-package: com.example.handler
 
 logging:
   level:

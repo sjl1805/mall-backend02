@@ -1,9 +1,9 @@
-package com.example.model.dto.users;
+package com.example.model.dto;
 
+import com.example.model.entity.UserAddress;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.example.model.entity.UserAddress;
 
 @Data
 @Schema(description = "用户地址数据传输对象")

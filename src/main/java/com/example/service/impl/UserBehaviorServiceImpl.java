@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UserBehaviorMapper;
-import com.example.model.dto.users.UserBehaviorDTO;
+import com.example.model.dto.UserBehaviorDTO;
 import com.example.model.entity.UserBehavior;
 import com.example.service.UserBehaviorService;
 import org.springframework.beans.BeanUtils;

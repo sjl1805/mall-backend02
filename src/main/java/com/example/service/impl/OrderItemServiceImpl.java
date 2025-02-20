@@ -2,8 +2,8 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.OrderItemMapper;
+import com.example.model.dto.OrderItemDTO;
 import com.example.model.entity.OrderItem;
-import com.example.model.dto.order.OrderItemDTO;
 import com.example.service.OrderItemService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.dto.product.ProductSpecDTO;
+import com.example.model.dto.ProductSpecDTO;
 import com.example.service.ProductSpecService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

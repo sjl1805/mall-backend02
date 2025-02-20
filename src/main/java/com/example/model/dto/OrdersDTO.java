@@ -1,13 +1,12 @@
-package com.example.model.dto.order;
+package com.example.model.dto;
 
+import com.example.model.entity.Orders;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.example.model.entity.Orders;
 
 @Data
 @Schema(description = "订单数据传输对象")

@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.model.dto.users.UserAddressDTO;
+import com.example.model.dto.UserAddressDTO;
 import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
 import io.swagger.v3.oas.annotations.Operation;

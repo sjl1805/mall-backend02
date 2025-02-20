@@ -1,10 +1,9 @@
-package com.example.model.dto.coupon;
+package com.example.model.dto;
 
+import com.example.model.entity.Coupon;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
-import com.example.model.entity.Coupon;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

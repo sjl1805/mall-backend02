@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.model.dto.product.RecommendProductDTO;
-import com.example.model.dto.product.RecommendProductPageDTO;
+import com.example.model.dto.RecommendProductDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.RecommendProduct;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public interface RecommendProductService extends IService<RecommendProduct> {
      * @return 分页结果（包含推荐详情）
      * @implNote 结果缓存优化，有效期10分钟
      */
-    IPage<RecommendProductDTO> listRecommendPage(RecommendProductPageDTO queryDTO);
+    IPage<RecommendProductDTO> listRecommendPage(PageDTO<RecommendProductDTO> queryDTO);
 
     /**
      * 更新推荐状态（管理端）

@@ -2,10 +2,11 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.Result;
-import com.example.model.dto.users.UserLoginDTO;
-import com.example.model.dto.users.UserPageDTO;
-import com.example.model.dto.users.UserRegisterDTO;
-import com.example.model.dto.users.UserDTO;
+import com.example.exception.BusinessException;
+import com.example.model.dto.UserDTO;
+import com.example.model.dto.UserLoginDTO;
+import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.PageDTO;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,7 +56,7 @@ public class UsersController {
     @Operation(summary = "分页查询用户", description = "管理端用户分页查询接口")
     @ApiResponse(responseCode = "200", description = "查询成功，返回分页数据")
     public Result<IPage<UserDTO>> listUsers(
-            @Parameter(hidden = true) UserPageDTO query) {
+            @Parameter(hidden = true) @Valid PageDTO<UserDTO> query) {
         return Result.success(usersService.listUsersByPage(query));
     }
 

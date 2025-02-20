@@ -1,9 +1,9 @@
-package com.example.model.dto.product;
+package com.example.model.dto;
 
+import com.example.model.entity.ProductReview;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.example.model.entity.ProductReview;
 
 @Data
 @Schema(description = "商品评价数据传输对象")

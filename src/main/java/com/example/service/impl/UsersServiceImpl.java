@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
 import com.example.exception.BusinessException;
 import com.example.mapper.UsersMapper;
-import com.example.model.dto.users.UserDTO;
-import com.example.model.dto.users.UserLoginDTO;
-import com.example.model.dto.users.UserPageDTO;
-import com.example.model.dto.users.UserRegisterDTO;
+import com.example.model.dto.UserDTO;
+import com.example.model.dto.UserLoginDTO;
+import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.PageDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import com.example.utils.JwtUtils;
@@ -59,9 +59,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      */
     @Override
     @Cacheable(key = "'page:' + #queryDTO.hashCode()", unless = "#result == null")
-    public IPage<UserDTO> listUsersByPage(UserPageDTO queryDTO) {
-        Page<Users> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
-        IPage<Users> usersPage = baseMapper.selectUserPage(page, queryDTO);
+    public IPage<UserDTO> listUsersByPage(PageDTO<UserDTO> queryDTO) {
+        Page<Users> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        IPage<Users> usersPage = baseMapper.selectUserPage(page, queryDTO.getQuery());
         return usersPage.convert(UserDTO::fromEntity);
     }
 

@@ -1,8 +1,8 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.model.dto.ProductSkuDTO;
 import com.example.model.entity.ProductSku;
-import com.example.model.dto.product.ProductSkuDTO;
 
 import java.util.List;
 import java.util.Map;
