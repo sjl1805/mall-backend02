@@ -1,4 +1,4 @@
-package com.example.mall.security;
+package com.example.security;
 
 import cn.hutool.core.date.DateUtil;
 import io.jsonwebtoken.*;

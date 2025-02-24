@@ -1,4 +1,4 @@
-package com.example.mall.config;
+package com.example.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;

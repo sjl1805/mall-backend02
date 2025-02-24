@@ -1,8 +1,5 @@
-package com.example.mall.common.exception;
+package com.example.common.exception;
 
-import com.example.mall.common.api.CommonResult;
-import com.example.mall.common.api.IResultCode;
-import com.example.mall.common.api.ResultCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +9,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.example.common.api.CommonResult;
+import com.example.common.api.IResultCode;
+import com.example.common.api.ResultCode;
 
 @Slf4j
 @RestControllerAdvice

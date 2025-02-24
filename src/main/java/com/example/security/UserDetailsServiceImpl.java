@@ -1,4 +1,4 @@
-package com.example.mall.security;
+package com.example.security;
 
 import com.example.model.entity.Users;
 import com.example.mapper.UsersMapper;

@@ -1,6 +1,5 @@
-package com.example.mall.config;
+package com.example.config;
 
-import com.example.mall.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.security.JwtAuthenticationFilter;
 
 import java.util.Arrays;
 import java.util.Collections;

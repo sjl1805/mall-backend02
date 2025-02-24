@@ -1,4 +1,4 @@
-package com.example.mall.common.api;
+package com.example.common.api;
 
 
 // 枚举实现

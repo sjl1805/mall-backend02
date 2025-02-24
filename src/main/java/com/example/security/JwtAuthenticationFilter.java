@@ -1,4 +1,4 @@
-package com.example.mall.security;
+package com.example.security;
 
 import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
