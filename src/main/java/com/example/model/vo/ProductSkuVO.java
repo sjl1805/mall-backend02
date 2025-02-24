@@ -1,6 +1,7 @@
 package com.example.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,13 +10,24 @@ import java.time.LocalDateTime;
 @Data
 public class ProductSkuVO {
     private Long id;
+
+    @Schema(description = "商品ID", example = "1")
     private Long productId;
-    private Object specValues; // 反序列化后的规格组合
+
+    @Schema(description = "规格值组合（JSON）", example = "{\"color\":\"red\",\"size\":\"M\"}")
+    private String specValues;
+
+    @Schema(description = "商品单价", example = "99.99")
     private BigDecimal price;
+
+    @Schema(description = "商品库存", example = "100")
     private Integer stock;
-    private Integer sales;
+
+    @Schema(description = "SKU主图URL", example = "http://example.com/image.jpg")
     private String mainImage;
-    private String status;
+
+    @Schema(description = "SKU状态：0-下架 1-上架", example = "1")
+    private Integer status;
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
@@ -23,8 +35,8 @@ public class ProductSkuVO {
     // 状态转换
     public String getStatus() {
         return switch (status) {
-            case "1" -> "上架";
-            case "0" -> "下架";
+            case 1 -> "上架";
+            case 0 -> "下架";
             default -> "未知状态";
         };
     }

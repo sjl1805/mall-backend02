@@ -1,6 +1,7 @@
 package com.example.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,14 +10,28 @@ import java.util.List;
 @Data
 public class ProductReviewVO {
     private Long id;
+
+    @Schema(description = "订单ID", example = "1")
     private Long orderId;
+
+    @Schema(description = "用户ID", example = "1")
     private Long userId;
+
+    @Schema(description = "商品ID", example = "1")
     private Long productId;
+
+    @Schema(description = "评分：1-5分", example = "5")
     private Integer rating;
+
+    @Schema(description = "评价内容", example = "这款商品非常好！")
     private String content;
+
+    @Schema(description = "评价图片，JSON格式", example = "[\"http://example.com/image1.jpg\", \"http://example.com/image2.jpg\"]")
     private List<String> images;
-    private String status;
-    
+
+    @Schema(description = "审核状态：0-待审核 1-已通过 2-已拒绝", example = "1")
+    private Integer status;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
