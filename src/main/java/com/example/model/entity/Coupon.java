@@ -3,9 +3,9 @@ package com.example.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.io.Serializable;
 
 /**
  * 优惠券表

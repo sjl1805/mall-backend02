@@ -1,15 +1,15 @@
 package com.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Value;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Operation;
 
 import java.io.File;
 
@@ -19,7 +19,7 @@ import java.io.File;
 public class FileController {
 
     @Value("${file.storage.path}")
-    private String fileStoragePath; 
+    private String fileStoragePath;
 
     @PostMapping("/upload")
     @Operation(summary = "文件上传")

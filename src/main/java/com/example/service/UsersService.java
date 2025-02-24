@@ -2,9 +2,9 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.model.dto.UserDTO;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
-import com.example.model.dto.UserDTO;
 import com.example.model.entity.Users;
 
 /**
@@ -49,7 +49,7 @@ public interface UsersService extends IService<Users> {
     /**
      * 更新用户信息
      *
-     * @param userId 用户ID
+     * @param userId  用户ID
      * @param userDTO 用户信息
      * @return 更新结果
      */

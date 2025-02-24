@@ -3,8 +3,10 @@ package com.example.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.Coupon;
-import java.util.List;
+
 import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * @author 31815
  * @description 针对表【coupon(优惠券表)】的数据库操作Service
@@ -59,21 +61,21 @@ public interface CouponService extends IService<Coupon> {
      * @return 删除结果
      */
     boolean deleteCoupon(Long id);
-  
+
     /**
      * 设置优惠券有效期
      *
-     * @param id 优惠券ID
+     * @param id        优惠券ID
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      */
     boolean setCouponValidity(Long id, String startTime, String endTime);
 
     /**
      * 设置优惠券使用条件
      *
-     * @param id 优惠券ID
-     * @param minAmount 最小金额    
+     * @param id        优惠券ID
+     * @param minAmount 最小金额
      */
     boolean setCouponConditions(Long id, BigDecimal minAmount);
 }

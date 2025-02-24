@@ -3,8 +3,9 @@ package com.example.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * 用户收货地址表
  *

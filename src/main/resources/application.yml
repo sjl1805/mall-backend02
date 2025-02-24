@@ -53,7 +53,7 @@ springdoc:
     enabled: true
     # noinspection SpringBootApplicationYaml
     packages-to-scan: com.example.controller   # 指定扫描的包
-  paths-to-match: /**              
+  paths-to-match: /**
 
 file:
   storage:
