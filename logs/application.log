@@ -4031,3 +4031,421 @@ com.google.code.kaptcha.util.ConfigException: Invalid value '0' for config param
 	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
 
 2025-02-24T23:19:04.858+08:00  WARN 5040 --- [http-nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.google.code.kaptcha.util.ConfigException: Invalid value '0' for config parameter 'kaptcha.textproducer.char.length'. Value must be greater than or equals to 1.]
+2025-02-24T23:30:20.054+08:00  INFO 2736 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 2736 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-24T23:30:20.054+08:00 DEBUG 2736 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-24T23:30:20.059+08:00  INFO 2736 --- [restartedMain] com.example.MallBackendApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-02-24T23:30:20.123+08:00  INFO 2736 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-24T23:30:20.124+08:00  INFO 2736 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-24T23:30:21.006+08:00  INFO 2736 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-24T23:30:21.014+08:00  INFO 2736 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-24T23:30:21.054+08:00  INFO 2736 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 25 ms. Found 0 Redis repository interfaces.
+2025-02-24T23:30:21.851+08:00  INFO 2736 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-24T23:30:21.861+08:00  INFO 2736 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-24T23:30:21.861+08:00  INFO 2736 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-24T23:30:21.918+08:00  INFO 2736 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-24T23:30:21.919+08:00  INFO 2736 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1795 ms
+2025-02-24T23:30:22.221+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CartMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.224+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CartMapper.xml]'
+2025-02-24T23:30:22.256+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CategoryMapper.xml]'
+2025-02-24T23:30:22.284+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.287+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CouponMapper.xml]'
+2025-02-24T23:30:22.313+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.FavoriteFolderMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.319+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\FavoriteFolderMapper.xml]'
+2025-02-24T23:30:22.345+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.OrderItemMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.345+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrderItemMapper.xml]'
+2025-02-24T23:30:22.371+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrdersMapper.xml]'
+2025-02-24T23:30:22.390+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductFavoriteMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.393+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductFavoriteMapper.xml]'
+2025-02-24T23:30:22.412+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductReviewMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.415+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductReviewMapper.xml]'
+2025-02-24T23:30:22.437+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSkuMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.439+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSkuMapper.xml]'
+2025-02-24T23:30:22.457+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductsMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.459+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductsMapper.xml]'
+2025-02-24T23:30:22.476+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSpecMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.477+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSpecMapper.xml]'
+2025-02-24T23:30:22.493+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.RecommendProductMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.493+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\RecommendProductMapper.xml]'
+2025-02-24T23:30:22.510+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserAddressMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.518+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserAddressMapper.xml]'
+2025-02-24T23:30:22.539+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserBehaviorMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.541+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserBehaviorMapper.xml]'
+2025-02-24T23:30:22.558+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserCouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.560+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserCouponMapper.xml]'
+2025-02-24T23:30:22.569+08:00 ERROR 2736 --- [restartedMain] c.b.m.core.MybatisConfiguration          : mapper[com.example.mapper.UsersMapper.selectById] is ignored, because it exists, maybe from xml file
+2025-02-24T23:30:22.577+08:00  WARN 2736 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UsersMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:30:22.577+08:00 DEBUG 2736 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UsersMapper.xml]'
+2025-02-24T23:30:22.652+08:00 DEBUG 2736 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-24T23:30:22.662+08:00 DEBUG 2736 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-24T23:30:22.670+08:00 DEBUG 2736 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:12
+2025-02-24T23:30:22.754+08:00 DEBUG 2736 --- [restartedMain] c.e.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2025-02-24T23:30:23.139+08:00  WARN 2736 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'usersController': Unsatisfied dependency expressed through field 'captchaProducer': No qualifying bean of type 'com.google.code.kaptcha.Producer' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2025-02-24T23:30:23.153+08:00  INFO 2736 --- [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-02-24T23:30:23.167+08:00  INFO 2736 --- [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-02-24T23:30:23.185+08:00 ERROR 2736 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field captchaProducer in com.example.controller.UsersController required a bean of type 'com.google.code.kaptcha.Producer' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.google.code.kaptcha.Producer' in your configuration.
+
+2025-02-24T23:31:06.518+08:00  INFO 2508 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 2508 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-24T23:31:06.520+08:00 DEBUG 2508 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-24T23:31:06.521+08:00  INFO 2508 --- [restartedMain] com.example.MallBackendApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-02-24T23:31:06.567+08:00  INFO 2508 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-24T23:31:06.569+08:00  INFO 2508 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-24T23:31:07.444+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-24T23:31:07.447+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-24T23:31:07.485+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 24 ms. Found 0 Redis repository interfaces.
+2025-02-24T23:31:08.273+08:00  INFO 2508 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-24T23:31:08.283+08:00  INFO 2508 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-24T23:31:08.283+08:00  INFO 2508 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-24T23:31:08.341+08:00  INFO 2508 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-24T23:31:08.343+08:00  INFO 2508 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1772 ms
+2025-02-24T23:31:08.640+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CartMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.643+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CartMapper.xml]'
+2025-02-24T23:31:08.718+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CategoryMapper.xml]'
+2025-02-24T23:31:08.754+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.756+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CouponMapper.xml]'
+2025-02-24T23:31:08.781+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.FavoriteFolderMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.784+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\FavoriteFolderMapper.xml]'
+2025-02-24T23:31:08.810+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.OrderItemMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.812+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrderItemMapper.xml]'
+2025-02-24T23:31:08.841+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrdersMapper.xml]'
+2025-02-24T23:31:08.863+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductFavoriteMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.866+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductFavoriteMapper.xml]'
+2025-02-24T23:31:08.889+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductReviewMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.891+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductReviewMapper.xml]'
+2025-02-24T23:31:08.916+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSkuMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.918+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSkuMapper.xml]'
+2025-02-24T23:31:08.939+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductsMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.941+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductsMapper.xml]'
+2025-02-24T23:31:08.961+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSpecMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.964+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSpecMapper.xml]'
+2025-02-24T23:31:08.985+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.RecommendProductMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:08.987+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\RecommendProductMapper.xml]'
+2025-02-24T23:31:09.004+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserAddressMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:09.006+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserAddressMapper.xml]'
+2025-02-24T23:31:09.022+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserBehaviorMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:09.023+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserBehaviorMapper.xml]'
+2025-02-24T23:31:09.039+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserCouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:09.042+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserCouponMapper.xml]'
+2025-02-24T23:31:09.050+08:00 ERROR 2508 --- [restartedMain] c.b.m.core.MybatisConfiguration          : mapper[com.example.mapper.UsersMapper.selectById] is ignored, because it exists, maybe from xml file
+2025-02-24T23:31:09.059+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UsersMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:09.061+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UsersMapper.xml]'
+2025-02-24T23:31:09.138+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-24T23:31:09.148+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-24T23:31:09.157+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:15
+2025-02-24T23:31:09.244+08:00 DEBUG 2508 --- [restartedMain] c.e.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2025-02-24T23:31:10.411+08:00  INFO 2508 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@662cee5a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@92723fd, org.springframework.security.web.context.SecurityContextHolderFilter@6ffb5742, org.springframework.security.web.header.HeaderWriterFilter@38873980, org.springframework.web.filter.CorsFilter@7fbbe49e, org.springframework.security.web.authentication.logout.LogoutFilter@3162b868, com.example.security.JwtAuthenticationFilter@630a0d7c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5fd0dc6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3ddd91eb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@ec3b0e0, org.springframework.security.web.session.SessionManagementFilter@2d3b83d4, org.springframework.security.web.access.ExceptionTranslationFilter@43a496c7, org.springframework.security.web.access.intercept.AuthorizationFilter@3f0a0dd7]
+2025-02-24T23:31:10.800+08:00  INFO 2508 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-02-24T23:31:10.843+08:00  INFO 2508 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
+2025-02-24T23:31:10.852+08:00  INFO 2508 --- [restartedMain] com.example.MallBackendApplication       : Started MallBackendApplication in 4.727 seconds (process running for 5.094)
+2025-02-24T23:31:13.290+08:00  INFO 2508 --- [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-02-24T23:31:13.397+08:00  INFO 2508 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 2508 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-24T23:31:13.398+08:00 DEBUG 2508 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-24T23:31:13.398+08:00  INFO 2508 --- [restartedMain] com.example.MallBackendApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-02-24T23:31:13.660+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-24T23:31:13.661+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-24T23:31:13.671+08:00  INFO 2508 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2025-02-24T23:31:13.781+08:00  INFO 2508 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-24T23:31:13.782+08:00  INFO 2508 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-24T23:31:13.783+08:00  INFO 2508 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-24T23:31:13.802+08:00  INFO 2508 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-24T23:31:13.803+08:00  INFO 2508 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 403 ms
+2025-02-24T23:31:13.860+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CartMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.863+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CartMapper.xml]'
+2025-02-24T23:31:13.879+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CategoryMapper.xml]'
+2025-02-24T23:31:13.896+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.897+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CouponMapper.xml]'
+2025-02-24T23:31:13.914+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.FavoriteFolderMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.915+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\FavoriteFolderMapper.xml]'
+2025-02-24T23:31:13.928+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.OrderItemMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.930+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrderItemMapper.xml]'
+2025-02-24T23:31:13.945+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrdersMapper.xml]'
+2025-02-24T23:31:13.958+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductFavoriteMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.960+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductFavoriteMapper.xml]'
+2025-02-24T23:31:13.973+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductReviewMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.975+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductReviewMapper.xml]'
+2025-02-24T23:31:13.990+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSkuMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:13.991+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSkuMapper.xml]'
+2025-02-24T23:31:14.002+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductsMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.004+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductsMapper.xml]'
+2025-02-24T23:31:14.017+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSpecMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.019+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSpecMapper.xml]'
+2025-02-24T23:31:14.032+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.RecommendProductMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.034+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\RecommendProductMapper.xml]'
+2025-02-24T23:31:14.049+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserAddressMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.050+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserAddressMapper.xml]'
+2025-02-24T23:31:14.064+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserBehaviorMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.065+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserBehaviorMapper.xml]'
+2025-02-24T23:31:14.078+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserCouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.080+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserCouponMapper.xml]'
+2025-02-24T23:31:14.085+08:00 ERROR 2508 --- [restartedMain] c.b.m.core.MybatisConfiguration          : mapper[com.example.mapper.UsersMapper.selectById] is ignored, because it exists, maybe from xml file
+2025-02-24T23:31:14.095+08:00  WARN 2508 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UsersMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:14.096+08:00 DEBUG 2508 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UsersMapper.xml]'
+2025-02-24T23:31:14.170+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-24T23:31:14.182+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-24T23:31:14.186+08:00 DEBUG 2508 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:15
+2025-02-24T23:31:14.208+08:00 DEBUG 2508 --- [restartedMain] c.e.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2025-02-24T23:31:17.658+08:00  INFO 18204 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 18204 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-24T23:31:17.660+08:00 DEBUG 18204 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-24T23:31:17.661+08:00  INFO 18204 --- [restartedMain] com.example.MallBackendApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-02-24T23:31:17.704+08:00  INFO 18204 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-24T23:31:17.705+08:00  INFO 18204 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-24T23:31:18.568+08:00  INFO 18204 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-24T23:31:18.571+08:00  INFO 18204 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-24T23:31:18.608+08:00  INFO 18204 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 23 ms. Found 0 Redis repository interfaces.
+2025-02-24T23:31:19.287+08:00  INFO 18204 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-24T23:31:19.296+08:00  INFO 18204 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-24T23:31:19.297+08:00  INFO 18204 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-24T23:31:19.355+08:00  INFO 18204 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-24T23:31:19.357+08:00  INFO 18204 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1651 ms
+2025-02-24T23:31:19.634+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CartMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.637+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CartMapper.xml]'
+2025-02-24T23:31:19.662+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CategoryMapper.xml]'
+2025-02-24T23:31:19.690+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.692+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CouponMapper.xml]'
+2025-02-24T23:31:19.714+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.FavoriteFolderMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.716+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\FavoriteFolderMapper.xml]'
+2025-02-24T23:31:19.741+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.OrderItemMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.743+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrderItemMapper.xml]'
+2025-02-24T23:31:19.768+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrdersMapper.xml]'
+2025-02-24T23:31:19.788+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductFavoriteMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.790+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductFavoriteMapper.xml]'
+2025-02-24T23:31:19.808+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductReviewMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.811+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductReviewMapper.xml]'
+2025-02-24T23:31:19.829+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSkuMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.832+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSkuMapper.xml]'
+2025-02-24T23:31:19.850+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductsMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.852+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductsMapper.xml]'
+2025-02-24T23:31:19.872+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSpecMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.874+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSpecMapper.xml]'
+2025-02-24T23:31:19.892+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.RecommendProductMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.894+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\RecommendProductMapper.xml]'
+2025-02-24T23:31:19.912+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserAddressMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.914+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserAddressMapper.xml]'
+2025-02-24T23:31:19.935+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserBehaviorMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.936+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserBehaviorMapper.xml]'
+2025-02-24T23:31:19.953+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserCouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.954+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserCouponMapper.xml]'
+2025-02-24T23:31:19.963+08:00 ERROR 18204 --- [restartedMain] c.b.m.core.MybatisConfiguration          : mapper[com.example.mapper.UsersMapper.selectById] is ignored, because it exists, maybe from xml file
+2025-02-24T23:31:19.973+08:00  WARN 18204 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UsersMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:19.975+08:00 DEBUG 18204 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UsersMapper.xml]'
+2025-02-24T23:31:20.063+08:00 DEBUG 18204 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-24T23:31:20.075+08:00 DEBUG 18204 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-24T23:31:20.084+08:00 DEBUG 18204 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:11
+2025-02-24T23:31:20.161+08:00 DEBUG 18204 --- [restartedMain] c.e.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2025-02-24T23:31:21.274+08:00  INFO 18204 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@175db5a3, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@33a6a86b, org.springframework.security.web.context.SecurityContextHolderFilter@66f63941, org.springframework.security.web.header.HeaderWriterFilter@9b05301, org.springframework.web.filter.CorsFilter@29a3c0, org.springframework.security.web.authentication.logout.LogoutFilter@51d7425a, com.example.security.JwtAuthenticationFilter@57a016e6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@520add6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@162c04b9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@772ddb87, org.springframework.security.web.session.SessionManagementFilter@747294ec, org.springframework.security.web.access.ExceptionTranslationFilter@27bd2a7b, org.springframework.security.web.access.intercept.AuthorizationFilter@421cc873]
+2025-02-24T23:31:21.605+08:00  INFO 18204 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-02-24T23:31:21.648+08:00  INFO 18204 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
+2025-02-24T23:31:21.657+08:00  INFO 18204 --- [restartedMain] com.example.MallBackendApplication       : Started MallBackendApplication in 4.357 seconds (process running for 4.713)
+2025-02-24T23:31:31.754+08:00  INFO 18204 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-24T23:31:31.755+08:00  INFO 18204 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-02-24T23:31:31.756+08:00  INFO 18204 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-02-24T23:31:31.769+08:00  WARN 18204 --- [http-nio-8080-exec-1] o.s.w.s.h.HandlerMappingIntrospector     : Cache miss for REQUEST dispatch to '/api/swagger-ui.html' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2025-02-24T23:31:33.793+08:00  INFO 18204 --- [http-nio-8080-exec-5] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1628 ms
+2025-02-24T23:31:33.848+08:00 ERROR 18204 --- [http-nio-8080-exec-5] c.e.c.exception.GlobalExceptionHandler   : 系统异常: 
+
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:344) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.OutputBuffer.appendByteArray(OutputBuffer.java:743) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:670) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:379) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:357) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:97) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.security.web.util.OnCommittedResponseWrapper$SaveContextServletOutputStream.write(OnCommittedResponseWrapper.java:633) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.util.StreamUtils.copy(StreamUtils.java:117) ~[spring-core-6.1.1.jar:6.1.1]
+	at org.springframework.http.converter.ByteArrayHttpMessageConverter.writeInternal(ByteArrayHttpMessageConverter.java:67) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.http.converter.ByteArrayHttpMessageConverter.writeInternal(ByteArrayHttpMessageConverter.java:38) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.http.converter.AbstractHttpMessageConverter.write(AbstractHttpMessageConverter.java:236) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:300) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:190) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.1.jar:6.1.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.16.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at com.example.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:47) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.1.jar:6.1.1]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method) ~[na:na]
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97) ~[na:na]
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53) ~[na:na]
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532) ~[na:na]
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.filters.IdentityOutputFilter.doWrite(IdentityOutputFilter.java:73) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.coyote.Response.doWrite(Response.java:616) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:331) ~[tomcat-embed-core-10.1.16.jar:10.1.16]
+	... 105 common frames omitted
+
+2025-02-24T23:31:41.411+08:00  INFO 6908 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 6908 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-24T23:31:41.413+08:00 DEBUG 6908 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-24T23:31:41.415+08:00  INFO 6908 --- [restartedMain] com.example.MallBackendApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-02-24T23:31:41.465+08:00  INFO 6908 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-24T23:31:41.465+08:00  INFO 6908 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-24T23:31:42.376+08:00  INFO 6908 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-24T23:31:42.376+08:00  INFO 6908 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-24T23:31:42.417+08:00  INFO 6908 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 0 Redis repository interfaces.
+2025-02-24T23:31:43.121+08:00  INFO 6908 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-24T23:31:43.133+08:00  INFO 6908 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-24T23:31:43.133+08:00  INFO 6908 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-24T23:31:43.201+08:00  INFO 6908 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-24T23:31:43.201+08:00  INFO 6908 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1736 ms
+2025-02-24T23:31:43.512+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CartMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.512+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CartMapper.xml]'
+2025-02-24T23:31:43.543+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CategoryMapper.xml]'
+2025-02-24T23:31:43.571+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.CouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.576+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\CouponMapper.xml]'
+2025-02-24T23:31:43.600+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.FavoriteFolderMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.608+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\FavoriteFolderMapper.xml]'
+2025-02-24T23:31:43.633+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.OrderItemMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.633+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrderItemMapper.xml]'
+2025-02-24T23:31:43.663+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\OrdersMapper.xml]'
+2025-02-24T23:31:43.684+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductFavoriteMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.684+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductFavoriteMapper.xml]'
+2025-02-24T23:31:43.713+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductReviewMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.713+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductReviewMapper.xml]'
+2025-02-24T23:31:43.738+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSkuMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.742+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSkuMapper.xml]'
+2025-02-24T23:31:43.763+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductsMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.763+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductsMapper.xml]'
+2025-02-24T23:31:43.791+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.ProductSpecMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.794+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\ProductSpecMapper.xml]'
+2025-02-24T23:31:43.822+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.RecommendProductMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.831+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\RecommendProductMapper.xml]'
+2025-02-24T23:31:43.852+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserAddressMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.858+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserAddressMapper.xml]'
+2025-02-24T23:31:43.885+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserBehaviorMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.887+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserBehaviorMapper.xml]'
+2025-02-24T23:31:43.905+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UserCouponMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.907+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UserCouponMapper.xml]'
+2025-02-24T23:31:43.915+08:00 ERROR 6908 --- [restartedMain] c.b.m.core.MybatisConfiguration          : mapper[com.example.mapper.UsersMapper.selectById] is ignored, because it exists, maybe from xml file
+2025-02-24T23:31:43.926+08:00  WARN 6908 --- [restartedMain] c.b.m.core.injector.methods.SelectById   : [com.example.mapper.UsersMapper.selectById] Has been loaded by XML or SqlProvider or Mybatis's Annotation, so ignoring this injection for [class com.baomidou.mybatisplus.core.injector.methods.SelectById]
+2025-02-24T23:31:43.928+08:00 DEBUG 6908 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [C:\Users\31815\Desktop\mall-backend\target\classes\mapper\UsersMapper.xml]'
+2025-02-24T23:31:43.996+08:00 DEBUG 6908 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-24T23:31:44.010+08:00 DEBUG 6908 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-24T23:31:44.019+08:00 DEBUG 6908 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:15
+2025-02-24T23:31:44.108+08:00 DEBUG 6908 --- [restartedMain] c.e.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2025-02-24T23:31:45.298+08:00  INFO 6908 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@175db5a3, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@33a6a86b, org.springframework.security.web.context.SecurityContextHolderFilter@66f63941, org.springframework.security.web.header.HeaderWriterFilter@9b05301, org.springframework.web.filter.CorsFilter@29a3c0, org.springframework.security.web.authentication.logout.LogoutFilter@51d7425a, com.example.security.JwtAuthenticationFilter@57a016e6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@520add6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@162c04b9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@772ddb87, org.springframework.security.web.session.SessionManagementFilter@747294ec, org.springframework.security.web.access.ExceptionTranslationFilter@27bd2a7b, org.springframework.security.web.access.intercept.AuthorizationFilter@421cc873]
+2025-02-24T23:31:45.610+08:00  INFO 6908 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-02-24T23:31:45.653+08:00  INFO 6908 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
+2025-02-24T23:31:45.662+08:00  INFO 6908 --- [restartedMain] com.example.MallBackendApplication       : Started MallBackendApplication in 4.634 seconds (process running for 4.979)
+2025-02-24T23:32:57.824+08:00  INFO 6908 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-24T23:32:57.825+08:00  INFO 6908 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-02-24T23:32:57.828+08:00  INFO 6908 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-02-24T23:32:57.850+08:00  WARN 6908 --- [http-nio-8080-exec-1] o.s.w.s.h.HandlerMappingIntrospector     : Cache miss for REQUEST dispatch to '/api/swagger-ui.html' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2025-02-24T23:32:59.368+08:00  INFO 6908 --- [http-nio-8080-exec-5] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1109 ms
+2025-02-24T23:33:10.777+08:00  INFO 6908 --- [http-nio-8080-exec-6] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-02-24T23:33:10.927+08:00  INFO 6908 --- [http-nio-8080-exec-6] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4fb1bb7a
+2025-02-24T23:33:10.929+08:00  INFO 6908 --- [http-nio-8080-exec-6] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-02-24T23:33:10.935+08:00 DEBUG 6908 --- [http-nio-8080-exec-6] c.e.mapper.CouponMapper.selectById       : ==>  Preparing: SELECT id,name,type, value,num,min_amount,start_time, end_time,status,create_time, update_time FROM coupon WHERE id = ?
+2025-02-24T23:33:10.959+08:00 DEBUG 6908 --- [http-nio-8080-exec-6] c.e.mapper.CouponMapper.selectById       : ==> Parameters: 1(Long)
+2025-02-24T23:33:10.978+08:00 DEBUG 6908 --- [http-nio-8080-exec-6] c.e.mapper.CouponMapper.selectById       : <==      Total: 1

@@ -11,11 +11,10 @@ import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.google.code.kaptcha.Producer;
+
 
 
 @Tag(name = "Users", description = "用户注册登录及基本信息管理")
@@ -26,11 +25,6 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
-    @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    private Producer captchaProducer;
 
     @Operation(summary = "用户注册")
     @PostMapping("/register")
@@ -43,7 +37,6 @@ public class UsersController {
     @Operation(summary = "用户登录")
     @PostMapping("/login")
     public CommonResult<Users> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
-        
         try {
             Users user = usersService.login(userLoginDTO);
             return CommonResult.success(user);
@@ -85,11 +78,4 @@ public class UsersController {
                 CommonResult.failed(ResultCode.USER_NOT_FOUND);
     }
 
-    @Operation(summary = "生成验证码")
-    @GetMapping("/captcha")
-    public CommonResult<String> getCaptcha() {
-        String captcha = captchaProducer.createText();
-        request.getSession().setAttribute("kaptchaCode", captcha);
-        return CommonResult.success(captcha);
-    }
 } 

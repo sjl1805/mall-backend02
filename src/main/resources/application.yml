@@ -69,20 +69,6 @@ logging:
   file:
     name: logs/application.log  # 设置日志文件存储路径
 
-kaptcha:
-  border: no
-  border-color: "105,179,90"
-  textproducer:
-    font:
-      size: 40
-    char:
-      length: 4
-    font-color: "blue"
-  image:
-    width: 200
-    height: 80
-  session:
-    key: "kaptchaCode"
 
 
 
