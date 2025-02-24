@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 购物车表
@@ -44,10 +44,10 @@ public class Cart {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

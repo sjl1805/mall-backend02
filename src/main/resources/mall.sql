@@ -280,7 +280,8 @@ CREATE TABLE `product_review`
     FOREIGN KEY (`product_id`) REFERENCES products (`id`),
     UNIQUE INDEX `uk_order_product` (`order_id`, `product_id`)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT = '商品评价表';-- 14. 商品收藏表
+  DEFAULT CHARSET = utf8mb4 COMMENT = '商品评价表';
+-- 14. 商品收藏表
 CREATE TABLE `product_favorite`
 (
     `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT '收藏ID',
@@ -295,7 +296,8 @@ CREATE TABLE `product_favorite`
         SET NULL,
     FOREIGN KEY (`user_id`) REFERENCES users (`id`) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT = '商品收藏表';-- 15. 推荐商品表
+  DEFAULT CHARSET = utf8mb4 COMMENT = '商品收藏表';
+-- 15. 推荐商品表
 CREATE TABLE `recommend_product`
 (
     `id`                BIGINT      NOT NULL AUTO_INCREMENT COMMENT '推荐商品ID',
@@ -313,7 +315,8 @@ CREATE TABLE `recommend_product`
     INDEX `idx_product_id` (`product_id`),
     FOREIGN KEY (`product_id`) REFERENCES products (`id`) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT = '推荐商品表';-- 16. 用户行为表
+  DEFAULT CHARSET = utf8mb4 COMMENT = '推荐商品表';
+-- 16. 用户行为表
 CREATE TABLE user_behavior
 (
     `id`            BIGINT        NOT NULL AUTO_INCREMENT COMMENT '行为记录ID',

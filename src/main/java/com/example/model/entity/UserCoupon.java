@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户优惠券表
@@ -44,20 +44,20 @@ public class UserCoupon {
     /**
      * 领取时间
      */
-    private Date getTime;
+    private LocalDateTime getTime;
 
     /**
      * 使用时间
      */
-    private Date useTime;
+    private LocalDateTime useTime;
 
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

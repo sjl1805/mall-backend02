@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 商品评价表
@@ -59,10 +59,10 @@ public class ProductReview {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

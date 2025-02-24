@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户行为记录表
@@ -40,7 +40,7 @@ public class UserBehavior {
     /**
      * 行为时间
      */
-    private Date behaviorTime;
+    private LocalDateTime behaviorTime;
 
     /**
      * 停留时长（秒）
@@ -50,12 +50,12 @@ public class UserBehavior {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 行为权重

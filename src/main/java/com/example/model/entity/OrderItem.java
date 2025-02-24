@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 订单商品表
@@ -60,10 +60,10 @@ public class OrderItem {
     /**
      * 创建时间（带时区）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间（带时区）
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }
