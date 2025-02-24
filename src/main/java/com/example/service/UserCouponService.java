@@ -54,4 +54,12 @@ public interface UserCouponService extends IService<UserCoupon> {
      * @return 删除结果
      */
     boolean deleteUserCoupon(Long id);
+
+    /**
+     * 根据用户ID和状态查询用户优惠券
+     * @param userId 用户ID
+     * @param status 优惠券状态
+     * @return 用户优惠券列表
+     */
+    List<UserCoupon> selectByUserIdAndStatus(Long userId, String status);
 }

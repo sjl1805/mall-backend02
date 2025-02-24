@@ -51,6 +51,11 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
     public boolean deleteUserCoupon(Long id) {
         return userCouponMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public List<UserCoupon> selectByUserIdAndStatus(Long userId, String status) {
+        return userCouponMapper.selectByUserIdAndStatus(userId, status);
+    }
 }
 
 

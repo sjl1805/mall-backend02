@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Users;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,6 +18,7 @@ import java.util.List;
  * @Entity model.entity.Users
  */
 @Mapper
+@Repository
 public interface UsersMapper extends BaseMapper<Users> {
 
     /**
@@ -51,7 +55,9 @@ public interface UsersMapper extends BaseMapper<Users> {
      * @param id 用户ID
      * @return 用户信息
      */
-    Users selectById(@Param("id") Long id);
+    @Override
+    @Select("select * from users where user_id = #{id}")
+    Users selectById(Serializable id);
 
     /**
      * 插入新用户

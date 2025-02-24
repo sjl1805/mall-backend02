@@ -15,7 +15,8 @@ public enum ResultCode implements IResultCode {
     PRODUCT_OFF_SHELF(200001, "商品已下架"),
     USERNAME_EXISTED(400100, "用户名已存在"),
     LOGIN_FAILED(400101, "登录失败"),
-    USER_NOT_FOUND(400102, "用户不存在");
+    USER_NOT_FOUND(400102, "用户不存在"),
+    FAILED(400103, "操作失败");
 
     private final int code;
     private final String message;
