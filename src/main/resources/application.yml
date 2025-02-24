@@ -16,6 +16,9 @@ spring:
       port: 6379
       password:
       database: 0
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 jwt:
   secret: bWFsbC1zZWNyZXQta2V5LTIwMjQtc3ByaW5nLWJvb3QtMy1qd3Qtc2VjdXJpdHk=
