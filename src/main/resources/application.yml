@@ -18,7 +18,8 @@ spring:
       database: 0
 
 jwt:
-  secret: mall-secret-key-2024-spring-boot-3-jwt-security
+  secret: "U2VjcmV0S2V5Rm9ySldUMTU2NDg2NTQzMjEwOTg3NjU0MzIxMDk4NzY1NDMyCg=="
+  token-validity-in-seconds: 86400
   expiration: 86400  # 24小时
   token-header: Authorization
   token-prefix: "Bearer "

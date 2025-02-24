@@ -2,7 +2,6 @@ package com.example.security;
 
 import cn.hutool.core.date.DateUtil;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +14,14 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
-    private String secret;
+    private String secretKey;
 
     @Value("${jwt.expiration}")
     private long expiration;
@@ -29,8 +29,9 @@ public class JwtTokenProvider {
     private SecretKey key;
 
     @PostConstruct
-    public void init() {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    protected void init() {
+        byte[] keyBytes = Base64.getUrlDecoder().decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(UserDetails userDetails) {
