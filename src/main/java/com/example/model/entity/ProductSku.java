@@ -1,18 +1,19 @@
 package com.example.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 商品SKU表
+ *
  * @TableName product_sku
  */
-@TableName(value ="product_sku")
+@TableName(value = "product_sku")
 @Data
 public class ProductSku {
     /**

@@ -1,17 +1,18 @@
 package com.example.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.Date;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 推荐商品表
+ *
  * @TableName recommend_product
  */
-@TableName(value ="recommend_product")
+@TableName(value = "recommend_product")
 @Data
 public class RecommendProduct {
     /**
