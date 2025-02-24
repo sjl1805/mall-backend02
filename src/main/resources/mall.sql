@@ -30,7 +30,8 @@ CREATE TABLE users
     INDEX idx_search (username, phone, STATUS),
     INDEX idx_create_time (create_time)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';-- 2. 商品分类表
+  DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';
+-- 2. 商品分类表
 CREATE TABLE `category`
 (
     `id`          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '分类ID',
@@ -47,7 +48,8 @@ CREATE TABLE `category`
     INDEX idx_parent_status (parent_id, STATUS),
     INDEX idx_level_sort (LEVEL, sort)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8mb4 COMMENT = '商品分类表';-- 3. 商品表（使用JSON类型）
+  DEFAULT CHARSET = utf8mb4 COMMENT = '商品分类表';
+-- 3. 商品表（使用JSON类型）
 CREATE TABLE products
 (
     `id`          BIGINT         NOT NULL AUTO_INCREMENT COMMENT '商品ID',
