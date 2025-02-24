@@ -2,6 +2,9 @@ server:
   port: 8080
   servlet:
     context-path: /api
+    multipart:
+      max-file-size: 10MB  # 最大文件大小
+      max-request-size: 10MB  # 最大请求大小
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/mall?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
@@ -52,3 +55,7 @@ springdoc:
     # noinspection SpringBootApplicationYaml
     packages-to-scan: com.example.controller   # 指定扫描的包
   paths-to-match: /**              
+
+file:
+  storage:
+    path: /path/file  # 文件存储路径
