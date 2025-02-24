@@ -24,4 +24,49 @@
         update_time
     </sql>
 
+    <!-- 根据商品ID查询SKU -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 分页查询SKU -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_sku
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询SKU -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新SKU -->
+    <insert id="insertProductSku" parameterType="com.example.model.entity.ProductSku">
+        INSERT INTO product_sku (product_id, spec_values, price, stock, sales, main_image, create_time, update_time, status)
+        VALUES (#{productId}, #{specValues}, #{price}, #{stock}, #{sales}, #{mainImage}, #{createTime}, #{updateTime}, #{status})
+    </insert>
+
+    <!-- 更新SKU信息 -->
+    <update id="updateProductSku" parameterType="com.example.model.entity.ProductSku">
+        UPDATE product_sku
+        SET product_id = #{productId},
+            spec_values = #{specValues},
+            price = #{price},
+            stock = #{stock},
+            sales = #{sales},
+            main_image = #{mainImage},
+            update_time = #{updateTime},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除SKU -->
+    <delete id="deleteProductSku">
+        DELETE FROM product_sku WHERE id = #{id}
+    </delete>
 </mapper>

@@ -24,5 +24,52 @@
         update_time
     </sql>
 
+    <!-- 根据名称模糊查询 -->
+    <select id="selectByNameLike" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE name LIKE CONCAT('%', #{name}, '%')
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
 
+    <!-- 分页查询优惠券 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询优惠券 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新优惠券 -->
+    <insert id="insertCoupon" parameterType="com.example.model.entity.Coupon">
+        INSERT INTO coupon (name, type, value, min_amount, start_time, end_time, status, create_time, update_time)
+        VALUES (#{name}, #{type}, #{value}, #{minAmount}, #{startTime}, #{endTime}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新优惠券信息 -->
+    <update id="updateCoupon" parameterType="com.example.model.entity.Coupon">
+        UPDATE coupon
+        SET name = #{name},
+            type = #{type},
+            value = #{value},
+            min_amount = #{minAmount},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            status = #{status},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除优惠券 -->
+    <delete id="deleteCoupon">
+        DELETE FROM coupon WHERE id = #{id}
+    </delete>
 </mapper>

@@ -18,5 +18,45 @@
         spec_values,create_time,update_time
     </sql>
 
+    <!-- 根据商品ID查询规格 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_spec
+        WHERE product_id = #{productId}
+    </select>
 
+    <!-- 分页查询商品规格 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_spec
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询商品规格 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_spec
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新商品规格 -->
+    <insert id="insertProductSpec" parameterType="com.example.model.entity.ProductSpec">
+        INSERT INTO product_spec (product_id, spec_name, spec_values, create_time, update_time)
+        VALUES (#{productId}, #{specName}, #{specValues}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新商品规格信息 -->
+    <update id="updateProductSpec" parameterType="com.example.model.entity.ProductSpec">
+        UPDATE product_spec
+        SET product_id = #{productId},
+            spec_name = #{specName},
+            spec_values = #{specValues},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除商品规格 -->
+    <delete id="deleteProductSpec">
+        DELETE FROM product_spec WHERE id = #{id}
+    </delete>
 </mapper>

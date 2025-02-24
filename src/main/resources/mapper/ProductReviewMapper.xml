@@ -24,4 +24,52 @@
         update_time
     </sql>
 
+    <!-- 根据商品ID查询评价 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_review
+        WHERE product_id = #{productId}
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 分页查询商品评价 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_review
+        WHERE status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询评价 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_review
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新评价 -->
+    <insert id="insertProductReview" parameterType="com.example.model.entity.ProductReview">
+        INSERT INTO product_review (order_id, user_id, product_id, rating, content, images, status, create_time, update_time)
+        VALUES (#{orderId}, #{userId}, #{productId}, #{rating}, #{content}, #{images}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新评价信息 -->
+    <update id="updateProductReview" parameterType="com.example.model.entity.ProductReview">
+        UPDATE product_review
+        SET order_id = #{orderId},
+            user_id = #{userId},
+            product_id = #{productId},
+            rating = #{rating},
+            content = #{content},
+            images = #{images},
+            status = #{status},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除评价 -->
+    <delete id="deleteProductReview">
+        DELETE FROM product_review WHERE id = #{id}
+    </delete>
 </mapper>

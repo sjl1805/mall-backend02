@@ -22,4 +22,48 @@
         sort,create_time,update_time
     </sql>
 
+    <!-- 根据用户ID查询收藏夹 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 分页查询收藏夹 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询收藏夹 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新收藏夹 -->
+    <insert id="insertFavoriteFolder" parameterType="com.example.model.entity.FavoriteFolder">
+        INSERT INTO favorite_folder (user_id, name, description, is_public, item_count, sort, create_time, update_time)
+        VALUES (#{userId}, #{name}, #{description}, #{isPublic}, #{itemCount}, #{sort}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新收藏夹信息 -->
+    <update id="updateFavoriteFolder" parameterType="com.example.model.entity.FavoriteFolder">
+        UPDATE favorite_folder
+        SET user_id = #{userId},
+            name = #{name},
+            description = #{description},
+            is_public = #{isPublic},
+            item_count = #{itemCount},
+            sort = #{sort},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除收藏夹 -->
+    <delete id="deleteFavoriteFolder">
+        DELETE FROM favorite_folder WHERE id = #{id}
+    </delete>
 </mapper>
