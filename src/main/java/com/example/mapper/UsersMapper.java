@@ -23,28 +23,32 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     /**
      * 根据用户名模糊查询用户
+     *
      * @param username 用户名
      * @return 用户列表
      */
     List<Users> selectByUsernameLike(@Param("username") String username);
 
-    /** 
+    /**
      * 根据用户名和密码查询用户
+     *
      * @param username 用户名
      * @param password 密码
      * @return 用户信息
      */
     Users selectByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
-    
+
     /**
      * 根据用户名查询用户
+     *
      * @param username 用户名
      * @return 用户信息
      */
     Users selectByUsername(@Param("username") String username);
-    
+
     /**
      * 分页查询用户
+     *
      * @param page 分页信息
      * @return 用户列表
      */
@@ -52,6 +56,7 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     /**
      * 根据ID查询用户
+     *
      * @param id 用户ID
      * @return 用户信息
      */
@@ -61,6 +66,7 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     /**
      * 插入新用户
+     *
      * @param user 用户信息
      * @return 插入结果
      */
@@ -68,6 +74,7 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     /**
      * 更新用户信息
+     *
      * @param user 用户信息
      * @return 更新结果
      */
@@ -75,6 +82,7 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     /**
      * 根据ID删除用户
+     *
      * @param id 用户ID
      * @return 删除结果
      */

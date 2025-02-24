@@ -17,6 +17,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 根据用户ID查询优惠券
+     *
      * @param userId 用户ID
      * @return 用户优惠券列表
      */
@@ -24,6 +25,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 分页查询用户优惠券
+     *
      * @param page 分页信息
      * @return 用户优惠券列表
      */
@@ -31,6 +33,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 根据ID查询用户优惠券
+     *
      * @param id 用户优惠券ID
      * @return 用户优惠券信息
      */
@@ -38,6 +41,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 插入新用户优惠券
+     *
      * @param userCoupon 用户优惠券信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 更新用户优惠券信息
+     *
      * @param userCoupon 用户优惠券信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 根据ID删除用户优惠券
+     *
      * @param id 用户优惠券ID
      * @return 删除结果
      */
@@ -59,6 +65,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 
     /**
      * 根据用户ID和状态查询用户优惠券
+     *
      * @param userId 用户ID
      * @param status 优惠券状态
      * @return 用户优惠券列表

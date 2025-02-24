@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.Products;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 根据商品名称查询商品
+     *
      * @param name 商品名称
      * @return 商品列表
      */
@@ -22,6 +23,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 分页查询商品
+     *
      * @param page 分页信息
      * @return 商品列表
      */
@@ -29,6 +31,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 根据ID查询商品
+     *
      * @param id 商品ID
      * @return 商品信息
      */
@@ -36,6 +39,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 新增商品
+     *
      * @param product 商品信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 更新商品信息
+     *
      * @param product 商品信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface ProductsService extends IService<Products> {
 
     /**
      * 根据ID删除商品
+     *
      * @param id 商品ID
      * @return 删除结果
      */

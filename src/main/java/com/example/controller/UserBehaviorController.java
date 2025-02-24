@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "用户行为管理", description = "用户行为记录的增删改查")
+@Tag(name = "UserBehavior", description = "用户行为记录的增删改查")
 @RestController
-@RequestMapping("/api/userBehavior")
+@RequestMapping("/userBehavior")
 public class UserBehaviorController {
 
     @Autowired

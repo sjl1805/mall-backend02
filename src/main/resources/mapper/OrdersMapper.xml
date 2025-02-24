@@ -38,32 +38,43 @@
 
     <!-- 用户订单查询 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT * FROM orders WHERE user_id = #{userId}
+        SELECT *
+        FROM orders
+        WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT * FROM orders ORDER BY create_time DESC
+        SELECT *
+        FROM orders
+        ORDER BY create_time DESC
     </select>
 
     <!-- 订单号查询 -->
     <select id="selectByOrderNo" resultMap="BaseResultMap">
-        SELECT * FROM orders WHERE order_no = #{orderNo}
+        SELECT *
+        FROM orders
+        WHERE order_no = #{orderNo}
     </select>
 
     <!-- 插入订单 -->
     <insert id="insertOrder">
-        INSERT INTO orders (...) VALUES (...)
+        INSERT INTO orders (...)
+        VALUES (...)
     </insert>
 
     <!-- 更新状态 -->
     <update id="updateOrderStatus">
-        UPDATE orders SET status = #{status} WHERE order_no = #{orderNo}
+        UPDATE orders
+        SET status = #{status}
+        WHERE order_no = #{orderNo}
     </update>
 
     <!-- 删除订单 -->
     <delete id="deleteOrder">
-        DELETE FROM orders WHERE id = #{id}
+        DELETE
+        FROM orders
+        WHERE id = #{id}
     </delete>
 
 </mapper>

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "用户优惠券管理", description = "用户优惠券的增删改查")
+@Tag(name = "UserCoupon", description = "用户优惠券的增删改查")
 @RestController
-@RequestMapping("/api/userCoupon")
+@RequestMapping("/userCoupon")
 public class UserCouponController {
 
     @Autowired

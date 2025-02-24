@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.api.CommonResult;
 import com.example.common.api.ResultCode;
 import com.example.model.entity.ProductSku;
@@ -9,14 +11,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 
-@Tag(name = "商品SKU管理", description = "商品SKU的增删改查")
+@Tag(name = "ProductSku", description = "商品SKU的增删改查")
 @RestController
-@RequestMapping("/api/productSku")
+@RequestMapping("/productSku")
 public class ProductSkuController {
 
     @Autowired

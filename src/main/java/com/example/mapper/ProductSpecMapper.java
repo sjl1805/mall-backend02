@@ -17,6 +17,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 根据商品ID查询规格
+     *
      * @param productId 商品ID
      * @return 商品规格列表
      */
@@ -24,6 +25,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 分页查询商品规格
+     *
      * @param page 分页信息
      * @return 商品规格列表
      */
@@ -31,6 +33,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 根据ID查询商品规格
+     *
      * @param id 商品规格ID
      * @return 商品规格信息
      */
@@ -38,6 +41,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 插入新商品规格
+     *
      * @param productSpec 商品规格信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 更新商品规格信息
+     *
      * @param productSpec 商品规格信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
      * 根据ID删除商品规格
+     *
      * @param id 商品规格ID
      * @return 删除结果
      */

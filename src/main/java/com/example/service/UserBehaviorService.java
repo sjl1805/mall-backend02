@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.UserBehavior;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 根据用户ID查询行为记录
+     *
      * @param userId 用户ID
      * @return 用户行为记录列表
      */
@@ -22,6 +23,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 分页查询用户行为记录
+     *
      * @param page 分页信息
      * @return 用户行为记录列表
      */
@@ -29,6 +31,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 根据ID查询用户行为记录
+     *
      * @param id 行为记录ID
      * @return 用户行为记录信息
      */
@@ -36,6 +39,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 新增用户行为记录
+     *
      * @param userBehavior 用户行为记录信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 更新用户行为记录信息
+     *
      * @param userBehavior 用户行为记录信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface UserBehaviorService extends IService<UserBehavior> {
 
     /**
      * 根据ID删除用户行为记录
+     *
      * @param id 行为记录ID
      * @return 删除结果
      */

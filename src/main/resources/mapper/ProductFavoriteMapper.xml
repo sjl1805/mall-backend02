@@ -20,21 +20,24 @@
 
     <!-- 根据用户ID查询收藏商品 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_favorite
         WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询用户收藏商品 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_favorite
         ORDER BY create_time DESC
     </select>
 
     <!-- 根据ID查询收藏商品 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM product_favorite
         WHERE id = #{id}
     </select>
@@ -48,15 +51,17 @@
     <!-- 更新收藏商品信息 -->
     <update id="updateProductFavorite" parameterType="com.example.model.entity.ProductFavorite">
         UPDATE product_favorite
-        SET user_id = #{userId},
-            product_id = #{productId},
-            folder_id = #{folderId},
+        SET user_id     = #{userId},
+            product_id  = #{productId},
+            folder_id   = #{folderId},
             update_time = #{updateTime}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除收藏商品 -->
     <delete id="deleteProductFavorite">
-        DELETE FROM product_favorite WHERE id = #{id}
+        DELETE
+        FROM product_favorite
+        WHERE id = #{id}
     </delete>
 </mapper>

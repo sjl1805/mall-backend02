@@ -27,48 +27,55 @@
 
     <!-- 根据商品ID查询推荐商品 -->
     <select id="selectByProductId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE product_id = #{productId}
     </select>
 
     <!-- 分页查询推荐商品 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         ORDER BY sort ASC
     </select>
 
     <!-- 根据ID查询推荐商品 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE id = #{id}
     </select>
 
     <!-- 插入新推荐商品 -->
     <insert id="insertRecommendProduct" parameterType="com.example.model.entity.RecommendProduct">
-        INSERT INTO recommend_product (product_id, type, sort, status, start_time, end_time, algorithm_version, recommend_reason, create_time, update_time)
-        VALUES (#{productId}, #{type}, #{sort}, #{status}, #{startTime}, #{endTime}, #{algorithmVersion}, #{recommendReason}, #{createTime}, #{updateTime})
+        INSERT INTO recommend_product (product_id, type, sort, status, start_time, end_time, algorithm_version,
+                                       recommend_reason, create_time, update_time)
+        VALUES (#{productId}, #{type}, #{sort}, #{status}, #{startTime}, #{endTime}, #{algorithmVersion},
+                #{recommendReason}, #{createTime}, #{updateTime})
     </insert>
 
     <!-- 更新推荐商品信息 -->
     <update id="updateRecommendProduct" parameterType="com.example.model.entity.RecommendProduct">
         UPDATE recommend_product
-        SET product_id = #{productId},
-            type = #{type},
-            sort = #{sort},
-            status = #{status},
-            start_time = #{startTime},
-            end_time = #{endTime},
+        SET product_id        = #{productId},
+            type              = #{type},
+            sort              = #{sort},
+            status            = #{status},
+            start_time        = #{startTime},
+            end_time          = #{endTime},
             algorithm_version = #{algorithmVersion},
-            recommend_reason = #{recommendReason},
-            update_time = #{updateTime}
+            recommend_reason  = #{recommendReason},
+            update_time       = #{updateTime}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除推荐商品 -->
     <delete id="deleteRecommendProduct">
-        DELETE FROM recommend_product WHERE id = #{id}
+        DELETE
+        FROM recommend_product
+        WHERE id = #{id}
     </delete>
 </mapper>

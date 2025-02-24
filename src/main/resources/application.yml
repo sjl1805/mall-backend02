@@ -25,17 +25,20 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
 
 jwt:
-  secret: "U2VjcmV0S2V5Rm9ySldUMTU2NDg2NTQzMjEwOTg3NjU0MzIxMDk4NzY1NDMyCg=="
+  secret: "U2fromV0S2V5Rm9ySldUMTS2NDg2NTQzMjEwOTg3NjU0MzIxMDk4NzY1NDMyCg=="
+  # noinspection SpringBootApplicationYaml
   token-validity-in-seconds: 86400
   expiration: 86400  # 24小时
+  # noinspection SpringBootApplicationYaml
   token-header: Authorization
+  # noinspection SpringBootApplicationYaml
   token-prefix: "Bearer "
 
 mybatis-plus:
   configuration:
-    default-scripting-language: org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
     map-underscore-to-camel-case: true
     jdbc-type-for-null: null
+    default-scripting-language-driver: org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
   type-handlers-package: com.example.handler  # 自定义JSON类型处理器
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.example.model.entity
@@ -46,5 +49,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+    # noinspection SpringBootApplicationYaml
     packages-to-scan: com.example.controller   # 指定扫描的包
-  paths-to-match: /api/**                   # 指定匹配的接口路径
+  paths-to-match: /**              

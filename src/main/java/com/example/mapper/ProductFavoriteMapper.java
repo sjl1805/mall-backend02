@@ -17,6 +17,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 根据用户ID查询收藏商品
+     *
      * @param userId 用户ID
      * @return 收藏商品列表
      */
@@ -24,6 +25,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 分页查询用户收藏商品
+     *
      * @param page 分页信息
      * @return 收藏商品列表
      */
@@ -31,6 +33,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 根据ID查询收藏商品
+     *
      * @param id 收藏商品ID
      * @return 收藏商品信息
      */
@@ -38,6 +41,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 插入新收藏商品
+     *
      * @param productFavorite 收藏商品信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 更新收藏商品信息
+     *
      * @param productFavorite 收藏商品信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface ProductFavoriteMapper extends BaseMapper<ProductFavorite> {
 
     /**
      * 根据ID删除收藏商品
+     *
      * @param id 收藏商品ID
      * @return 删除结果
      */

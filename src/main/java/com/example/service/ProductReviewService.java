@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.ProductReview;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 根据商品ID查询评价
+     *
      * @param productId 商品ID
      * @return 商品评价列表
      */
@@ -22,6 +23,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 分页查询商品评价
+     *
      * @param page 分页信息
      * @return 商品评价列表
      */
@@ -29,6 +31,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 根据ID查询商品评价
+     *
      * @param id 商品评价ID
      * @return 商品评价信息
      */
@@ -36,6 +39,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 新增商品评价
+     *
      * @param productReview 商品评价信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 更新商品评价信息
+     *
      * @param productReview 商品评价信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface ProductReviewService extends IService<ProductReview> {
 
     /**
      * 根据ID删除商品评价
+     *
      * @param id 商品评价ID
      * @return 删除结果
      */

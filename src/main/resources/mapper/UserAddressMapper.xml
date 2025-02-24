@@ -28,48 +28,55 @@
 
     <!-- 根据用户ID查询收货地址 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_address
         WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询用户收货地址 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_address
         ORDER BY create_time DESC
     </select>
 
     <!-- 根据ID查询用户收货地址 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_address
         WHERE id = #{id}
     </select>
 
     <!-- 插入新用户收货地址 -->
     <insert id="insertUserAddress" parameterType="com.example.model.entity.UserAddress">
-        INSERT INTO user_address (user_id, is_default, receiver_name, receiver_phone, province, city, district, detail_address, create_time, update_time)
-        VALUES (#{userId}, #{isDefault}, #{receiverName}, #{receiverPhone}, #{province}, #{city}, #{district}, #{detailAddress}, #{createTime}, #{updateTime})
+        INSERT INTO user_address (user_id, is_default, receiver_name, receiver_phone, province, city, district,
+                                  detail_address, create_time, update_time)
+        VALUES (#{userId}, #{isDefault}, #{receiverName}, #{receiverPhone}, #{province}, #{city}, #{district},
+                #{detailAddress}, #{createTime}, #{updateTime})
     </insert>
 
     <!-- 更新用户收货地址信息 -->
     <update id="updateUserAddress" parameterType="com.example.model.entity.UserAddress">
         UPDATE user_address
-        SET user_id = #{userId},
-            is_default = #{isDefault},
-            receiver_name = #{receiverName},
+        SET user_id        = #{userId},
+            is_default     = #{isDefault},
+            receiver_name  = #{receiverName},
             receiver_phone = #{receiverPhone},
-            province = #{province},
-            city = #{city},
-            district = #{district},
+            province       = #{province},
+            city           = #{city},
+            district       = #{district},
             detail_address = #{detailAddress},
-            update_time = #{updateTime}
+            update_time    = #{updateTime}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除用户收货地址 -->
     <delete id="deleteUserAddress">
-        DELETE FROM user_address WHERE id = #{id}
+        DELETE
+        FROM user_address
+        WHERE id = #{id}
     </delete>
 </mapper>

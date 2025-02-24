@@ -17,6 +17,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 根据用户ID查询收货地址
+     *
      * @param userId 用户ID
      * @return 用户收货地址列表
      */
@@ -24,6 +25,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 分页查询用户收货地址
+     *
      * @param page 分页信息
      * @return 用户收货地址列表
      */
@@ -31,6 +33,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 根据ID查询用户收货地址
+     *
      * @param id 收货地址ID
      * @return 用户收货地址信息
      */
@@ -38,6 +41,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 插入新用户收货地址
+     *
      * @param userAddress 用户收货地址信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 更新用户收货地址信息
+     *
      * @param userAddress 用户收货地址信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
 
     /**
      * 根据ID删除用户收货地址
+     *
      * @param id 收货地址ID
      * @return 删除结果
      */

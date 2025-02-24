@@ -22,17 +22,22 @@
 
     <!-- 根据用户ID查询购物车商品 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT * FROM cart WHERE user_id = #{userId}
+        SELECT *
+        FROM cart
+        WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询购物车商品 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT * FROM cart ORDER BY create_time DESC
+        SELECT *
+        FROM cart
+        ORDER BY create_time DESC
     </select>
 
     <!-- 根据ID查询购物车商品 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM cart
         WHERE id = #{id}
     </select>
@@ -46,16 +51,18 @@
     <!-- 更新购物车商品信息 -->
     <update id="updateCart" parameterType="com.example.model.entity.Cart">
         UPDATE cart
-        SET user_id = #{userId},
-            product_id = #{productId},
-            quantity = #{quantity},
-            checked = #{checked},
+        SET user_id     = #{userId},
+            product_id  = #{productId},
+            quantity    = #{quantity},
+            checked     = #{checked},
             update_time = #{updateTime}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除购物车商品 -->
     <delete id="deleteCart">
-        DELETE FROM cart WHERE id = #{id}
+        DELETE
+        FROM cart
+        WHERE id = #{id}
     </delete>
 </mapper>

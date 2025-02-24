@@ -17,6 +17,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 根据订单ID查询订单商品
+     *
      * @param orderId 订单ID
      * @return 订单商品列表
      */
@@ -24,6 +25,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 分页查询订单商品
+     *
      * @param page 分页信息
      * @return 订单商品列表
      */
@@ -31,6 +33,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 根据ID查询订单商品
+     *
      * @param id 订单商品ID
      * @return 订单商品信息
      */
@@ -38,6 +41,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 插入新订单商品
+     *
      * @param orderItem 订单商品信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 更新订单商品信息
+     *
      * @param orderItem 订单商品信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
      * 根据ID删除订单商品
+     *
      * @param id 订单商品ID
      * @return 删除结果
      */

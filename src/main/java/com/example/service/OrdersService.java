@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.Orders;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 根据用户ID查询订单
+     *
      * @param userId 用户ID
      * @return 订单列表
      */
@@ -22,6 +23,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 分页查询订单
+     *
      * @param page 分页信息
      * @return 订单列表
      */
@@ -29,6 +31,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 根据ID查询订单
+     *
      * @param id 订单ID
      * @return 订单信息
      */
@@ -36,6 +39,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 新增订单
+     *
      * @param orders 订单信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 更新订单信息
+     *
      * @param orders 订单信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface OrdersService extends IService<Orders> {
 
     /**
      * 根据ID删除订单
+     *
      * @param id 订单ID
      * @return 删除结果
      */

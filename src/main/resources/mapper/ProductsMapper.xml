@@ -26,7 +26,8 @@
 
     <!-- 根据商品名称模糊查询 -->
     <select id="selectByNameLike" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM products
         WHERE name LIKE CONCAT('%', #{name}, '%')
         AND status = 1
@@ -35,7 +36,8 @@
 
     <!-- 分页查询商品 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM products
         WHERE status = 1
         ORDER BY create_time DESC
@@ -43,7 +45,8 @@
 
     <!-- 根据ID查询商品 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM products
         WHERE id = #{id}
         AND status = 1
@@ -52,25 +55,28 @@
     <!-- 插入新商品 -->
     <insert id="insertProduct" parameterType="com.example.model.entity.Products">
         INSERT INTO products (category_id, name, description, price, stock, images, create_time, update_time, status)
-        VALUES (#{categoryId}, #{name}, #{description}, #{price}, #{stock}, #{images}, #{createTime}, #{updateTime}, #{status})
+        VALUES (#{categoryId}, #{name}, #{description}, #{price}, #{stock}, #{images}, #{createTime}, #{updateTime},
+                #{status})
     </insert>
 
     <!-- 更新商品信息 -->
     <update id="updateProduct" parameterType="com.example.model.entity.Products">
         UPDATE products
         SET category_id = #{categoryId},
-            name = #{name},
+            name        = #{name},
             description = #{description},
-            price = #{price},
-            stock = #{stock},
-            images = #{images},
+            price       = #{price},
+            stock       = #{stock},
+            images      = #{images},
             update_time = #{updateTime},
-            status = #{status}
+            status      = #{status}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除商品 -->
     <delete id="deleteProduct">
-        DELETE FROM products WHERE id = #{id}
+        DELETE
+        FROM products
+        WHERE id = #{id}
     </delete>
 </mapper>

@@ -17,6 +17,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 根据商品ID查询评价
+     *
      * @param productId 商品ID
      * @return 评价列表
      */
@@ -24,6 +25,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 分页查询商品评价
+     *
      * @param page 分页信息
      * @return 评价列表
      */
@@ -31,6 +33,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 根据ID查询评价
+     *
      * @param id 评价ID
      * @return 评价信息
      */
@@ -38,6 +41,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 插入新评价
+     *
      * @param productReview 评价信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 更新评价信息
+     *
      * @param productReview 评价信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
      * 根据ID删除评价
+     *
      * @param id 评价ID
      * @return 删除结果
      */

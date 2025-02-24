@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Category;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 根据分类名称模糊查询
+     *
      * @param name 分类名称（模糊匹配）
      * @return 分类列表
      */
@@ -23,6 +25,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 根据分类名称查询分类
+     *
      * @param name 分类名称
      * @return 分类列表
      */
@@ -30,6 +33,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 分页查询分类（支持排序）
+     *
      * @param page 分页参数
      * @return 分页结果
      */
@@ -37,6 +41,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 根据父分类ID查询子分类
+     *
      * @param parentId 父分类ID
      * @return 子分类列表
      */
@@ -44,6 +49,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 根据层级查询分类
+     *
      * @param level 分类层级（1-一级 2-二级 3-三级）
      * @return 分类列表
      */

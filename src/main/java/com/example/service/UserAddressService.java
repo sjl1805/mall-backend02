@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.UserAddress;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 根据用户ID查询收货地址
+     *
      * @param userId 用户ID
      * @return 收货地址列表
      */
@@ -22,6 +23,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 分页查询收货地址
+     *
      * @param page 分页信息
      * @return 收货地址列表
      */
@@ -29,6 +31,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 根据ID查询收货地址
+     *
      * @param id 收货地址ID
      * @return 收货地址信息
      */
@@ -36,6 +39,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 新增收货地址
+     *
      * @param userAddress 收货地址信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 更新收货地址信息
+     *
      * @param userAddress 收货地址信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface UserAddressService extends IService<UserAddress> {
 
     /**
      * 根据ID删除收货地址
+     *
      * @param id 收货地址ID
      * @return 删除结果
      */

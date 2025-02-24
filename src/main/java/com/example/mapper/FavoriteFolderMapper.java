@@ -17,6 +17,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 根据用户ID查询收藏夹
+     *
      * @param userId 用户ID
      * @return 收藏夹列表
      */
@@ -24,6 +25,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 分页查询收藏夹
+     *
      * @param page 分页信息
      * @return 收藏夹列表
      */
@@ -31,6 +33,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 根据ID查询收藏夹
+     *
      * @param id 收藏夹ID
      * @return 收藏夹信息
      */
@@ -38,6 +41,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 插入新收藏夹
+     *
      * @param favoriteFolder 收藏夹信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 更新收藏夹信息
+     *
      * @param favoriteFolder 收藏夹信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
 
     /**
      * 根据ID删除收藏夹
+     *
      * @param id 收藏夹ID
      * @return 删除结果
      */

@@ -17,6 +17,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 根据商品ID查询SKU
+     *
      * @param productId 商品ID
      * @return SKU列表
      */
@@ -24,6 +25,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 分页查询SKU
+     *
      * @param page 分页信息
      * @return SKU列表
      */
@@ -31,6 +33,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 根据ID查询SKU
+     *
      * @param id SKU ID
      * @return SKU信息
      */
@@ -38,6 +41,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 插入新SKU
+     *
      * @param productSku SKU信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 更新SKU信息
+     *
      * @param productSku SKU信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
 
     /**
      * 根据ID删除SKU
+     *
      * @param id SKU ID
      * @return 删除结果
      */

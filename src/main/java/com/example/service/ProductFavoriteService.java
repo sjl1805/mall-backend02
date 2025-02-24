@@ -1,8 +1,8 @@
 package com.example.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.ProductFavorite;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 根据用户ID查询商品收藏
+     *
      * @param userId 用户ID
      * @return 商品收藏列表
      */
@@ -22,6 +23,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 分页查询商品收藏
+     *
      * @param page 分页信息
      * @return 商品收藏列表
      */
@@ -29,6 +31,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 根据ID查询商品收藏
+     *
      * @param id 商品收藏ID
      * @return 商品收藏信息
      */
@@ -36,6 +39,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 新增商品收藏
+     *
      * @param productFavorite 商品收藏信息
      * @return 插入结果
      */
@@ -43,6 +47,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 更新商品收藏信息
+     *
      * @param productFavorite 商品收藏信息
      * @return 更新结果
      */
@@ -50,6 +55,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
 
     /**
      * 根据ID删除商品收藏
+     *
      * @param id 商品收藏ID
      * @return 删除结果
      */

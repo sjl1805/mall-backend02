@@ -24,21 +24,24 @@
 
     <!-- 根据用户ID查询优惠券 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询用户优惠券 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_coupon
         ORDER BY create_time DESC
     </select>
 
     <!-- 根据ID查询用户优惠券 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE id = #{id}
     </select>
@@ -52,18 +55,20 @@
     <!-- 更新用户优惠券信息 -->
     <update id="updateUserCoupon" parameterType="com.example.model.entity.UserCoupon">
         UPDATE user_coupon
-        SET user_id = #{userId},
-            coupon_id = #{couponId},
-            status = #{status},
-            order_id = #{orderId},
-            get_time = #{getTime},
-            use_time = #{useTime},
+        SET user_id     = #{userId},
+            coupon_id   = #{couponId},
+            status      = #{status},
+            order_id    = #{orderId},
+            get_time    = #{getTime},
+            use_time    = #{useTime},
             update_time = #{updateTime}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除用户优惠券 -->
     <delete id="deleteUserCoupon">
-        DELETE FROM user_coupon WHERE id = #{id}
+        DELETE
+        FROM user_coupon
+        WHERE id = #{id}
     </delete>
 </mapper>

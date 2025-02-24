@@ -1,15 +1,16 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.UsersMapper;
-import com.example.model.entity.Users;
-import com.example.service.UsersService;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
-import org.springframework.stereotype.Service;
+import com.example.model.entity.Users;
+import com.example.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 /**
  * @author 31815
  * @description 针对表【users(用户表)】的数据库操作Service实现
@@ -44,11 +45,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         Users user = usersMapper.selectByUsernameAndPassword(userLoginDTO.getUsername(), userLoginDTO.getPassword());
         if (user == null) {
             throw new RuntimeException("用户名或密码错误");
-        }
-        else if(passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())){
+        } else if (passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
             return user;
-        }
-        else{
+        } else {
             throw new RuntimeException("用户名或密码错误");
         }
     }

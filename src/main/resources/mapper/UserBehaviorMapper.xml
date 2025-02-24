@@ -24,46 +24,53 @@
 
     <!-- 根据用户ID查询行为记录 -->
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_behavior
         WHERE user_id = #{userId}
     </select>
 
     <!-- 分页查询用户行为 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_behavior
         ORDER BY behavior_time DESC
     </select>
 
     <!-- 根据ID查询用户行为 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_behavior
         WHERE id = #{id}
     </select>
 
     <!-- 插入新用户行为 -->
     <insert id="insertUserBehavior" parameterType="com.example.model.entity.UserBehavior">
-        INSERT INTO user_behavior (user_id, product_id, behavior_type, behavior_time, duration, create_time, update_time, weight)
-        VALUES (#{userId}, #{productId}, #{behaviorType}, #{behaviorTime}, #{duration}, #{createTime}, #{updateTime}, #{weight})
+        INSERT INTO user_behavior (user_id, product_id, behavior_type, behavior_time, duration, create_time,
+                                   update_time, weight)
+        VALUES (#{userId}, #{productId}, #{behaviorType}, #{behaviorTime}, #{duration}, #{createTime}, #{updateTime},
+                #{weight})
     </insert>
 
     <!-- 更新用户行为信息 -->
     <update id="updateUserBehavior" parameterType="com.example.model.entity.UserBehavior">
         UPDATE user_behavior
-        SET user_id = #{userId},
-            product_id = #{productId},
+        SET user_id       = #{userId},
+            product_id    = #{productId},
             behavior_type = #{behaviorType},
             behavior_time = #{behaviorTime},
-            duration = #{duration},
-            update_time = #{updateTime},
-            weight = #{weight}
+            duration      = #{duration},
+            update_time   = #{updateTime},
+            weight        = #{weight}
         WHERE id = #{id}
     </update>
 
     <!-- 根据ID删除用户行为 -->
     <delete id="deleteUserBehavior">
-        DELETE FROM user_behavior WHERE id = #{id}
+        DELETE
+        FROM user_behavior
+        WHERE id = #{id}
     </delete>
 </mapper>

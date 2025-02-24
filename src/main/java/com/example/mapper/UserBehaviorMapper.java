@@ -17,6 +17,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 根据用户ID查询行为记录
+     *
      * @param userId 用户ID
      * @return 用户行为列表
      */
@@ -24,6 +25,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 分页查询用户行为
+     *
      * @param page 分页信息
      * @return 用户行为列表
      */
@@ -31,6 +33,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 根据ID查询用户行为
+     *
      * @param id 行为记录ID
      * @return 用户行为信息
      */
@@ -38,6 +41,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 插入新用户行为
+     *
      * @param userBehavior 用户行为信息
      * @return 插入结果
      */
@@ -45,6 +49,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 更新用户行为信息
+     *
      * @param userBehavior 用户行为信息
      * @return 更新结果
      */
@@ -52,6 +57,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
 
     /**
      * 根据ID删除用户行为
+     *
      * @param id 行为记录ID
      * @return 删除结果
      */
