@@ -2,6 +2,7 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.model.entity.Users;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author 31815
@@ -9,8 +10,11 @@ import com.example.model.entity.Users;
  * @createDate 2025-02-24 12:03:41
  * @Entity model.entity.Users
  */
+@Mapper
 public interface UsersMapper extends BaseMapper<Users> {
-
+    Users selectByUsername(String username);
+    Users selectByPhone(String phone);
+    int updateStatus(Long userId, Integer status);
 }
 
 
