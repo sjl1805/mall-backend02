@@ -44,6 +44,9 @@ mybatis-plus:
   type-handlers-package: com.example.handler  # 自定义JSON类型处理器
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.example.model.entity
+  global-config:
+    db-config:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 使用标准输出日志
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -62,3 +65,10 @@ file:
 logging:
   level:
     com.baomidou.mybatisplus: DEBUG  # 设置 MyBatis-Plus 日志级别为 DEBUG
+    com.example: DEBUG  # 设置自定义日志级别为 DEBUG
+  file:
+    name: logs/application.log  # 设置日志文件存储路径
+
+
+
+    

@@ -9,7 +9,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
         <result property="value" column="value" jdbcType="DECIMAL"/>
-        <result property="num" column="num" jdbcType="INT"/>
+        <result property="num" column="num" jdbcType="INTEGER"/>
         <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
         <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
