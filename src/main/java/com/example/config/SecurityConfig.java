@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/auth/**",
-                                "/error"
+                                "/error",
+                                "/**"
                         ).permitAll()
                         // 需要认证的接口
                         .anyRequest().authenticated()

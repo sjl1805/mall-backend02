@@ -17,6 +17,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                .openapi("3.0.1")
                 .info(new Info()
                         .title("电商平台API文档")
                         .version("1.0.0")
@@ -31,5 +32,4 @@ public class SwaggerConfig {
                                         .name("Authorization")))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME));
     }
-
 } 

@@ -36,12 +36,12 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+    url: /v3/api-docs
     tags-sorter: alpha
     operations-sorter: alpha
-  info:
-    title: 电商平台API文档
-    version: 1.0.0
-    description: 基于Spring Boot 3的电商平台后端API
+    doc-expansion: none
+    filter: true
+    persist-authorization: true
 
 mybatis-plus:
   configuration:
