@@ -14,7 +14,6 @@ spring:
   security:
     oauth2:
       resource-server:
-
         jwt:
           issuer-uri: http://localhost:8080
   data:
@@ -59,3 +58,7 @@ springdoc:
 file:
   storage:
     path: src/main/resources/static/images  # 更新文件存储路径
+
+logging:
+  level:
+    com.baomidou.mybatisplus: DEBUG  # 设置 MyBatis-Plus 日志级别为 DEBUG
