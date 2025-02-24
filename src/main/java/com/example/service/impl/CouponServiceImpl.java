@@ -8,6 +8,9 @@ import com.example.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -51,8 +54,28 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     public boolean deleteCoupon(Long id) {
         return couponMapper.deleteById(id) > 0;
     }
-}
 
+    @Override
+    public boolean setCouponValidity(Long id, String startTime, String endTime) {
+        Coupon coupon = couponMapper.selectById(id);
+        if (coupon == null) {
+            throw new RuntimeException("优惠券不存在");
+        }
+        coupon.setStartTime(LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        coupon.setEndTime(LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return couponMapper.updateById(coupon) > 0;
+    }
+
+    @Override
+    public boolean setCouponConditions(Long id, BigDecimal minAmount) {
+        Coupon coupon = couponMapper.selectById(id);
+        if (coupon == null) {
+            throw new RuntimeException("优惠券不存在");
+        }
+        coupon.setMinAmount(minAmount);
+        return couponMapper.updateById(coupon) > 0;
+    }
+}
 
 
 

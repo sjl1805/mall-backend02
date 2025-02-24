@@ -6,6 +6,7 @@ import com.example.common.api.CommonResult;
 import com.example.common.api.ResultCode;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.UserDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,5 +58,21 @@ public class UsersController {
             @RequestParam(defaultValue = "10") int size) {
         IPage<Users> pageParam = new Page<>(page, size);
         return CommonResult.success(usersService.selectPage(pageParam));
+    }
+
+    @Operation(summary = "更新用户信息")
+    @PutMapping("/{userId}")
+    public CommonResult<Boolean> updateUserInfo(@PathVariable Long userId, @Valid @RequestBody UserDTO userDTO) {
+        boolean result = usersService.updateUserInfo(userId, userDTO);
+        return result ? CommonResult.success(true) :
+                CommonResult.failed(ResultCode.USER_NOT_FOUND);
+    }
+
+    @Operation(summary = "删除用户")
+    @DeleteMapping("/{userId}")
+    public CommonResult<Boolean> deleteUser(@PathVariable Long userId) {
+        boolean result = usersService.deleteUser(userId);
+        return result ? CommonResult.success(true) :
+                CommonResult.failed(ResultCode.USER_NOT_FOUND);
     }
 } 

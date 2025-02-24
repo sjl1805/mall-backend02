@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.UsersMapper;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.UserDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,23 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     public IPage<Users> selectPage(IPage<Users> page) {
         return usersMapper.selectPage(page);
     }
+
+    @Override
+    public boolean updateUserInfo(Long userId, UserDTO userDTO) {
+        Users user = usersMapper.selectById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return usersMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public boolean deleteUser(Long userId) {
+        return usersMapper.deleteById(userId) > 0;
+    }
+
 }
 
 

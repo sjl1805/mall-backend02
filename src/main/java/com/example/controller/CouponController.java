@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Tag(name = "Coupon", description = "优惠券的增删改查")
@@ -63,6 +64,25 @@ public class CouponController {
     @DeleteMapping("/{id}")
     public CommonResult<Boolean> deleteCoupon(@PathVariable Long id) {
         boolean result = couponService.deleteCoupon(id);
+        return result ? CommonResult.success(true) : CommonResult.failed(ResultCode.FAILED);
+    }
+
+    @Operation(summary = "设置优惠券有效期")
+    @PutMapping("/setValidity/{id}")
+    public CommonResult<Boolean> setCouponValidity(
+            @PathVariable Long id,
+            @RequestParam String startTime,
+            @RequestParam String endTime) {
+        boolean result = couponService.setCouponValidity(id, startTime, endTime);
+        return result ? CommonResult.success(true) : CommonResult.failed(ResultCode.FAILED);
+    }
+
+    @Operation(summary = "设置使用条件")
+    @PutMapping("/setConditions/{id}")
+    public CommonResult<Boolean> setCouponConditions(
+            @PathVariable Long id,
+            @RequestParam BigDecimal minAmount) {
+        boolean result = couponService.setCouponConditions(id, minAmount);
         return result ? CommonResult.success(true) : CommonResult.failed(ResultCode.FAILED);
     }
 } 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
+import com.example.model.dto.UserDTO;
 import com.example.model.entity.Users;
 
 /**
@@ -44,4 +45,21 @@ public interface UsersService extends IService<Users> {
      * @return 用户列表
      */
     IPage<Users> selectPage(IPage<Users> page);
+
+    /**
+     * 更新用户信息
+     *
+     * @param userId 用户ID
+     * @param userDTO 用户信息
+     * @return 更新结果
+     */
+    boolean updateUserInfo(Long userId, UserDTO userDTO);
+
+    /**
+     * 删除用户
+     *
+     * @param userId 用户ID
+     * @return 删除结果
+     */
+    boolean deleteUser(Long userId);
 }
