@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 用户优惠券表
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "user_coupon")
 @Data
-public class UserCoupon {
+public class UserCoupon implements Serializable {
     /**
      * 用户优惠券ID
      */

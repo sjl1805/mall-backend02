@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 商品规格表
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "product_spec")
 @Data
-public class ProductSpec {
+public class ProductSpec implements Serializable {
     /**
      * 规格ID
      */

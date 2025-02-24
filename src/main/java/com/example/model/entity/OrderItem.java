@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 订单商品表
  *
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "order_item")
 @Data
-public class OrderItem {
+public class OrderItem implements Serializable {
     /**
      * 订单商品ID
      */

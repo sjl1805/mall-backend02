@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 商品评价表
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "product_review")
 @Data
-public class ProductReview {
+public class ProductReview implements Serializable {
     /**
      * 评价ID
      */

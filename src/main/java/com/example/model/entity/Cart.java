@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
  * 购物车表
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "cart")
 @Data
-public class Cart {
+public class Cart implements Serializable {
     /**
      * 购物车ID
      */

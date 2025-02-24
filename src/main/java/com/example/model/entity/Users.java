@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 用户表
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "users")
 @Data
-public class Users {
+public class Users implements Serializable {
     /**
      * 用户ID
      */

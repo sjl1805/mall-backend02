@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 收藏夹表
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "favorite_folder")
 @Data
-public class FavoriteFolder {
+public class FavoriteFolder implements Serializable {
     /**
      * 收藏夹ID
      */

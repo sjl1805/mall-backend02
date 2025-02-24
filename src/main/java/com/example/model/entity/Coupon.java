@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
  * 优惠券表
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "coupon")
 @Data
-public class Coupon {
+public class Coupon implements Serializable {
     /**
      * 优惠券ID
      */

@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 商品表
  *
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "products")
 @Data
-public class Products {
+public class Products implements Serializable {
     /**
      * 商品ID
      */

@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.io.Serializable;
 /**
  * 用户行为记录表
  *
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value = "user_behavior")
 @Data
-public class UserBehavior {
+public class UserBehavior implements Serializable {
     /**
      * 行为记录ID
      */
