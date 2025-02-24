@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class UserLoginDTO {
     @NotBlank(message = "用户名不能为空")
-    @Schema(description = "用户名", example = "john_doe")
+    @Schema(description = "用户名", example = "admin")
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @Schema(description = "用户密码", example = "password123")
+    @Schema(description = "用户密码", example = "123456")
     private String password;
 
     @Schema(description = "验证码", example = "123456")

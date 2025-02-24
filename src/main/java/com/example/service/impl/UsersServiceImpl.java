@@ -46,12 +46,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
+    @Cacheable(value = "users", key = "#userLoginDTO.username")
     public Users login(UserLoginDTO userLoginDTO) {
-        Users user = usersMapper.selectByUsernameAndPassword(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+        Users user = usersMapper.selectByUsername(userLoginDTO.getUsername());
         if (user == null) {
             throw new RuntimeException("用户名或密码错误");
         } else if (passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
-            return user;
+            return user; // 登录成功，用户信息将被缓存
         } else {
             throw new RuntimeException("用户名或密码错误");
         }
