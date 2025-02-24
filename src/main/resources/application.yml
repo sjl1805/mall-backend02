@@ -4,3 +4,33 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      resource-server:
+
+        jwt:
+          issuer-uri: http://localhost:8080
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+
+jwt:
+  secret: mall-secret-key-2024-spring-boot-3-jwt-security
+  expiration: 86400  # 24小时
+  token-header: Authorization
+  token-prefix: "Bearer "
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  info:
+    title: 电商平台API文档
+    version: 1.0.0
+    description: 基于Spring Boot 3的电商平台后端API
