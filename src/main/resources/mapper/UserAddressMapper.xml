@@ -5,18 +5,18 @@
 <mapper namespace="com.example.mapper.UserAddressMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.UserAddress">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="isDefault" column="is_default" jdbcType="TINYINT"/>
-            <result property="isDefaultTrue" column="is_default_true" jdbcType="TINYINT"/>
-            <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
-            <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
-            <result property="province" column="province" jdbcType="VARCHAR"/>
-            <result property="city" column="city" jdbcType="VARCHAR"/>
-            <result property="district" column="district" jdbcType="VARCHAR"/>
-            <result property="detailAddress" column="detail_address" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="isDefault" column="is_default" jdbcType="TINYINT"/>
+        <result property="isDefaultTrue" column="is_default_true" jdbcType="TINYINT"/>
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
+        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="district" column="district" jdbcType="VARCHAR"/>
+        <result property="detailAddress" column="detail_address" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -26,57 +26,4 @@
         detail_address,create_time,update_time
     </sql>
 
-    <!-- 设置默认地址（两步操作保证原子性） -->
-    <update id="unsetDefaultAddress">
-        UPDATE user_address 
-        SET is_default = 0 
-        WHERE user_id = #{userId} 
-        AND is_default = 1
-    </update>
-
-    <update id="setDefaultAddress">
-        UPDATE user_address 
-        SET is_default = 1,
-            update_time = NOW()
-        WHERE id = #{addressId} 
-        AND user_id = #{userId}
-    </update>
-
-    <!-- 地址分页查询 -->
-    <select id="selectAddressPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM user_address
-        WHERE user_id = #{userId}
-        ORDER BY is_default DESC, update_time DESC
-    </select>
-
-    <!-- 地址有效性校验 -->
-    <select id="validateAddress" resultType="int">
-        SELECT COUNT(*) 
-        FROM user_address 
-        WHERE id = #{addressId} 
-        AND user_id = #{userId}
-    </select>
-
-    <!-- 地址删除 -->
-    <delete id="deleteAddress">
-        DELETE FROM user_address 
-        WHERE id = #{addressId} 
-        AND user_id = #{userId}
-    </delete>
-
-    <!-- 动态更新地址信息 -->
-    <update id="updateAddressInfo" parameterType="com.example.model.entity.UserAddress">
-        UPDATE user_address
-        <set>
-            <if test="receiverName != null">receiver_name = #{receiverName},</if>
-            <if test="receiverPhone != null">receiver_phone = #{receiverPhone},</if>
-            <if test="province != null">province = #{province},</if>
-            <if test="city != null">city = #{city},</if>
-            <if test="district != null">district = #{district},</if>
-            <if test="detailAddress != null">detail_address = #{detailAddress},</if>
-            update_time = NOW()
-        </set>
-        WHERE id = #{id} AND user_id = #{userId}
-    </update>
 </mapper>

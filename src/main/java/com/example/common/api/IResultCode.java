@@ -3,5 +3,6 @@ package com.example.common.api;
 
 public interface IResultCode {
     int getCode();
+
     String getMessage();
 }

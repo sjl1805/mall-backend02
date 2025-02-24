@@ -5,15 +5,15 @@
 <mapper namespace="com.example.mapper.FavoriteFolderMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.FavoriteFolder">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="isPublic" column="is_public" jdbcType="TINYINT"/>
-            <result property="itemCount" column="item_count" jdbcType="INTEGER"/>
-            <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="isPublic" column="is_public" jdbcType="TINYINT"/>
+        <result property="itemCount" column="item_count" jdbcType="INTEGER"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -22,64 +22,4 @@
         sort,create_time,update_time
     </sql>
 
-    <insert id="insertFolder" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO favorite_folder (
-            user_id, name, description,
-            is_public, sort, create_time,
-            update_time
-        ) VALUES (
-            #{userId}, #{name}, #{description},
-            #{isPublic}, #{sort}, NOW(),
-            NOW()
-        )
-    </insert>
-
-    <update id="updateFolderInfo">
-        UPDATE favorite_folder
-        <set>
-            <if test="name != null">name = #{name},</if>
-            <if test="description != null">description = #{description},</if>
-            <if test="isPublic != null">is_public = #{isPublic},</if>
-            update_time = NOW()
-        </set>
-        WHERE id = #{id} AND user_id = #{userId}
-    </update>
-
-    <update id="updateItemCount">
-        UPDATE favorite_folder 
-        SET item_count = (
-            SELECT COUNT(*) 
-            FROM favorite_item 
-            WHERE folder_id = #{folderId}
-        )
-        WHERE id = #{folderId}
-    </update>
-
-    <select id="selectUserFolders" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM favorite_folder
-        WHERE user_id = #{userId}
-        ORDER BY sort ASC, create_time DESC
-    </select>
-
-    <select id="selectPublicFolders" resultMap="BaseResultMap">
-        SELECT f.*, u.username
-        FROM favorite_folder f
-        JOIN users u ON f.user_id = u.id
-        WHERE f.is_public = 1
-        <if test="keyword != null and keyword != ''">
-            AND (f.name LIKE CONCAT('%', #{keyword}, '%') 
-                 OR f.description LIKE CONCAT('%', #{keyword}, '%'))
-        </if>
-        ORDER BY f.item_count DESC
-        LIMIT #{limit}
-    </select>
-
-    <update id="updateSort">
-        UPDATE favorite_folder
-        SET sort = #{newSort},
-            update_time = NOW()
-        WHERE id = #{folderId} 
-        AND user_id = #{userId}
-    </update>
 </mapper>

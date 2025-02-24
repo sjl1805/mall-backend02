@@ -32,7 +32,7 @@ public class ProductVO {
 
     @Schema(description = "商品状态：0-下架 1-上架", example = "1")
     private Integer status;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

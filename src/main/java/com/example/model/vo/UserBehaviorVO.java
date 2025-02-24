@@ -25,10 +25,10 @@ public class UserBehaviorVO {
 
     @Schema(description = "行为权重", example = "1.5")
     private BigDecimal weight;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime behaviorTime;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

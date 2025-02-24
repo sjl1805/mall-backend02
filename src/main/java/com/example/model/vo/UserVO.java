@@ -33,10 +33,10 @@ public class UserVO {
 
     @Schema(description = "用户角色", example = "0")
     private Integer role;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 

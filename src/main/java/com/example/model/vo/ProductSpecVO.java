@@ -18,7 +18,7 @@ public class ProductSpecVO {
 
     @Schema(description = "规格值，JSON格式", example = "{\"color\":\"red\",\"size\":\"M\"}")
     private String specValues; // 保持JSON字符串格式
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

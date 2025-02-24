@@ -5,12 +5,12 @@
 <mapper namespace="com.example.mapper.ProductSpecMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSpec">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="specName" column="spec_name" jdbcType="VARCHAR"/>
-            <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="specName" column="spec_name" jdbcType="VARCHAR"/>
+        <result property="specValues" column="spec_values" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -18,34 +18,5 @@
         spec_values,create_time,update_time
     </sql>
 
-    <!-- 规格值批量更新 -->
-    <update id="updateSpecValuesBatch" parameterType="com.example.model.entity.ProductSpec">
-        UPDATE product_spec
-        <set>
-            <if test="specName != null">spec_name = #{specName},</if>
-            <if test="specValues != null">spec_values = #{specValues},</if>
-        </set>
-        WHERE id IN
-        <foreach collection="ids" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </update>
 
-    <!-- 规格值状态管理 -->
-    <update id="updateSpecStatus">
-        UPDATE product_spec
-        SET status = #{status}
-        WHERE id = #{specId}
-    </update>
-
-    <!-- 规格值排序调整 -->
-    <update id="updateSpecSort">
-        UPDATE product_spec
-        SET sort = CASE id
-            <foreach collection="sortedIds" item="id" index="index">
-                WHEN #{id} THEN #{index}
-            </foreach>
-        END
-        WHERE product_id = #{productId}
-    </update>
 </mapper>

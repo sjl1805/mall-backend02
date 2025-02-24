@@ -1,17 +1,18 @@
 package com.example.security;
 
-import com.example.model.entity.Users;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.mapper.UsersMapper;
+import com.example.model.entity.Users;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import java.util.Collection;
 import java.util.List;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (users == null) {
             throw new UsernameNotFoundException("用户不存在: " + username);
         }
-        
+
         return new AuthUserDetails(
                 users.getId(),
                 users.getUsername(),

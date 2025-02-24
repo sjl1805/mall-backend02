@@ -5,16 +5,16 @@
 <mapper namespace="com.example.mapper.ProductReviewMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.ProductReview">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="productId" column="product_id" jdbcType="BIGINT"/>
-            <result property="rating" column="rating" jdbcType="TINYINT"/>
-            <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="images" column="images" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="rating" column="rating" jdbcType="TINYINT"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -24,56 +24,4 @@
         update_time
     </sql>
 
-    <select id="selectReviewPage" resultMap="BaseResultMap">
-        SELECT pr.*, u.username, p.name as product_name
-        FROM product_review pr
-        JOIN users u ON pr.user_id = u.id
-        JOIN products p ON pr.product_id = p.id
-        WHERE pr.product_id = #{productId}
-        AND pr.status = 1
-        <if test="query.rating != null">
-            AND pr.rating = #{query.rating}
-        </if>
-        ORDER BY pr.create_time DESC
-    </select>
-
-    <update id="updateReviewStatus">
-        UPDATE product_review
-        SET status = #{status},
-            update_time = NOW()
-        WHERE id = #{reviewId}
-        AND product_id = #{productId}
-    </update>
-
-    <select id="selectReviewSummary" resultType="map">
-        SELECT 
-            COUNT(*) AS total_reviews,
-            AVG(rating) AS average_rating,
-            SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) AS five_star,
-            SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) AS four_star,
-            SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) AS three_star,
-            SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) AS two_star,
-            SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) AS one_star
-        FROM product_review
-        WHERE product_id = #{productId}
-        AND status = 1
-    </select>
-
-    <select id="selectLatestReviews" resultMap="BaseResultMap">
-        SELECT pr.*, u.username, u.avatar
-        FROM product_review pr
-        JOIN users u ON pr.user_id = u.id
-        WHERE pr.product_id = #{productId}
-        AND pr.status = 1
-        ORDER BY pr.create_time DESC
-        LIMIT #{limit}
-    </select>
-
-    <update id="updateReviewImages">
-        UPDATE product_review
-        SET images = #{images},
-            update_time = NOW()
-        WHERE id = #{reviewId}
-        AND user_id = #{userId}
-    </update>
 </mapper>

@@ -1,7 +1,10 @@
 package com.example.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -32,4 +35,7 @@ public class UserRegisterDTO {
     @Email(message = "邮箱格式不正确")
     @Schema(description = "用户邮箱", example = "example@example.com")
     private String email;
+
+    @Schema(description = "用户角色", example = "1")
+    private Integer role;
 } 

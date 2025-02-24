@@ -18,7 +18,7 @@ public class ProductFavoriteVO {
 
     @Schema(description = "收藏夹ID（NULL表示未分类）", example = "1")
     private Long folderId; // 收藏夹ID（可为空）
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

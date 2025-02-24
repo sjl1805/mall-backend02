@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.security.JwtAuthenticationFilter;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -37,38 +36,38 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 禁用CSRF和CORS（由前端框架处理）
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // 会话管理设置为无状态
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // 请求授权配置
-            .authorizeHttpRequests(auth -> auth
-                // 开放接口
-                .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/api/auth/**",
-                    "/error"
-                ).permitAll()
-                // 需要认证的接口
-                .anyRequest().authenticated()
-            )
-            
-            // 添加JWT过滤器
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            
-            // 异常处理配置
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint((request, response, authException) -> 
-                    response.sendError(401, "未授权的访问"))
-                .accessDeniedHandler((request, response, accessDeniedException) -> 
-                    response.sendError(403, "权限不足"))
-            );
+                // 禁用CSRF和CORS（由前端框架处理）
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // 会话管理设置为无状态
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 请求授权配置
+                .authorizeHttpRequests(auth -> auth
+                        // 开放接口
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/api/auth/**",
+                                "/error"
+                        ).permitAll()
+                        // 需要认证的接口
+                        .anyRequest().authenticated()
+                )
+
+                // 添加JWT过滤器
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // 异常处理配置
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(401, "未授权的访问"))
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.sendError(403, "权限不足"))
+                );
 
         return http.build();
     }
@@ -81,7 +80,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

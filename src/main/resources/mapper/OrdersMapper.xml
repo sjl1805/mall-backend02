@@ -5,25 +5,25 @@
 <mapper namespace="com.example.mapper.OrdersMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Orders">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
-            <result property="payAmount" column="pay_amount" jdbcType="DECIMAL"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
-            <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
-            <result property="receiverAddress" column="receiver_address" jdbcType="VARCHAR"/>
-            <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP"/>
-            <result property="deliveryTime" column="delivery_time" jdbcType="TIMESTAMP"/>
-            <result property="receiveTime" column="receive_time" jdbcType="TIMESTAMP"/>
-            <result property="paymentMethod" column="payment_method" jdbcType="TINYINT"/>
-            <result property="logisticsCompany" column="logistics_company" jdbcType="VARCHAR"/>
-            <result property="trackingNumber" column="tracking_number" jdbcType="VARCHAR"/>
-            <result property="commentStatus" column="comment_status" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="timezone" column="timezone" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
+        <result property="payAmount" column="pay_amount" jdbcType="DECIMAL"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
+        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
+        <result property="receiverAddress" column="receiver_address" jdbcType="VARCHAR"/>
+        <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP"/>
+        <result property="deliveryTime" column="delivery_time" jdbcType="TIMESTAMP"/>
+        <result property="receiveTime" column="receive_time" jdbcType="TIMESTAMP"/>
+        <result property="paymentMethod" column="payment_method" jdbcType="TINYINT"/>
+        <result property="logisticsCompany" column="logistics_company" jdbcType="VARCHAR"/>
+        <result property="trackingNumber" column="tracking_number" jdbcType="VARCHAR"/>
+        <result property="commentStatus" column="comment_status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="timezone" column="timezone" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -36,75 +36,5 @@
         timezone
     </sql>
 
-    <!-- 订单创建（返回自增主键） -->
-    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (
-            order_no, user_id, total_amount, pay_amount, status,
-            receiver_name, receiver_phone, receiver_address, payment_method,
-            create_time, update_time, timezone
-        ) VALUES (
-            #{orderNo}, #{userId}, #{totalAmount}, #{payAmount}, #{status},
-            #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{paymentMethod},
-            NOW(), NOW(), #{timezone}
-        )
-    </insert>
 
-    <!-- 支付状态更新 -->
-    <update id="updatePaymentStatus">
-        UPDATE orders
-        <set>
-            status = #{status},
-            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
-            <if test="payAmount != null">pay_amount = #{payAmount},</if>
-            update_time = NOW()
-        </set>
-        WHERE order_no = #{orderNo} AND status = 0
-    </update>
-
-    <!-- 物流信息更新 -->
-    <update id="updateLogisticsInfo">
-        UPDATE orders
-        <set>
-            logistics_company = #{logisticsCompany},
-            tracking_number = #{trackingNumber},
-            delivery_time = NOW(),
-            status = 2,
-            update_time = NOW()
-        </set>
-        WHERE id = #{orderId} AND status = 1
-    </update>
-
-    <!-- 订单状态流转 -->
-    <update id="updateOrderStatus">
-        UPDATE orders
-        <set>
-            status = #{newStatus},
-            <choose>
-                <when test="newStatus == 3">receive_time = NOW(),</when>
-                <when test="newStatus == 4">comment_status = 1,</when>
-            </choose>
-            update_time = NOW()
-        </set>
-        WHERE id = #{orderId} AND status = #{oldStatus}
-    </update>
-
-    <!-- 订单详情查询 -->
-    <select id="selectByOrderNo" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM orders
-        WHERE order_no = #{orderNo}
-    </select>
-
-    <!-- 分页查询订单 -->
-    <select id="selectOrdersPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM orders
-        <where>
-            user_id = #{userId}
-            <if test="query.status != null">AND status = #{query.status}</if>
-            <if test="query.startTime != null">AND create_time >= #{query.startTime}</if>
-            <if test="query.endTime != null">AND create_time &lt;= #{query.endTime}</if>
-        </where>
-        ORDER BY create_time DESC
-    </select>
 </mapper>

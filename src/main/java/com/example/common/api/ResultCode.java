@@ -9,7 +9,7 @@ public enum ResultCode implements IResultCode {
     FORBIDDEN(403, "没有相关权限"),
     NOT_FOUND(404, "资源不存在"),
     INTERNAL_SERVER_ERROR(500, "服务器异常"),
-    
+
     // 业务相关状态码（6位数字，前两位表示模块）
     USER_NOT_EXIST(100001, "用户不存在"),
     PRODUCT_OFF_SHELF(200001, "商品已下架");

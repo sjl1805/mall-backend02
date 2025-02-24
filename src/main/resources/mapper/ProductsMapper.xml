@@ -5,16 +5,16 @@
 <mapper namespace="com.example.mapper.ProductsMapper">
 
     <resultMap id="BaseResultMap" type="com.example.model.entity.Products">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="price" column="price" jdbcType="DECIMAL"/>
-            <result property="stock" column="stock" jdbcType="INTEGER"/>
-            <result property="images" column="images" jdbcType="OTHER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="DECIMAL"/>
+        <result property="stock" column="stock" jdbcType="INTEGER"/>
+        <result property="images" column="images" jdbcType="OTHER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -24,48 +24,4 @@
         status
     </sql>
 
-    <!-- 商品上下架状态切换 -->
-    <update id="updateProductStatus">
-        UPDATE products
-        SET status = #{status}
-        WHERE id = #{productId}
-    </update>
-
-    <!-- 带分类过滤的分页查询 -->
-    <select id="selectProductsPage" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
-        FROM products
-        <where>
-            <if test="query.categoryId != null">
-                category_id = #{query.categoryId}
-            </if>
-            <if test="query.status != null">
-                AND status = #{query.status}
-            </if>
-            <if test="query.keyword != null and query.keyword != ''">
-                AND name LIKE CONCAT('%', #{query.keyword}, '%')
-            </if>
-        </where>
-        ORDER BY update_time DESC
-    </select>
-
-    <!-- 更新商品图片JSON -->
-    <update id="updateProductImages">
-        UPDATE products
-        SET images = #{images}
-        WHERE id = #{productId}
-    </update>
-
-    <!-- 价格区间统计 -->
-    <select id="selectPriceRange" resultType="map">
-        SELECT 
-            MIN(price) AS minPrice,
-            MAX(price) AS maxPrice,
-            AVG(price) AS avgPrice
-        FROM products
-        WHERE status = 1
-        <if test="categoryId != null">
-            AND category_id = #{categoryId}
-        </if>
-    </select>
 </mapper>
