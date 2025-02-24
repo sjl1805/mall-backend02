@@ -4,10 +4,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.core.io.FileSystemResource;
+
+import java.io.File;
 
 @RestController
 @RequestMapping("/files")
@@ -24,7 +28,19 @@ public class FileController {
     @GetMapping("/download/{filename}")
     @Operation(summary = "文件下载")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
-        Resource fileResource = new FileSystemResource("path/file"); // 替换为实际的资源对象
-        return ResponseEntity.ok().body(fileResource);
+        String filePath = "src/main/resources/static/images/" + filename;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        FileSystemResource resource = new FileSystemResource(file);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
     }
 } 

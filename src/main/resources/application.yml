@@ -58,4 +58,4 @@ springdoc:
 
 file:
   storage:
-    path: /path/file  # 文件存储路径
+    path: src/main/resources/static/images  # 更新文件存储路径
