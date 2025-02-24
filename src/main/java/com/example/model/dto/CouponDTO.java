@@ -28,6 +28,10 @@ public class CouponDTO {
     @Schema(description = "优惠券面值", example = "20.00")
     private BigDecimal value;
 
+    @NotNull(message = "优惠券数量不能为空")
+    @Schema(description = "优惠券数量", example = "100")
+    private Integer num;
+
     @NotNull(message = "使用门槛不能为空")
     @Schema(description = "使用门槛", example = "100.00")
     private BigDecimal minAmount;

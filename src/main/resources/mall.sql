@@ -74,6 +74,7 @@ CREATE TABLE `coupon`
     `name`        VARCHAR(32)    NOT NULL COMMENT '优惠券名称',
     `type`        TINYINT        NOT NULL COMMENT '优惠券类型：1-满减券 2-折扣券',
     `value`       DECIMAL(10, 2) NOT NULL COMMENT '优惠券面值',
+    `num`         INT            NOT NULL COMMENT '优惠券数量',
     `min_amount`  DECIMAL(10, 2) NOT NULL COMMENT '使用门槛',
     `start_time`  TIMESTAMP      NOT NULL COMMENT '生效时间',
     `end_time`    TIMESTAMP      NOT NULL COMMENT '失效时间',

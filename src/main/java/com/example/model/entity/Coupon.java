@@ -37,6 +37,11 @@ public class Coupon implements Serializable {
     private BigDecimal value;
 
     /**
+     * 优惠券数量
+     */
+    private Integer num;
+
+    /**
      * 使用门槛
      */
     private BigDecimal minAmount;

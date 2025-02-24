@@ -20,6 +20,9 @@ public class CouponVO {
     @Schema(description = "优惠券面值", example = "20.00")
     private BigDecimal value;
 
+    @Schema(description = "优惠券数量", example = "100")
+    private Integer num;
+
     @Schema(description = "使用门槛", example = "100.00")
     private BigDecimal minAmount;
 

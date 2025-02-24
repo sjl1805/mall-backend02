@@ -9,6 +9,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
         <result property="value" column="value" jdbcType="DECIMAL"/>
+        <result property="num" column="num" jdbcType="INT"/>
         <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
         <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
@@ -19,7 +20,7 @@
 
     <sql id="Base_Column_List">
         id,name,type,
-        value,min_amount,start_time,
+        value,num,min_amount,start_time,
         end_time,status,create_time,
         update_time
     </sql>
@@ -53,8 +54,8 @@
 
     <!-- 插入新优惠券 -->
     <insert id="insertCoupon" parameterType="com.example.model.entity.Coupon">
-        INSERT INTO coupon (name, type, value, min_amount, start_time, end_time, status, create_time, update_time)
-        VALUES (#{name}, #{type}, #{value}, #{minAmount}, #{startTime}, #{endTime}, #{status}, #{createTime},
+        INSERT INTO coupon (name, type, value, num, min_amount, start_time, end_time, status, create_time, update_time)
+        VALUES (#{name}, #{type}, #{value}, #{num}, #{minAmount}, #{startTime}, #{endTime}, #{status}, #{createTime},
                 #{updateTime})
     </insert>
 
@@ -64,6 +65,7 @@
         SET name        = #{name},
             type        = #{type},
             value       = #{value},
+            num         = #{num},
             min_amount  = #{minAmount},
             start_time  = #{startTime},
             end_time    = #{endTime},
