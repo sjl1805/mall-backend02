@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductSkuMapper;
 import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * @author 31815
@@ -15,6 +19,38 @@ import org.springframework.stereotype.Service;
 public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, ProductSku>
         implements ProductSkuService {
 
+    @Autowired
+    private ProductSkuMapper productSkuMapper;
+
+    @Override
+    public List<ProductSku> selectByProductId(Long productId) {
+        return productSkuMapper.selectByProductId(productId);
+    }
+
+    @Override
+    public IPage<ProductSku> selectPage(IPage<ProductSku> page) {
+        return productSkuMapper.selectPage(page);
+    }
+
+    @Override
+    public ProductSku selectById(Long id) {
+        return productSkuMapper.selectById(id);
+    }
+
+    @Override
+    public boolean insertProductSku(ProductSku productSku) {
+        return productSkuMapper.insert(productSku) > 0;
+    }
+
+    @Override
+    public boolean updateProductSku(ProductSku productSku) {
+        return productSkuMapper.updateById(productSku) > 0;
+    }
+
+    @Override
+    public boolean deleteProductSku(Long id) {
+        return productSkuMapper.deleteById(id) > 0;
+    }
 }
 
 

@@ -2,6 +2,9 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.ProductSku;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * @author 31815
@@ -10,4 +13,45 @@ import com.example.model.entity.ProductSku;
  */
 public interface ProductSkuService extends IService<ProductSku> {
 
+    /**
+     * 根据商品ID查询SKU
+     * @param productId 商品ID
+     * @return SKU列表
+     */
+    List<ProductSku> selectByProductId(Long productId);
+
+    /**
+     * 分页查询SKU
+     * @param page 分页信息
+     * @return SKU列表
+     */
+    IPage<ProductSku> selectPage(IPage<ProductSku> page);
+
+    /**
+     * 根据ID查询SKU
+     * @param id SKU ID
+     * @return SKU信息
+     */
+    ProductSku selectById(Long id);
+
+    /**
+     * 新增SKU
+     * @param productSku SKU信息
+     * @return 插入结果
+     */
+    boolean insertProductSku(ProductSku productSku);
+
+    /**
+     * 更新SKU信息
+     * @param productSku SKU信息
+     * @return 更新结果
+     */
+    boolean updateProductSku(ProductSku productSku);
+
+    /**
+     * 根据ID删除SKU
+     * @param id SKU ID
+     * @return 删除结果
+     */
+    boolean deleteProductSku(Long id);
 }

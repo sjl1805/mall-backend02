@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * 用户登录数据传输对象
+ */
 @Data
 public class UserLoginDTO {
     @NotBlank(message = "用户名不能为空")

@@ -23,6 +23,13 @@ public interface CouponMapper extends BaseMapper<Coupon> {
     List<Coupon> selectByNameLike(@Param("name") String name);
 
     /**
+     * 根据优惠券名称查询优惠券
+     * @param name 优惠券名称
+     * @return 优惠券列表
+     */
+    List<Coupon> selectByName(@Param("name") String name);
+
+    /**
      * 分页查询优惠券
      * @param page 分页信息
      * @return 优惠券列表

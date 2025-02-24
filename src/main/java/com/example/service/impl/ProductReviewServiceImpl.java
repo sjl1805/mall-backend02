@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductReviewMapper;
 import com.example.model.entity.ProductReview;
 import com.example.service.ProductReviewService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * @author 31815
@@ -15,6 +19,38 @@ import org.springframework.stereotype.Service;
 public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, ProductReview>
         implements ProductReviewService {
 
+    @Autowired
+    private ProductReviewMapper productReviewMapper;
+
+    @Override
+    public List<ProductReview> selectByProductId(Long productId) {
+        return productReviewMapper.selectByProductId(productId);
+    }
+
+    @Override
+    public IPage<ProductReview> selectPage(IPage<ProductReview> page) {
+        return productReviewMapper.selectPage(page);
+    }
+
+    @Override
+    public ProductReview selectById(Long id) {
+        return productReviewMapper.selectById(id);
+    }
+
+    @Override
+    public boolean insertProductReview(ProductReview productReview) {
+        return productReviewMapper.insert(productReview) > 0;
+    }
+
+    @Override
+    public boolean updateProductReview(ProductReview productReview) {
+        return productReviewMapper.updateById(productReview) > 0;
+    }
+
+    @Override
+    public boolean deleteProductReview(Long id) {
+        return productReviewMapper.deleteById(id) > 0;
+    }
 }
 
 

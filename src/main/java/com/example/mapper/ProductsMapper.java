@@ -23,6 +23,13 @@ public interface ProductsMapper extends BaseMapper<Products> {
     List<Products> selectByNameLike(@Param("name") String name);
 
     /**
+     * 根据商品名称查询商品
+     * @param name 商品名称
+     * @return 商品列表
+     */
+    List<Products> selectByName(@Param("name") String name);
+
+    /**
      * 分页查询商品
      * @param page 分页信息
      * @return 商品列表

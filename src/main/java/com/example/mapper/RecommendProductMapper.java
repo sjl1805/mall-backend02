@@ -23,6 +23,13 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
     List<RecommendProduct> selectByProductId(@Param("productId") Long productId);
 
     /**
+     * 根据用户ID查询推荐商品
+     * @param userId 用户ID
+     * @return 推荐商品列表
+     */
+    List<RecommendProduct> selectByUserId(@Param("userId") Long userId);
+
+    /**
      * 分页查询推荐商品
      * @param page 分页信息
      * @return 推荐商品列表

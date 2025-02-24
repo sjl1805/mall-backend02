@@ -22,6 +22,13 @@ public interface CategoryMapper extends BaseMapper<Category> {
     List<Category> selectByNameLike(@Param("name") String name);
 
     /**
+     * 根据分类名称查询分类
+     * @param name 分类名称
+     * @return 分类列表
+     */
+    List<Category> selectByName(@Param("name") String name);
+
+    /**
      * 分页查询分类（支持排序）
      * @param page 分页参数
      * @return 分页结果

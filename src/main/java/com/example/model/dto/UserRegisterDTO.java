@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * 用户注册数据传输对象
+ */
 @Data
 public class UserRegisterDTO {
     @NotBlank(message = "用户名不能为空")

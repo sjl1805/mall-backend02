@@ -24,6 +24,21 @@ public interface UsersMapper extends BaseMapper<Users> {
      */
     List<Users> selectByUsernameLike(@Param("username") String username);
 
+    /** 
+     * 根据用户名和密码查询用户
+     * @param username 用户名
+     * @param password 密码
+     * @return 用户信息
+     */
+    Users selectByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+    
+    /**
+     * 根据用户名查询用户
+     * @param username 用户名
+     * @return 用户信息
+     */
+    Users selectByUsername(@Param("username") String username);
+    
     /**
      * 分页查询用户
      * @param page 分页信息
