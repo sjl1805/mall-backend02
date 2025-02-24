@@ -45,11 +45,9 @@ springdoc:
 
 mybatis-plus:
   configuration:
+    default-scripting-language: org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    default-fetch-size: 100
-    default-statement-timeout: 30
-    jdbc-type-for-null: 'null'
-    type-handlers-package: com.baomidou.mybatisplus.extension.handlers
+    jdbc-type-for-null: null
+  type-handlers-package: com.example.handler  # 自定义JSON类型处理器
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.example.model.entity

@@ -21,4 +21,57 @@
         status,order_id,get_time,
         use_time,create_time,update_time
     </sql>
+
+    <select id="selectUserCoupons" resultMap="BaseResultMap">
+        SELECT uc.*, c.name, c.value, c.min_amount, c.start_time, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+        <if test="status != null">
+            AND uc.status = #{status}
+        </if>
+        AND NOW() BETWEEN c.start_time AND c.end_time
+        ORDER BY c.end_time ASC
+    </select>
+
+    <update id="useCoupon">
+        UPDATE user_coupon
+        SET status = 1,
+            order_id = #{orderId},
+            use_time = NOW()
+        WHERE id = #{userCouponId}
+        AND user_id = #{userId}
+        AND status = 0
+    </update>
+
+    <select id="countAvailableCoupons" resultType="int">
+        SELECT COUNT(*)
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+        AND uc.status = 0
+        AND NOW() BETWEEN c.start_time AND c.end_time
+    </select>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_coupon (
+            user_id, coupon_id, status, 
+            get_time, create_time, update_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.userId}, #{item.couponId}, 0,
+                NOW(), NOW(), NOW()
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectExpiringCoupons" resultMap="BaseResultMap">
+        SELECT uc.*, c.name, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+        AND uc.status = 0
+        AND c.end_time BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)
+    </select>
 </mapper>

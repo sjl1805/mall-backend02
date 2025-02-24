@@ -21,4 +21,54 @@
         behavior_type,behavior_time,duration,
         create_time,update_time,weight
     </sql>
+
+    <insert id="insertOrUpdateBehavior">
+        INSERT INTO user_behavior (user_id, product_id, behavior_type, behavior_time, duration, weight)
+        VALUES (#{userId}, #{productId}, #{behaviorType}, NOW(), #{duration}, #{weight})
+        ON DUPLICATE KEY UPDATE
+            behavior_time = NOW(),
+            duration = duration + VALUES(duration),
+            weight = weight + VALUES(weight)
+    </insert>
+
+    <select id="selectUserPreferences" resultType="map">
+        SELECT 
+            product_id,
+            SUM(weight) AS total_weight,
+            COUNT(*) AS behavior_count
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND behavior_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        GROUP BY product_id
+        ORDER BY total_weight DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectHotProducts" resultType="map">
+        SELECT 
+            product_id,
+            SUM(weight) AS total_weight,
+            COUNT(*) AS behavior_count
+        FROM user_behavior
+        WHERE behavior_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        GROUP BY product_id
+        ORDER BY total_weight DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectBehaviorStats" resultType="map">
+        SELECT 
+            behavior_type,
+            COUNT(*) AS count,
+            AVG(duration) AS avg_duration,
+            SUM(weight) AS total_weight
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        GROUP BY behavior_type
+    </select>
+
+    <delete id="cleanExpiredBehaviors">
+        DELETE FROM user_behavior
+        WHERE behavior_time &lt; DATE_SUB(NOW(), INTERVAL 90 DAY)
+    </delete>
 </mapper>

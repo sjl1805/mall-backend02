@@ -23,4 +23,57 @@
         main_image,status,create_time,
         update_time
     </sql>
+
+    <!-- 批量更新SKU状态 -->
+    <update id="updateSkuStatusBatch">
+        UPDATE product_sku
+        SET status = #{status}
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 价格/库存联合查询 -->
+    <select id="selectByPriceAndStock" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE status = 1
+        <if test="minPrice != null">
+            AND price >= #{minPrice}
+        </if>
+        <if test="maxPrice != null">
+            AND price &lt;= #{maxPrice}
+        </if>
+        <if test="hasStock != null and hasStock">
+            AND stock > 0
+        </if>
+        ORDER BY price
+    </select>
+
+    <!-- 销量排行榜生成 -->
+    <select id="selectSalesRank" resultType="map">
+        SELECT 
+            sku.id,
+            sku.spec_values,
+            sku.sales,
+            p.name AS product_name
+        FROM product_sku sku
+        INNER JOIN products p ON sku.product_id = p.id
+        WHERE sku.status = 1 AND p.status = 1
+        ORDER BY sku.sales DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 更新SKU主图默认值 -->
+    <update id="updateMainImageDefault">
+        UPDATE product_sku
+        SET main_image = 
+            CASE 
+                WHEN #{defaultImage} IS NOT NULL AND main_image IS NULL 
+                THEN #{defaultImage} 
+                ELSE main_image 
+            END
+        WHERE product_id = #{productId}
+    </update>
 </mapper>

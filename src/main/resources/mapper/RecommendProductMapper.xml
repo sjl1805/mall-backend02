@@ -24,4 +24,61 @@
         end_time,algorithm_version,recommend_reason,
         create_time,update_time
     </sql>
+
+    <select id="selectRecommendPage" resultMap="BaseResultMap">
+        SELECT r.*, p.name as product_name, p.price, p.main_image
+        FROM recommend_product r
+        JOIN products p ON r.product_id = p.id
+        <where>
+            <if test="query.type != null">
+                r.type = #{query.type}
+            </if>
+            <if test="query.status != null">
+                AND r.status = #{query.status}
+            </if>
+            <if test="query.algorithmVersion != null and query.algorithmVersion != ''">
+                AND r.algorithm_version = #{query.algorithmVersion}
+            </if>
+        </where>
+        ORDER BY r.sort DESC, r.create_time DESC
+    </select>
+
+    <update id="updateStatusBatch">
+        UPDATE recommend_product
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectValidRecommends" resultMap="BaseResultMap">
+        SELECT r.*, p.name as product_name
+        FROM recommend_product r
+        JOIN products p ON r.product_id = p.id
+        WHERE r.status = 1
+        AND NOW() BETWEEN r.start_time AND r.end_time
+        <if test="type != null">
+            AND r.type = #{type}
+        </if>
+        ORDER BY r.sort DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectRecommendStats" resultType="map">
+        SELECT 
+            type,
+            COUNT(*) AS total_count,
+            AVG(sort) AS avg_sort,
+            SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) AS valid_count
+        FROM recommend_product
+        GROUP BY type
+    </select>
+
+    <delete id="cleanExpiredRecommends">
+        DELETE FROM recommend_product
+        WHERE end_time &lt; NOW()
+        AND status = 0
+    </delete>
 </mapper>

@@ -17,4 +17,58 @@
         id,user_id,product_id,
         folder_id,create_time,update_time
     </sql>
+
+    <insert id="insertOrUpdateFavorite">
+        INSERT INTO product_favorite (user_id, product_id, folder_id, create_time, update_time)
+        VALUES (#{userId}, #{productId}, #{folderId}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            folder_id = VALUES(folder_id),
+            update_time = NOW()
+    </insert>
+
+    <delete id="deleteBatchFavorites">
+        DELETE FROM product_favorite
+        WHERE user_id = #{userId}
+        AND product_id IN
+        <foreach collection="productIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countUserFavorites" resultType="int">
+        SELECT COUNT(*) 
+        FROM product_favorite 
+        WHERE user_id = #{userId}
+        <if test="folderId != null">
+            AND folder_id = #{folderId}
+        </if>
+    </select>
+
+    <select id="selectUserFavorites" resultMap="BaseResultMap">
+        SELECT pf.*, p.name as product_name, p.price, p.main_image
+        FROM product_favorite pf
+        JOIN products p ON pf.product_id = p.id
+        WHERE pf.user_id = #{userId}
+        <if test="query.folderId != null">
+            AND pf.folder_id = #{query.folderId}
+        </if>
+        ORDER BY pf.create_time DESC
+    </select>
+
+    <select id="checkFavoriteExists" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1 
+            FROM product_favorite 
+            WHERE user_id = #{userId} 
+            AND product_id = #{productId}
+        )
+    </select>
+
+    <update id="moveToFolder">
+        UPDATE product_favorite
+        SET folder_id = #{targetFolderId},
+            update_time = NOW()
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+    </update>
 </mapper>

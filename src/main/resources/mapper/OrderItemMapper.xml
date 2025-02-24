@@ -23,4 +23,50 @@
         quantity,total_amount,create_time,
         update_time
     </sql>
+
+    <!-- 订单详情查询 -->
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 批量插入订单项 -->
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item (
+            order_id, product_id, product_name, 
+            product_image, price, quantity, 
+            total_amount, create_time, update_time
+        ) VALUES 
+        <foreach collection="items" item="item" separator=",">
+            (
+                #{item.orderId}, #{item.productId}, #{item.productName},
+                #{item.productImage}, #{item.price}, #{item.quantity},
+                #{item.totalAmount}, NOW(), NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 批量更新订单项状态 -->
+    <update id="updateStatusBatch">
+        UPDATE order_item
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id IN 
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 关联订单查询 -->
+    <select id="selectWithOrder" resultType="map">
+        SELECT 
+            i.*,
+            o.order_no,
+            o.user_id,
+            o.status as order_status
+        FROM order_item i
+        INNER JOIN orders o ON i.order_id = o.id
+        WHERE i.id = #{itemId}
+    </select>
 </mapper>
