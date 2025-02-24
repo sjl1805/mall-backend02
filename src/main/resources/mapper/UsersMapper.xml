@@ -20,34 +20,4 @@
         id,username,password,nickname,phone,email,avatar,gender,status,role,create_time,update_time
     </sql>
 
-    <!-- 根据用户名查询 -->
-    <select id="selectByUsername" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM users
-        WHERE username = #{username}
-    </select>
-
-    <!-- 根据手机号查询 -->
-    <select id="selectByPhone" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM users
-        WHERE phone = #{phone}
-    </select>
-
-    <!-- 更新用户状态 -->
-    <update id="updateStatus">
-        UPDATE users
-        SET status = #{status},
-            update_time = NOW()
-        WHERE id = #{userId}
-    </update>
-
-    <!-- 更新最后登录时间（示例扩展字段） -->
-    <update id="updateLastLoginTime">
-        UPDATE users
-        SET last_login_time = NOW()
-        WHERE id = #{userId}
-    </update>
 </mapper> 

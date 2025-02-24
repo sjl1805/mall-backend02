@@ -12,9 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UsersMapper extends BaseMapper<Users> {
-    Users selectByUsername(String username);
-    Users selectByPhone(String phone);
-    int updateStatus(Long userId, Integer status);
+
 }
 
 
