@@ -18,7 +18,7 @@ spring:
       database: 0
 
 jwt:
-  secret: bWFsbC1zZWNyZXQta2V5LTIwMjQtc3ByaW5nLWJvb3QtMy1qd3Qtc2VjdXJpdHk=
+  secret: mall-secret-key-2024-spring-boot-3-jwt-security
   expiration: 86400  # 24小时
   token-header: Authorization
   token-prefix: "Bearer "

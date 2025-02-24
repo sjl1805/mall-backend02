@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.common.api.CommonResult;
-import com.example.common.api.IResultCode;
 import com.example.common.api.ResultCode;
 
 @Slf4j
@@ -83,21 +82,3 @@ public class GlobalExceptionHandler {
     }
 }
 
-// 正确分离自定义异常类（原 BusinessException.java 中的核心内容）
-class BusinessException extends RuntimeException {
-    private final IResultCode resultCode;
-
-    public BusinessException(IResultCode resultCode) {
-        super(resultCode.getMessage());
-        this.resultCode = resultCode;
-    }
-
-    public BusinessException(IResultCode resultCode, String message) {
-        super(message);
-        this.resultCode = resultCode;
-    }
-
-    public IResultCode getResultCode() {
-        return resultCode;
-    }
-} 
