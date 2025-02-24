@@ -44,6 +44,6 @@ public class UserAddressVO {
 
     // 默认状态转换
     public String getIsDefault() {
-        return "1".equals(isDefault) ? "是" : "否";
+        return Integer.valueOf(1).equals(isDefault) ? "是" : "否";
     }
 } 

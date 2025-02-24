@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,33 +32,4 @@ public class SwaggerConfig {
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME));
     }
 
-    // 管理后台API分组
-    @Bean
-    public GroupedOpenApi adminApi() {
-        return GroupedOpenApi.builder()
-                .group("管理后台")
-                .pathsToMatch("/api/admin/**")
-                .packagesToScan("com.example.mall.modules.admin")
-                .build();
-    }
-
-    // 用户端API分组
-    @Bean
-    public GroupedOpenApi userApi() {
-        return GroupedOpenApi.builder()
-                .group("用户端")
-                .pathsToMatch("/api/user/**")
-                .packagesToScan("com.example.mall.modules.user")
-                .build();
-    }
-
-    // 公共API分组
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("公共接口")
-                .pathsToMatch("/api/public/**")
-                .packagesToScan("com.example.mall.modules.public")
-                .build();
-    }
 } 

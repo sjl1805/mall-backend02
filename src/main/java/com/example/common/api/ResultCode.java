@@ -12,7 +12,10 @@ public enum ResultCode implements IResultCode {
 
     // 业务相关状态码（6位数字，前两位表示模块）
     USER_NOT_EXIST(100001, "用户不存在"),
-    PRODUCT_OFF_SHELF(200001, "商品已下架");
+    PRODUCT_OFF_SHELF(200001, "商品已下架"),
+    USERNAME_EXISTED(400100, "用户名已存在"),
+    LOGIN_FAILED(400101, "登录失败"),
+    USER_NOT_FOUND(400102, "用户不存在");
 
     private final int code;
     private final String message;
