@@ -7,6 +7,9 @@ import com.example.model.entity.RecommendProduct;
 import com.example.service.RecommendProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:53
  */
 @Service
+@CacheConfig(cacheNames = "recommendProducts")
 public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMapper, RecommendProduct>
         implements RecommendProductService {
 
@@ -23,6 +27,7 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
     private RecommendProductMapper recommendProductMapper;
 
     @Override
+    @Cacheable(value = "recommendProducts", key = "#userId")
     public List<RecommendProduct> selectByUserId(Long userId) {
         return recommendProductMapper.selectByUserId(userId);
     }
@@ -38,16 +43,19 @@ public class RecommendProductServiceImpl extends ServiceImpl<RecommendProductMap
     }
 
     @Override
+    @CacheEvict(value = "recommendProducts", key = "#recommendProduct.id")
     public boolean insertRecommendProduct(RecommendProduct recommendProduct) {
         return recommendProductMapper.insert(recommendProduct) > 0;
     }
 
     @Override
+    @CacheEvict(value = "recommendProducts", key = "#recommendProduct.id")
     public boolean updateRecommendProduct(RecommendProduct recommendProduct) {
         return recommendProductMapper.updateById(recommendProduct) > 0;
     }
 
     @Override
+    @CacheEvict(value = "recommendProducts", key = "#id")
     public boolean deleteRecommendProduct(Long id) {
         return recommendProductMapper.deleteById(id) > 0;
     }

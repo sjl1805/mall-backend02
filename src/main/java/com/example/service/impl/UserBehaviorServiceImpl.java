@@ -6,6 +6,9 @@ import com.example.mapper.UserBehaviorMapper;
 import com.example.model.entity.UserBehavior;
 import com.example.service.UserBehaviorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:47
  */
 @Service
+@CacheConfig(cacheNames = "userBehaviors")
 public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, UserBehavior>
         implements UserBehaviorService {
 
@@ -23,6 +27,7 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
     private UserBehaviorMapper userBehaviorMapper;
 
     @Override
+    @Cacheable(value = "userBehaviors", key = "#userId")
     public List<UserBehavior> selectByUserId(Long userId) {
         return userBehaviorMapper.selectByUserId(userId);
     }
@@ -38,16 +43,19 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
     }
 
     @Override
+    @CacheEvict(value = "userBehaviors", key = "#userBehavior.userId")
     public boolean insertUserBehavior(UserBehavior userBehavior) {
         return userBehaviorMapper.insert(userBehavior) > 0;
     }
 
     @Override
+    @CacheEvict(value = "userBehaviors", key = "#userBehavior.userId")
     public boolean updateUserBehavior(UserBehavior userBehavior) {
         return userBehaviorMapper.updateById(userBehavior) > 0;
     }
 
     @Override
+    @CacheEvict(value = "userBehaviors", key = "#id")
     public boolean deleteUserBehavior(Long id) {
         return userBehaviorMapper.deleteById(id) > 0;
     }

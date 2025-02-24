@@ -11,13 +11,16 @@ import com.example.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 /**
  * @author 31815
  * @description 针对表【users(用户表)】的数据库操作Service实现
  * @createDate 2025-02-24 12:03:41
  */
 @Service
+@CacheConfig(cacheNames = "users")
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         implements UsersService {
 
@@ -54,6 +57,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
+    @Cacheable(value = "users", key = "#userId")
     public Users getUserById(Long userId) {
         return usersMapper.selectById(userId);
     }
@@ -64,6 +68,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#userId")
     public boolean updateUserInfo(Long userId, UserDTO userDTO) {
         Users user = usersMapper.selectById(userId);
         if (user == null) {
@@ -75,6 +80,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#userId")
     public boolean deleteUser(Long userId) {
         return usersMapper.deleteById(userId) > 0;
     }

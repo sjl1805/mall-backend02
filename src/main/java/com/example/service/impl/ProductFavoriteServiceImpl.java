@@ -7,6 +7,9 @@ import com.example.model.entity.ProductFavorite;
 import com.example.service.ProductFavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:07
  */
 @Service
+@CacheConfig(cacheNames = "productFavorites")
 public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMapper, ProductFavorite>
         implements ProductFavoriteService {
 
@@ -23,6 +27,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     private ProductFavoriteMapper productFavoriteMapper;
 
     @Override
+    @Cacheable(value = "productFavorites", key = "#userId")
     public List<ProductFavorite> selectByUserId(Long userId) {
         return productFavoriteMapper.selectByUserId(userId);
     }
@@ -33,21 +38,25 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     }
 
     @Override
+    @Cacheable(value = "productFavorites", key = "#id")
     public ProductFavorite selectById(Long id) {
         return productFavoriteMapper.selectById(id);
     }
 
     @Override
+    @CacheEvict(value = "productFavorites", key = "#productFavorite.id")
     public boolean insertProductFavorite(ProductFavorite productFavorite) {
         return productFavoriteMapper.insert(productFavorite) > 0;
     }
 
     @Override
+    @CacheEvict(value = "productFavorites", key = "#productFavorite.id")
     public boolean updateProductFavorite(ProductFavorite productFavorite) {
         return productFavoriteMapper.updateById(productFavorite) > 0;
     }
 
     @Override
+    @CacheEvict(value = "productFavorites", key = "#id")
     public boolean deleteProductFavorite(Long id) {
         return productFavoriteMapper.deleteById(id) > 0;
     }

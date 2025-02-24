@@ -7,6 +7,9 @@ import com.example.model.entity.UserAddress;
 import com.example.service.UserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:50
  */
 @Service
+@CacheConfig(cacheNames = "userAddresses")
 public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserAddress>
         implements UserAddressService {
 
@@ -23,6 +27,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     private UserAddressMapper userAddressMapper;
 
     @Override
+    @Cacheable(value = "userAddresses", key = "#userId")
     public List<UserAddress> selectByUserId(Long userId) {
         return userAddressMapper.selectByUserId(userId);
     }
@@ -38,16 +43,19 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     }
 
     @Override
+    @CacheEvict(value = "userAddresses", key = "#userAddress.userId")
     public boolean insertUserAddress(UserAddress userAddress) {
         return userAddressMapper.insert(userAddress) > 0;
     }
 
     @Override
+    @CacheEvict(value = "userAddresses", key = "#userAddress.userId")
     public boolean updateUserAddress(UserAddress userAddress) {
         return userAddressMapper.updateById(userAddress) > 0;
     }
 
     @Override
+    @CacheEvict(value = "userAddresses", key = "#id")
     public boolean deleteUserAddress(Long id) {
         return userAddressMapper.deleteById(id) > 0;
     }

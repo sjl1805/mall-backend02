@@ -7,6 +7,9 @@ import com.example.model.entity.ProductSku;
 import com.example.service.ProductSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:01
  */
 @Service
+@CacheConfig(cacheNames = "productSkus")
 public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, ProductSku>
         implements ProductSkuService {
 
@@ -23,6 +27,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
     private ProductSkuMapper productSkuMapper;
 
     @Override
+    @Cacheable(value = "productSkus", key = "#productId")
     public List<ProductSku> selectByProductId(Long productId) {
         return productSkuMapper.selectByProductId(productId);
     }
@@ -33,21 +38,25 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
     }
 
     @Override
+    @Cacheable(value = "productSkus", key = "#id")
     public ProductSku selectById(Long id) {
         return productSkuMapper.selectById(id);
     }
 
     @Override
+    @CacheEvict(value = "productSkus", key = "#productSku.id")
     public boolean insertProductSku(ProductSku productSku) {
         return productSkuMapper.insert(productSku) > 0;
     }
 
     @Override
+    @CacheEvict(value = "productSkus", key = "#productSku.id")
     public boolean updateProductSku(ProductSku productSku) {
         return productSkuMapper.updateById(productSku) > 0;
     }
 
     @Override
+    @CacheEvict(value = "productSkus", key = "#id")
     public boolean deleteProductSku(Long id) {
         return productSkuMapper.deleteById(id) > 0;
     }

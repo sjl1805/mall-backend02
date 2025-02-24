@@ -7,6 +7,9 @@ import com.example.model.entity.Coupon;
 import com.example.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:19
  */
 @Service
+@CacheConfig(cacheNames = "coupons")
 public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
         implements CouponService {
 
@@ -26,6 +30,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     private CouponMapper couponMapper;
 
     @Override
+    @Cacheable(value = "coupons", key = "#name")
     public List<Coupon> selectByName(String name) {
         return couponMapper.selectByName(name);
     }
@@ -36,21 +41,25 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     }
 
     @Override
+    @Cacheable(value = "coupons", key = "#id")
     public Coupon selectById(Long id) {
         return couponMapper.selectById(id);
     }
 
     @Override
+    @CacheEvict(value = "coupons", key = "#coupon.id")
     public boolean insertCoupon(Coupon coupon) {
         return couponMapper.insert(coupon) > 0;
     }
 
     @Override
+    @CacheEvict(value = "coupons", key = "#coupon.id")
     public boolean updateCoupon(Coupon coupon) {
         return couponMapper.updateById(coupon) > 0;
     }
 
     @Override
+    @CacheEvict(value = "coupons", key = "#id")
     public boolean deleteCoupon(Long id) {
         return couponMapper.deleteById(id) > 0;
     }

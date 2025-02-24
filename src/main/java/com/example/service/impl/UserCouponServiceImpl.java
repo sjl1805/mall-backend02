@@ -6,6 +6,9 @@ import com.example.mapper.UserCouponMapper;
 import com.example.model.entity.UserCoupon;
 import com.example.service.UserCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:44
  */
 @Service
+@CacheConfig(cacheNames = "userCoupons")
 public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCoupon>
         implements UserCouponService {
 
@@ -23,8 +27,27 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
     private UserCouponMapper userCouponMapper;
 
     @Override
+    @Cacheable(value = "userCoupons", key = "#userId")
     public List<UserCoupon> selectByUserId(Long userId) {
         return userCouponMapper.selectByUserId(userId);
+    }
+
+    @Override
+    @CacheEvict(value = "userCoupons", key = "#userCoupon.userId")
+    public boolean insertUserCoupon(UserCoupon userCoupon) {
+        return userCouponMapper.insert(userCoupon) > 0;
+    }
+
+    @Override
+    @CacheEvict(value = "userCoupons", key = "#userCoupon.userId")
+    public boolean updateUserCoupon(UserCoupon userCoupon) {
+        return userCouponMapper.updateById(userCoupon) > 0;
+    }
+
+    @Override
+    @CacheEvict(value = "userCoupons", key = "#id")
+    public boolean deleteUserCoupon(Long id) {
+        return userCouponMapper.deleteById(id) > 0;
     }
 
     @Override
@@ -35,21 +58,6 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
     @Override
     public UserCoupon selectById(Long id) {
         return userCouponMapper.selectById(id);
-    }
-
-    @Override
-    public boolean insertUserCoupon(UserCoupon userCoupon) {
-        return userCouponMapper.insert(userCoupon) > 0;
-    }
-
-    @Override
-    public boolean updateUserCoupon(UserCoupon userCoupon) {
-        return userCouponMapper.updateById(userCoupon) > 0;
-    }
-
-    @Override
-    public boolean deleteUserCoupon(Long id) {
-        return userCouponMapper.deleteById(id) > 0;
     }
 
     @Override

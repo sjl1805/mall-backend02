@@ -7,6 +7,9 @@ import com.example.model.entity.Orders;
 import com.example.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:10
  */
 @Service
+@CacheConfig(cacheNames = "orders")
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
         implements OrdersService {
 
@@ -23,33 +27,38 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
     private OrdersMapper ordersMapper;
 
     @Override
+    @Cacheable(value = "orders", key = "#userId")
     public List<Orders> selectByUserId(Long userId) {
         return ordersMapper.selectByUserId(userId);
     }
 
     @Override
-    public IPage<Orders> selectPage(IPage<Orders> page) {
-        return ordersMapper.selectPage(page);
-    }
-
-    @Override
+    @Cacheable(value = "orders", key = "#id")
     public Orders selectById(Long id) {
         return ordersMapper.selectById(id);
     }
 
     @Override
+    @CacheEvict(value = "orders", key = "#orders.id")
     public boolean insertOrder(Orders orders) {
         return ordersMapper.insert(orders) > 0;
     }
 
     @Override
+    @CacheEvict(value = "orders", key = "#orders.id")
     public boolean updateOrder(Orders orders) {
         return ordersMapper.updateById(orders) > 0;
     }
 
     @Override
+    @CacheEvict(value = "orders", key = "#id")
     public boolean deleteOrder(Long id) {
         return ordersMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public IPage<Orders> selectPage(IPage<Orders> page) {
+        return ordersMapper.selectPage(page);
     }
 }
 
