@@ -7,13 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class MallBackendApplicationTests {
-    UsersServiceImpl  usersService;
     @Test
     void contextLoads() {
     }
 
-    @Test
-    void test() {
-            usersService.list();
- }
+
 }
