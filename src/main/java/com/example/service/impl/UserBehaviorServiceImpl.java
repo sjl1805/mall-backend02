@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.model.entity.Products;
 import com.example.model.entity.Users;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -383,6 +384,94 @@ public class UserBehaviorServiceImpl extends ServiceImpl<UserBehaviorMapper, Use
                 .add(weightedSum.multiply(new BigDecimal("0.5")));
         
         return activityScore;
+    }
+
+    /**
+     * 识别用户异常行为
+     * 检测与用户正常行为模式偏离较大的行为
+     *
+     * @param userId 用户ID
+     * @param days 天数，检测最近几天的行为
+     * @return 异常行为列表
+     */
+    @Override
+    @Cacheable(value = "userBehaviors", key = "'abnormal_' + #userId + '_' + #days")
+    public List<UserBehavior> detectAbnormalBehaviors(Long userId, Integer days) {
+        // 获取用户最近n天的行为
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -days);
+        Date startTime = calendar.getTime();
+        Date endTime = new Date();
+        
+        List<UserBehavior> behaviors = userBehaviorMapper.selectByUserIdAndTimeRange(
+                userId, startTime, endTime);
+        
+        // 简单实现：筛选权重特别高或特别低的行为作为异常行为
+        return behaviors.stream()
+                .filter(b -> b.getWeight().compareTo(new BigDecimal("0.2")) < 0 
+                        || b.getWeight().compareTo(new BigDecimal("0.8")) > 0)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 分析用户行为转化
+     * 计算从一种行为到另一种行为的转化率
+     *
+     * @param sourceType 源行为类型
+     * @param targetType 目标行为类型
+     * @param days 天数
+     * @return 转化率
+     */
+    @Override
+    @Cacheable(value = "userBehaviors", key = "'conversion_' + #sourceType + '_' + #targetType + '_' + #days")
+    public BigDecimal analyzeBehaviorConversion(Integer sourceType, Integer targetType, Integer days) {
+        Map<String, Object> conversionData = userBehaviorMapper.analyzeBehaviorConversion(
+                sourceType, targetType, days);
+        
+        if (conversionData == null || !conversionData.containsKey("conversion_rate")) {
+            return BigDecimal.ZERO;
+        }
+        
+        return new BigDecimal(conversionData.get("conversion_rate").toString());
+    }
+
+    /**
+     * 预测用户下一步可能的行为
+     * 基于用户历史行为模式预测未来可能的行为
+     *
+     * @param userId 用户ID
+     * @return 可能的行为类型及概率
+     */
+    @Override
+    @Cacheable(value = "userBehaviors", key = "'predict_' + #userId")
+    public Map<Integer, BigDecimal> predictNextBehavior(Long userId) {
+        // 获取用户最近的行为数据
+        List<UserBehavior> recentBehaviors = userBehaviorMapper.selectByUserId(userId);
+        
+        if (recentBehaviors == null || recentBehaviors.isEmpty()) {
+            return new HashMap<>();
+        }
+        
+        // 简单实现：根据用户历史行为的频率来预测下一步行为的概率
+        Map<Integer, BigDecimal> behaviorCounts = new HashMap<>();
+        Map<Integer, BigDecimal> behaviorProbabilities = new HashMap<>();
+        
+        // 统计各行为类型的次数
+        for (UserBehavior behavior : recentBehaviors) {
+            Integer type = behavior.getBehaviorType();
+            behaviorCounts.put(type, behaviorCounts.getOrDefault(type, BigDecimal.ZERO).add(BigDecimal.ONE));
+        }
+        
+        // 计算各行为类型的概率
+        BigDecimal total = new BigDecimal(recentBehaviors.size());
+        for (Map.Entry<Integer, BigDecimal> entry : behaviorCounts.entrySet()) {
+            behaviorProbabilities.put(
+                entry.getKey(), 
+                entry.getValue().divide(total, 4, RoundingMode.HALF_UP)
+            );
+        }
+        
+        return behaviorProbabilities;
     }
 }
 

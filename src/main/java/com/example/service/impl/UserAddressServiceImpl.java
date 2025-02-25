@@ -323,12 +323,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
     public boolean validateAddress(UserAddress address) {
         // 检查基本字段是否为空
         if (address == null || address.getUserId() == null ||
-                StringUtils.isEmpty(address.getReceiverName()) ||
-                StringUtils.isEmpty(address.getReceiverPhone()) ||
-                StringUtils.isEmpty(address.getProvince()) ||
-                StringUtils.isEmpty(address.getCity()) ||
-                StringUtils.isEmpty(address.getDistrict()) ||
-                StringUtils.isEmpty(address.getDetailAddress())) {
+                !StringUtils.hasText(address.getReceiverName()) ||
+                !StringUtils.hasText(address.getReceiverPhone()) ||
+                !StringUtils.hasText(address.getProvince()) ||
+                !StringUtils.hasText(address.getCity()) ||
+                !StringUtils.hasText(address.getDistrict()) ||
+                !StringUtils.hasText(address.getDetailAddress())) {
             return false;
         }
         
