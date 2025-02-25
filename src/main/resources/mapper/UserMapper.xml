@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="nickname" property="nickname" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="avatar" property="avatar" />
+        <result column="role" property="role" />
+        <result column="status" property="status" />
+        <result column="age_range" property="ageRange" />
+        <result column="gender" property="gender" />
+        <result column="consumption_level" property="consumptionLevel" />
+        <result column="activity_level" property="activityLevel" />
+        <result column="preferred_categories" property="preferredCategories" />
+        <result column="tags" property="tags" />
+        <result column="last_active_time" property="lastActiveTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, nickname, phone, email, avatar, role, status, age_range, gender, 
+        consumption_level, activity_level, preferred_categories, tags, last_active_time, create_time, update_time
+    </sql>
+    
+    <!-- 根据用户名查询用户信息 -->
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM users
+        WHERE username = #{username}
+    </select>
+    
+    <!-- 根据手机号查询用户信息 -->
+    <select id="selectByPhone" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+    
+    <!-- 根据邮箱查询用户信息 -->
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM users
+        WHERE email = #{email}
+    </select>
+    
+    <!-- 更新用户最后活跃时间 -->
+    <update id="updateLastActiveTime">
+        UPDATE users
+        SET last_active_time = #{lastActiveTime}
+        WHERE id = #{userId}
+    </update>
+    
+    <!-- 更新用户状态 -->
+    <update id="updateStatus">
+        UPDATE users
+        SET status = #{status},
+        update_time = NOW()
+        WHERE id = #{userId}
+    </update>
+    
+    <!-- 更新用户密码 -->
+    <update id="updatePassword">
+        UPDATE users
+        SET password = #{password},
+        update_time = NOW()
+        WHERE id = #{userId}
+    </update>
+    
+    <!-- 更新用户偏好分类 -->
+    <update id="updatePreferredCategories">
+        UPDATE users
+        SET preferred_categories = #{preferredCategories},
+        update_time = NOW()
+        WHERE id = #{userId}
+    </update>
+    
+    <!-- 更新用户标签 -->
+    <update id="updateTags">
+        UPDATE users
+        SET tags = #{tags},
+        update_time = NOW()
+        WHERE id = #{userId}
+    </update>
+    
+    <!-- 分页查询用户列表 -->
+    <select id="selectUserPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM users
+        <where>
+            <if test="params.username != null and params.username != ''">
+                AND username LIKE CONCAT('%', #{params.username}, '%')
+            </if>
+            <if test="params.nickname != null and params.nickname != ''">
+                AND nickname LIKE CONCAT('%', #{params.nickname}, '%')
+            </if>
+            <if test="params.phone != null and params.phone != ''">
+                AND phone LIKE CONCAT('%', #{params.phone}, '%')
+            </if>
+            <if test="params.email != null and params.email != ''">
+                AND email LIKE CONCAT('%', #{params.email}, '%')
+            </if>
+            <if test="params.role != null">
+                AND role = #{params.role}
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+            <if test="params.gender != null">
+                AND gender = #{params.gender}
+            </if>
+            <if test="params.consumptionLevel != null">
+                AND consumption_level = #{params.consumptionLevel}
+            </if>
+            <if test="params.activityLevel != null">
+                AND activity_level = #{params.activityLevel}
+            </if>
+            <if test="params.startTime != null">
+                AND create_time &gt;= #{params.startTime}
+            </if>
+            <if test="params.endTime != null">
+                AND create_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 查询用户数量统计(按消费能力分组) -->
+    <select id="selectUserCountByConsumptionLevel" resultType="java.util.Map">
+        SELECT 
+            CASE consumption_level
+                WHEN 1 THEN '低'
+                WHEN 2 THEN '中'
+                WHEN 3 THEN '高'
+                ELSE '未知'
+            END AS level_name,
+            COUNT(*) AS count
+        FROM users
+        GROUP BY consumption_level
+    </select>
+    
+    <!-- 查询用户数量统计(按活跃度分组) -->
+    <select id="selectUserCountByActivityLevel" resultType="java.util.Map">
+        SELECT 
+            CASE activity_level
+                WHEN 1 THEN '低'
+                WHEN 2 THEN '中'
+                WHEN 3 THEN '高'
+                ELSE '未知'
+            END AS level_name,
+            COUNT(*) AS count
+        FROM users
+        GROUP BY activity_level
+    </select>
+    
+    <!-- 查询用户数量统计(按注册时间分组) -->
+    <select id="selectUserCountByRegisterDate" resultType="java.util.Map">
+        SELECT 
+            DATE_FORMAT(create_time, '%Y-%m-%d') AS date,
+            COUNT(*) AS count
+        FROM users
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
+        ORDER BY date
+    </select>
+    
+    <!-- 批量更新用户活跃度 -->
+    <update id="batchUpdateActivityLevel">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE users
+            SET activity_level = #{item.activityLevel},
+            update_time = NOW()
+            WHERE id = #{item.userId}
+        </foreach>
+    </update>
+    
+    <!-- 批量更新用户消费能力 -->
+    <update id="batchUpdateConsumptionLevel">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE users
+            SET consumption_level = #{item.consumptionLevel},
+            update_time = NOW()
+            WHERE id = #{item.userId}
+        </foreach>
+    </update>
+</mapper> 
