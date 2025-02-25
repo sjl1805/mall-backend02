@@ -28,49 +28,77 @@
         WHERE username LIKE CONCAT('%', #{username}, '%')
     </select>
 
-    <!-- 分页查询用户 -->
-    <select id="selectPage" resultMap="BaseResultMap">
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByUsername" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM users
+        WHERE username = #{username}
     </select>
-
-    <!-- 根据ID查询用户 -->
-    <select id="selectById" resultMap="BaseResultMap">
+    
+    <!-- 根据电话号码查询用户 -->
+    <select id="selectByPhone" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM users
-        WHERE id = #{id}
+        WHERE phone = #{phone}
     </select>
-
-    <!-- 插入新用户 -->
-    <insert id="insertUser" parameterType="com.example.model.entity.Users">
-        INSERT INTO users (username, password, nickname, phone, email, avatar, gender, status, role, create_time,
-                           update_time)
-        VALUES (#{username}, #{password}, #{nickname}, #{phone}, #{email}, #{avatar}, #{gender}, #{status}, #{role},
-                #{createTime}, #{updateTime})
-    </insert>
-
-    <!-- 更新用户信息 -->
-    <update id="updateUser" parameterType="com.example.model.entity.Users">
+    
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE email = #{email}
+    </select>
+    
+    <!-- 根据状态查询用户列表 -->
+    <select id="selectByStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE status = #{status}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 高级查询用户列表 -->
+    <select id="selectUsersByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        <where>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone = #{phone}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 修改用户状态 -->
+    <update id="updateUserStatus">
         UPDATE users
-        SET username    = #{username},
-            password    = #{password},
-            nickname    = #{nickname},
-            phone       = #{phone},
-            email       = #{email},
-            avatar      = #{avatar},
-            gender      = #{gender},
-            status      = #{status},
-            role        = #{role},
-            update_time = #{updateTime}
+        SET status = #{status},
+            update_time = NOW()
         WHERE id = #{id}
     </update>
-
-    <!-- 根据ID删除用户 -->
-    <delete id="deleteUser">
-        DELETE
-        FROM users
-        WHERE id = #{id}
+    
+    <!-- 批量删除用户 -->
+    <delete id="batchDeleteUsers">
+        DELETE FROM users
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
+    
+    <!-- 检查用户名是否存在 -->
+    <select id="checkUsernameExists" resultType="int">
+        SELECT COUNT(1) FROM users WHERE username = #{username}
+    </select>
 </mapper> 

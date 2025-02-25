@@ -16,6 +16,22 @@
         <result property="weight" column="weight" jdbcType="DECIMAL"/>
     </resultMap>
 
+    <!-- 热门商品结果映射 -->
+    <resultMap id="ProductPopularityMap" type="com.example.model.vo.ProductPopularityVO">
+        <id property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="productName" column="name" jdbcType="VARCHAR"/>
+        <result property="count" column="behavior_count" jdbcType="INTEGER"/>
+        <result property="score" column="popularity_score" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <!-- 用户兴趣结果映射 -->
+    <resultMap id="UserInterestMap" type="com.example.model.vo.UserInterestVO">
+        <id property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="categoryName" column="name" jdbcType="VARCHAR"/>
+        <result property="interestScore" column="interest_score" jdbcType="DECIMAL"/>
+        <result property="behaviorCount" column="behavior_count" jdbcType="INTEGER"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         id,user_id,product_id,
         behavior_type,behavior_time,duration,
@@ -28,49 +44,113 @@
         <include refid="Base_Column_List"/>
         FROM user_behavior
         WHERE user_id = #{userId}
-    </select>
-
-    <!-- 分页查询用户行为 -->
-    <select id="selectPage" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM user_behavior
         ORDER BY behavior_time DESC
     </select>
 
-    <!-- 根据ID查询用户行为 -->
-    <select id="selectById" resultMap="BaseResultMap">
+    <!-- 根据行为类型查询用户行为 -->
+    <select id="selectByBehaviorType" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_behavior
-        WHERE id = #{id}
+        WHERE behavior_type = #{behaviorType}
+        ORDER BY behavior_time DESC
     </select>
 
-    <!-- 插入新用户行为 -->
-    <insert id="insertUserBehavior" parameterType="com.example.model.entity.UserBehavior">
-        INSERT INTO user_behavior (user_id, product_id, behavior_type, behavior_time, duration, create_time,
-                                   update_time, weight)
-        VALUES (#{userId}, #{productId}, #{behaviorType}, #{behaviorTime}, #{duration}, #{createTime}, #{updateTime},
-                #{weight})
+    <!-- 根据用户ID和行为类型查询 -->
+    <select id="selectByUserIdAndType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId} 
+          AND behavior_type = #{behaviorType}
+        ORDER BY behavior_time DESC
+    </select>
+
+    <!-- 根据时间范围查询用户行为 -->
+    <select id="selectByTimeRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE behavior_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY behavior_time DESC
+    </select>
+
+    <!-- 查询热门商品 -->
+    <select id="selectPopularProducts" resultMap="ProductPopularityMap">
+        SELECT 
+            ub.product_id,
+            p.name,
+            COUNT(*) as behavior_count,
+            SUM(ub.weight) as popularity_score
+        FROM user_behavior ub
+        JOIN products p ON ub.product_id = p.id
+        WHERE ub.behavior_type = #{behaviorType}
+          AND ub.behavior_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY ub.product_id, p.name
+        ORDER BY popularity_score DESC, behavior_count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 获取用户兴趣分类 -->
+    <select id="selectUserInterests" resultMap="UserInterestMap">
+        SELECT 
+            c.id as category_id,
+            c.name,
+            SUM(ub.weight) as interest_score,
+            COUNT(*) as behavior_count
+        FROM user_behavior ub
+        JOIN products p ON ub.product_id = p.id
+        JOIN category c ON p.category_id = c.id
+        WHERE ub.user_id = #{userId}
+          AND ub.behavior_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY c.id, c.name
+        ORDER BY interest_score DESC, behavior_count DESC
+    </select>
+
+    <!-- 批量插入用户行为 -->
+    <insert id="batchInsertBehaviors">
+        INSERT INTO user_behavior 
+        (user_id, product_id, behavior_type, behavior_time, duration, weight, create_time, update_time)
+        VALUES
+        <foreach collection="behaviors" item="behavior" separator=",">
+            (#{behavior.userId}, #{behavior.productId}, #{behavior.behaviorType}, 
+             #{behavior.behaviorTime}, #{behavior.duration}, #{behavior.weight}, 
+             NOW(), NOW())
+        </foreach>
     </insert>
 
-    <!-- 更新用户行为信息 -->
-    <update id="updateUserBehavior" parameterType="com.example.model.entity.UserBehavior">
-        UPDATE user_behavior
-        SET user_id       = #{userId},
-            product_id    = #{productId},
-            behavior_type = #{behaviorType},
-            behavior_time = #{behaviorTime},
-            duration      = #{duration},
-            update_time   = #{updateTime},
-            weight        = #{weight}
-        WHERE id = #{id}
-    </update>
-
-    <!-- 根据ID删除用户行为 -->
-    <delete id="deleteUserBehavior">
-        DELETE
+    <!-- 高级条件查询用户行为 -->
+    <select id="selectBehaviorsByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM user_behavior
-        WHERE id = #{id}
-    </delete>
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="productId != null">
+                AND product_id = #{productId}
+            </if>
+            <if test="behaviorType != null">
+                AND behavior_type = #{behaviorType}
+            </if>
+            <if test="startTime != null">
+                AND behavior_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND behavior_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY behavior_time DESC
+    </select>
+
+    <!-- 统计用户行为数量 -->
+    <select id="countUserBehaviors" resultType="int">
+        SELECT COUNT(*)
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        <if test="behaviorType != null">
+            AND behavior_type = #{behaviorType}
+        </if>
+    </select>
 </mapper>

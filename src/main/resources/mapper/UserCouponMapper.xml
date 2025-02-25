@@ -15,6 +15,26 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
+    
+    <!-- 用户优惠券与优惠券连接的结果映射 -->
+    <resultMap id="UserCouponWithDetailMap" type="com.example.model.vo.UserCouponVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="couponId" column="coupon_id" jdbcType="BIGINT"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+        <result property="getTime" column="get_time" jdbcType="TIMESTAMP"/>
+        <result property="useTime" column="use_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <!-- 优惠券信息 -->
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="value" column="value" jdbcType="DECIMAL"/>
+        <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
 
     <sql id="Base_Column_List">
         id,user_id,coupon_id,
@@ -28,47 +48,95 @@
         <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE user_id = #{userId}
-    </select>
-
-    <!-- 分页查询用户优惠券 -->
-    <select id="selectPage" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM user_coupon
         ORDER BY create_time DESC
     </select>
-
-    <!-- 根据ID查询用户优惠券 -->
-    <select id="selectById" resultMap="BaseResultMap">
+    
+    <!-- 根据用户ID和状态查询用户优惠券 -->
+    <select id="selectByUserIdAndStatus" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_coupon
-        WHERE id = #{id}
+        WHERE user_id = #{userId} AND status = #{status}
+        ORDER BY create_time DESC
     </select>
-
-    <!-- 插入新用户优惠券 -->
-    <insert id="insertUserCoupon" parameterType="com.example.model.entity.UserCoupon">
-        INSERT INTO user_coupon (user_id, coupon_id, status, order_id, get_time, use_time, create_time, update_time)
-        VALUES (#{userId}, #{couponId}, #{status}, #{orderId}, #{getTime}, #{useTime}, #{createTime}, #{updateTime})
-    </insert>
-
-    <!-- 更新用户优惠券信息 -->
-    <update id="updateUserCoupon" parameterType="com.example.model.entity.UserCoupon">
+    
+    <!-- 查询用户可用优惠券（未使用且未过期） -->
+    <select id="selectAvailableCoupons" resultMap="UserCouponWithDetailMap">
+        SELECT uc.*, c.name, c.type, c.value, c.min_amount, c.start_time, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+          AND uc.status = 0
+          AND c.start_time &lt;= #{currentTime}
+          AND c.end_time &gt; #{currentTime}
+          AND c.status = 1
+        ORDER BY c.value DESC, c.end_time ASC
+    </select>
+    
+    <!-- 获取即将过期的优惠券 -->
+    <select id="selectSoonExpiredCoupons" resultMap="UserCouponWithDetailMap">
+        SELECT uc.*, c.name, c.type, c.value, c.min_amount, c.start_time, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+          AND uc.status = 0
+          AND c.end_time BETWEEN #{startTime} AND #{endTime}
+          AND c.status = 1
+        ORDER BY c.end_time ASC
+    </select>
+    
+    <!-- 根据订单金额查询用户可用优惠券 -->
+    <select id="selectCouponsByOrderAmount" resultMap="UserCouponWithDetailMap">
+        SELECT uc.*, c.name, c.type, c.value, c.min_amount, c.start_time, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        WHERE uc.user_id = #{userId}
+          AND uc.status = 0
+          AND c.min_amount &lt;= #{orderAmount}
+          AND c.start_time &lt;= #{currentTime}
+          AND c.end_time &gt; #{currentTime}
+          AND c.status = 1
+        ORDER BY c.value DESC, c.end_time ASC
+    </select>
+    
+    <!-- 更新优惠券使用状态 -->
+    <update id="updateCouponStatus">
         UPDATE user_coupon
-        SET user_id     = #{userId},
-            coupon_id   = #{couponId},
-            status      = #{status},
-            order_id    = #{orderId},
-            get_time    = #{getTime},
-            use_time    = #{useTime},
-            update_time = #{updateTime}
+        SET status = #{status},
+            order_id = #{orderId},
+            use_time = #{useTime},
+            update_time = NOW()
         WHERE id = #{id}
     </update>
-
-    <!-- 根据ID删除用户优惠券 -->
-    <delete id="deleteUserCoupon">
-        DELETE
-        FROM user_coupon
-        WHERE id = #{id}
-    </delete>
+    
+    <!-- 批量添加用户优惠券 -->
+    <insert id="batchInsertUserCoupons">
+        INSERT INTO user_coupon (user_id, coupon_id, status, get_time, create_time, update_time)
+        VALUES
+        <foreach collection="couponIds" item="couponId" separator=",">
+            (#{userId}, #{couponId}, #{status}, #{getTime}, NOW(), NOW())
+        </foreach>
+    </insert>
+    
+    <!-- 高级查询用户优惠券 -->
+    <select id="selectUserCouponsByCondition" resultMap="UserCouponWithDetailMap">
+        SELECT uc.*, c.name, c.type, c.value, c.min_amount, c.start_time, c.end_time
+        FROM user_coupon uc
+        JOIN coupon c ON uc.coupon_id = c.id
+        <where>
+            <if test="userId != null">
+                AND uc.user_id = #{userId}
+            </if>
+            <if test="status != null">
+                AND uc.status = #{status}
+            </if>
+            <if test="startTime != null">
+                AND uc.get_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND uc.get_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY uc.create_time DESC
+    </select>
 </mapper>
