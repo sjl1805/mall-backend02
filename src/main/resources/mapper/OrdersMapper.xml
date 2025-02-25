@@ -59,25 +59,22 @@
 
     <!-- 插入订单 -->
     <insert id="insertOrder" parameterType="com.example.model.entity.Orders" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (
-            order_no, user_id, total_amount, pay_amount, status,
-            receiver_name, receiver_phone, receiver_address,
-            payment_time, delivery_time, receive_time,
-            payment_method, logistics_company, tracking_number,
-            comment_status, create_time, update_time, timezone
-        ) VALUES (
-            #{orderNo}, #{userId}, #{totalAmount}, #{payAmount}, #{status},
-            #{receiverName}, #{receiverPhone}, #{receiverAddress},
-            #{paymentTime}, #{deliveryTime}, #{receiveTime},
-            #{paymentMethod}, #{logisticsCompany}, #{trackingNumber},
-            #{commentStatus}, NOW(), NOW(), #{timezone}
-        )
+        INSERT INTO orders (order_no, user_id, total_amount, pay_amount, status,
+                            receiver_name, receiver_phone, receiver_address,
+                            payment_time, delivery_time, receive_time,
+                            payment_method, logistics_company, tracking_number,
+                            comment_status, create_time, update_time, timezone)
+        VALUES (#{orderNo}, #{userId}, #{totalAmount}, #{payAmount}, #{status},
+                #{receiverName}, #{receiverPhone}, #{receiverAddress},
+                #{paymentTime}, #{deliveryTime}, #{receiveTime},
+                #{paymentMethod}, #{logisticsCompany}, #{trackingNumber},
+                #{commentStatus}, NOW(), NOW(), #{timezone})
     </insert>
 
     <!-- 更新状态 -->
     <update id="updateOrderStatus">
         UPDATE orders
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE order_no = #{orderNo}
     </update>
@@ -141,9 +138,9 @@
     <update id="updatePaymentInfo">
         UPDATE orders
         SET payment_method = #{paymentMethod},
-            payment_time = #{paymentTime},
-            status = 2, <!-- 假设2为已支付状态 -->
-            update_time = NOW()
+        payment_time = #{paymentTime},
+        status = 2, <!-- 假设2为已支付状态 -->
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND status = 1 <!-- 假设1为待支付状态 -->
     </update>
@@ -152,25 +149,24 @@
     <update id="updateShippingInfo">
         UPDATE orders
         SET logistics_company = #{logisticsCompany},
-            tracking_number = #{trackingNumber},
-            delivery_time = NOW(),
-            status = 3, <!-- 假设3为已发货状态 -->
-            update_time = NOW()
+        tracking_number = #{trackingNumber},
+        delivery_time = NOW(),
+        status = 3, <!-- 假设3为已发货状态 -->
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND status = 2 <!-- 假设2为已支付状态 -->
     </update>
 
     <!-- 查询订单详情（包含订单项） -->
     <select id="selectOrderDetail" resultType="java.util.Map">
-        SELECT o.*, 
-               p.name as product_name, 
+        SELECT o.*,
+               p.name   as product_name,
                p.images as product_images,
-               oi.quantity, 
-               oi.price as item_price, 
-               oi.total_price as item_total_price
+               oi.quantity,
+               oi.price as item_price
         FROM orders o
-        JOIN order_item oi ON o.id = oi.order_id
-        JOIN products p ON oi.product_id = p.id
+                 JOIN order_item oi ON o.id = oi.order_id
+                 JOIN products p ON oi.product_id = p.id
         WHERE o.order_no = #{orderNo}
     </select>
 
@@ -178,8 +174,7 @@
     <update id="cancelOrder">
         UPDATE orders
         SET status = 4, <!-- 4表示已取消 -->
-            cancel_reason = #{cancelReason},
-            update_time = NOW()
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND status = 0 <!-- 0表示待支付 -->
     </update>
@@ -188,8 +183,8 @@
     <update id="confirmReceive">
         UPDATE orders
         SET status = 3, <!-- 3表示已完成 -->
-            receive_time = NOW(),
-            update_time = NOW()
+        receive_time = NOW(),
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND status = 2 <!-- 2表示已发货 -->
     </update>
@@ -198,8 +193,7 @@
     <update id="applyRefund">
         UPDATE orders
         SET status = 5, <!-- 5表示退款中 -->
-            refund_reason = #{refundReason},
-            update_time = NOW()
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND (status = 1 OR status = 2) <!-- 1表示已支付，2表示已发货 -->
     </update>
@@ -208,7 +202,7 @@
     <update id="completeOrder">
         UPDATE orders
         SET status = 3, <!-- 3表示已完成 -->
-            update_time = NOW()
+        update_time = NOW()
         WHERE order_no = #{orderNo}
         AND status = 2 <!-- 2表示已发货 -->
     </update>
@@ -234,8 +228,7 @@
     <update id="autoCancelTimeoutOrders">
         UPDATE orders
         SET status = 4, <!-- 4表示已取消 -->
-            cancel_reason = '超时未支付自动取消',
-            update_time = NOW()
+        update_time = NOW()
         WHERE status = 0 <!-- 0表示待支付 -->
         AND create_time &lt; #{timeoutTime}
     </update>
@@ -250,15 +243,15 @@
 
     <!-- 查询订单销售统计（按日期） -->
     <select id="getOrderSalesByDate" resultType="java.util.Map">
-        SELECT 
-            DATE(create_time) as date,
-            COUNT(*) as order_count,
-            SUM(pay_amount) as total_sales
+        SELECT
+        DATE(create_time) as date,
+        COUNT(*) as order_count,
+        SUM(pay_amount) as total_sales
         FROM orders
         WHERE status >= 1 <!-- 已支付及后续状态 -->
         AND create_time BETWEEN #{startDate} AND #{endDate}
         GROUP BY DATE(create_time)
-        ORDER BY date ASC
+        ORDER BY date
     </select>
 
 </mapper>

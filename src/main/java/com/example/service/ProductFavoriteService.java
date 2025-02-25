@@ -65,7 +65,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
     /**
      * 检查用户是否已收藏商品
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return 收藏记录，未收藏则返回null
      */
@@ -74,7 +74,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
     /**
      * 切换收藏状态（收藏/取消收藏）
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return true-收藏成功，false-取消收藏成功
      */
@@ -83,7 +83,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
     /**
      * 根据收藏夹查询收藏商品
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param folderId 收藏夹ID，为null则查询默认收藏夹
      * @return 收藏商品列表
      */
@@ -100,7 +100,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
     /**
      * 创建收藏夹
      *
-     * @param userId 用户ID
+     * @param userId     用户ID
      * @param folderName 收藏夹名称
      * @return 创建结果
      */
@@ -109,7 +109,7 @@ public interface ProductFavoriteService extends IService<ProductFavorite> {
     /**
      * 移动商品到指定收藏夹
      *
-     * @param id 收藏ID
+     * @param id       收藏ID
      * @param folderId 目标收藏夹ID
      * @return 移动结果
      */

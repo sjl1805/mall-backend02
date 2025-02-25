@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Category;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 
 /**
  * 商品分类Mapper接口
- * 
+ * <p>
  * 该接口提供对商品分类表(category)的数据库操作方法
  * 继承MyBatis-Plus的BaseMapper获取基础的CRUD功能
  * 同时扩展了特定业务需求的查询方法
@@ -93,6 +94,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
      *
      * @return 分类树结构
      */
+    @MapKey("id")
     List<Map<String, Object>> selectCategoryTree();
 
     /**
@@ -101,12 +103,13 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @param parentId 父分类ID
      * @return 子分类列表
      */
+    @MapKey("id")
     List<Map<String, Object>> selectChildrenWithProductCount(@Param("parentId") Long parentId);
 
     /**
      * 更新分类排序
      *
-     * @param id 分类ID
+     * @param id   分类ID
      * @param sort 排序值
      * @return 更新结果
      */
@@ -115,7 +118,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
     /**
      * 更新分类状态
      *
-     * @param id 分类ID
+     * @param id     分类ID
      * @param status 状态值
      * @return 更新结果
      */
@@ -140,7 +143,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
     /**
      * 批量更新分类状态
      *
-     * @param ids 分类ID列表
+     * @param ids    分类ID列表
      * @param status 状态值
      * @return 更新结果
      */
@@ -155,7 +158,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 商品数量
      */
     Integer countProductsByCategoryId(@Param("categoryId") Long categoryId);
-    
+
     /**
      * 查询指定分类是否有子分类
      *
@@ -163,7 +166,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 子分类数量
      */
     Integer countChildCategories(@Param("categoryId") Long categoryId);
-    
+
     /**
      * 递归查询所有子分类ID（包括自身）
      *
@@ -171,7 +174,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 所有子分类ID列表
      */
     List<Long> selectAllChildCategoryIds(@Param("categoryId") Long categoryId);
-    
+
     /**
      * 根据关键词搜索分类
      *
@@ -179,13 +182,14 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 匹配的分类列表
      */
     List<Category> searchCategories(@Param("keyword") String keyword);
-    
+
     /**
      * 查询热门分类（包含商品数量最多的分类）
      *
      * @param limit 查询数量
      * @return 热门分类列表
      */
+    @MapKey("id")
     List<Map<String, Object>> selectHotCategories(@Param("limit") Integer limit);
 }
 

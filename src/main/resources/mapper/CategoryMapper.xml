@@ -84,62 +84,68 @@
     </update>
 
     <delete id="deleteCategory">
-        DELETE FROM category
+        DELETE
+        FROM category
         WHERE id = #{id}
     </delete>
 
     <!-- 查询所有分类并按层级组织 -->
     <select id="selectCategoryTree" resultType="java.util.Map">
-        SELECT c1.id, c1.name, c1.icon, c1.level, c1.sort,
-               (SELECT COUNT(*) FROM product WHERE category_id = c1.id AND status = 1) as product_count,
-               (
-                   SELECT JSON_ARRAYAGG(
-                       JSON_OBJECT(
-                           'id', c2.id,
-                           'name', c2.name,
-                           'icon', c2.icon,
-                           'level', c2.level,
-                           'sort', c2.sort,
-                           'children', (
-                               SELECT JSON_ARRAYAGG(
-                                   JSON_OBJECT(
-                                       'id', c3.id,
-                                       'name', c3.name,
-                                       'icon', c3.icon,
-                                       'level', c3.level,
-                                       'sort', c3.sort
-                                   )
-                               )
-                               FROM category c3
-                               WHERE c3.parent_id = c2.id AND c3.status = 1
-                               ORDER BY c3.sort DESC
-                           )
-                       )
-                   )
-               )
-               FROM category c2
-               WHERE c2.parent_id = c1.id AND c2.status = 1
-               ORDER BY c2.sort DESC
-           ) as children
+        SELECT c1.id,
+               c1.name,
+               c1.icon,
+               c1.level,
+               c1.sort,
+               (SELECT COUNT(*) FROM products WHERE category_id = c1.id AND status = 1) as product_count,
+               (SELECT IFNULL(JSON_ARRAYAGG(
+                                      JSON_OBJECT(
+                                              'id', c2.id,
+                                              'name', c2.name,
+                                              'icon', c2.icon,
+                                              'level', c2.level,
+                                              'sort', c2.sort,
+                                              'children', IFNULL(
+                                                      (SELECT JSON_ARRAYAGG(
+                                                                      JSON_OBJECT(
+                                                                              'id', c3.id,
+                                                                              'name', c3.name,
+                                                                              'icon', c3.icon,
+                                                                              'level', c3.level,
+                                                                              'sort', c3.sort
+                                                                      )
+                                                              )
+                                                       FROM category c3
+                                                       WHERE c3.parent_id = c2.id
+                                                         AND c3.status = 1
+                                                       ORDER BY c3.sort DESC),
+                                                      JSON_ARRAY()
+                                                          )
+                                      )
+                              ), JSON_ARRAY())
+                FROM category c2
+                WHERE c2.parent_id = c1.id
+                  AND c2.status = 1
+                ORDER BY c2.sort DESC)                                                  as children
         FROM category c1
-        WHERE c1.parent_id = 0 AND c1.status = 1
+        WHERE c1.parent_id = 0
+          AND c1.status = 1
         ORDER BY c1.sort DESC
     </select>
 
     <!-- 根据父ID查询子分类（包含子分类的商品数量） -->
     <select id="selectChildrenWithProductCount" resultType="java.util.Map">
-        SELECT c.*, 
-               (SELECT COUNT(*) FROM product WHERE category_id = c.id AND status = 1) as product_count
+        SELECT c.*,
+               (SELECT COUNT(*) FROM products WHERE category_id = c.id AND status = 1) as product_count
         FROM category c
         WHERE c.parent_id = #{parentId}
-        AND c.status = 1
+          AND c.status = 1
         ORDER BY c.sort DESC
     </select>
 
     <!-- 更新分类排序 -->
     <update id="updateSort">
         UPDATE category
-        SET sort = #{sort},
+        SET sort        = #{sort},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -147,19 +153,24 @@
     <!-- 更新分类状态 -->
     <update id="updateStatus">
         UPDATE category
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{id}
     </update>
 
     <!-- 获取分类路径 -->
     <select id="selectCategoryPath" resultMap="BaseResultMap">
-        WITH RECURSIVE category_path AS (
-            SELECT * FROM category WHERE id = #{categoryId}
-            UNION ALL
-            SELECT c.* FROM category c, category_path cp WHERE c.id = cp.parent_id
-        )
-        SELECT * FROM category_path ORDER BY level ASC
+        WITH RECURSIVE category_path AS (SELECT *
+                                         FROM category
+                                         WHERE id = #{categoryId}
+                                         UNION ALL
+                                         SELECT c.*
+                                         FROM category c,
+                                              category_path cp
+                                         WHERE c.id = cp.parent_id)
+        SELECT *
+        FROM category_path
+        ORDER BY level ASC
     </select>
 
     <!-- 批量删除分类 -->
@@ -175,7 +186,7 @@
     <update id="batchUpdateStatus">
         UPDATE category
         SET status = #{status},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -187,28 +198,30 @@
         SELECT COUNT(*)
         FROM products
         WHERE category_id = #{categoryId}
-        AND status = 1
+          AND status = 1
     </select>
-    
+
     <!-- 查询指定分类是否有子分类 -->
     <select id="countChildCategories" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM category
         WHERE parent_id = #{categoryId}
-        AND status = 1
+          AND status = 1
     </select>
-    
+
     <!-- 递归查询所有子分类ID -->
     <select id="selectAllChildCategoryIds" resultType="java.lang.Long">
-        WITH RECURSIVE category_tree AS (
-            SELECT id FROM category WHERE id = #{categoryId}
-            UNION ALL
-            SELECT c.id FROM category c
-            JOIN category_tree ct ON c.parent_id = ct.id
-        )
-        SELECT id FROM category_tree
+        WITH RECURSIVE category_tree AS (SELECT id
+                                         FROM category
+                                         WHERE id = #{categoryId}
+                                         UNION ALL
+                                         SELECT c.id
+                                         FROM category c
+                                                  JOIN category_tree ct ON c.parent_id = ct.id)
+        SELECT id
+        FROM category_tree
     </select>
-    
+
     <!-- 根据关键词搜索分类 -->
     <select id="searchCategories" resultMap="BaseResultMap">
         SELECT
@@ -218,16 +231,19 @@
         AND name LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY level ASC, sort DESC
     </select>
-    
+
     <!-- 查询热门分类 -->
     <select id="selectHotCategories" resultType="java.util.Map">
-        SELECT c.id, c.name, c.icon, c.level, 
+        SELECT c.id,
+               c.name,
+               c.icon,
+               c.level,
                COUNT(p.id) as product_count
         FROM category c
-        LEFT JOIN products p ON c.id = p.category_id AND p.status = 1
+                 LEFT JOIN products p ON c.id = p.category_id AND p.status = 1
         WHERE c.status = 1
         GROUP BY c.id
-        ORDER BY product_count DESC, c.sort DESC
+        ORDER BY product_count DESC
         LIMIT #{limit}
     </select>
 

@@ -67,9 +67,9 @@ public interface UsersMapper extends BaseMapper<Users> {
      * 高级查询用户列表
      *
      * @param username 用户名(可选)
-     * @param phone 手机号(可选)
-     * @param status 状态(可选)
-     * @param page 分页参数
+     * @param phone    手机号(可选)
+     * @param status   状态(可选)
+     * @param page     分页参数
      * @return 分页用户数据
      */
     IPage<Users> selectUsersByCondition(
@@ -81,7 +81,7 @@ public interface UsersMapper extends BaseMapper<Users> {
     /**
      * 修改用户状态
      *
-     * @param id 用户ID
+     * @param id     用户ID
      * @param status 新状态
      * @return 更新结果
      */

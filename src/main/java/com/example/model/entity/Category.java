@@ -18,63 +18,53 @@ import java.util.List;
 @TableName(value = "category")
 @Data
 public class Category implements Serializable {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 分类ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
-
     /**
      * 父分类ID
      */
     private Long parentId;
-
     /**
      * 分类名称
      */
     private String name;
-
     /**
      * 分类图标
      */
     private String icon;
-
     /**
      * 层级：1一级 2二级 3三级
      */
     private Integer level;
-
     /**
      * 排序
      */
     private Integer sort;
-
     /**
      * 状态：0-禁用 1-启用
      */
     private Integer status;
-
     /**
      * 创建时间（带时区）
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
     /**
      * 更新时间（带时区）
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-    
     /**
      * 非数据库字段，用于存储子分类列表
      */
     @TableField(exist = false)
     private List<Category> children;
-    
+
     /**
      * 非数据库字段，用于存储分类下的商品数量
      */

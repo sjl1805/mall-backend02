@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.FavoriteFolder;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -69,7 +70,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
     /**
      * 增加收藏夹商品数量
      *
-     * @param id 收藏夹ID
+     * @param id    收藏夹ID
      * @param count 增加数量，可为负数（减少）
      * @return 更新结果
      */
@@ -86,7 +87,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
     /**
      * 更新收藏夹排序
      *
-     * @param id 收藏夹ID
+     * @param id   收藏夹ID
      * @param sort 排序值
      * @return 更新结果
      */
@@ -119,7 +120,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
      * 按名称查询收藏夹
      *
      * @param userId 用户ID
-     * @param name 收藏夹名称（模糊匹配）
+     * @param name   收藏夹名称（模糊匹配）
      * @return 收藏夹列表
      */
     List<FavoriteFolder> selectByName(
@@ -137,7 +138,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
     /**
      * 批量更新收藏夹公开状态
      *
-     * @param ids 收藏夹ID列表
+     * @param ids      收藏夹ID列表
      * @param isPublic 公开状态
      * @return 更新结果
      */
@@ -159,6 +160,7 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
      * @param userId 用户ID
      * @return 收藏夹简要信息列表
      */
+    @MapKey("userId")
     List<Map<String, Object>> selectFolderBriefs(@Param("userId") Long userId);
 
     /**

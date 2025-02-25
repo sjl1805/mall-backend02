@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.ProductReview;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -80,6 +81,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      * @param productId 商品ID
      * @return 各评分数量统计，格式：[{rating: 5, count: 10}, ...]
      */
+    @MapKey("productId")
     List<Map<String, Object>> countByRating(@Param("productId") Long productId);
 
     /**
@@ -106,7 +108,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
     /**
      * 批量更新评价状态
      *
-     * @param ids 评价ID列表
+     * @param ids    评价ID列表
      * @param status 新状态
      * @return 更新结果
      */
@@ -127,14 +129,7 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      */
     int countPendingReviews();
 
-    /**
-     * 更新评价有用度
-     *
-     * @param id 评价ID
-     * @param increment 增量（1或-1）
-     * @return 更新结果
-     */
-    int updateUsefulCount(@Param("id") Long id, @Param("increment") int increment);
+
 }
 
 

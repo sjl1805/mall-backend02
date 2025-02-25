@@ -99,7 +99,7 @@ public interface ProductReviewService extends IService<ProductReview> {
     /**
      * 批量更新评价状态
      *
-     * @param ids 评价ID列表
+     * @param ids    评价ID列表
      * @param status 新状态
      * @return 更新结果
      */
@@ -117,7 +117,7 @@ public interface ProductReviewService extends IService<ProductReview> {
      * 查询精选评价（高分评价）
      *
      * @param productId 商品ID
-     * @param limit 限制数量
+     * @param limit     限制数量
      * @return 精选评价列表
      */
     List<ProductReview> selectFeaturedReviews(Long productId, Integer limit);
@@ -141,7 +141,7 @@ public interface ProductReviewService extends IService<ProductReview> {
     /**
      * 回复商品评价
      *
-     * @param reviewId 评价ID
+     * @param reviewId     评价ID
      * @param replyContent 回复内容
      * @return 回复结果
      */

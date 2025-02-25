@@ -98,7 +98,7 @@
         WHERE status = 1
         AND num > 0
         AND start_time &lt;= #{now}
-        AND end_time &gt;= #{now}  
+        AND end_time &gt;= #{now}
         <if test="amount != null">
             AND min_amount &lt;= #{amount}
         </if>
@@ -112,16 +112,16 @@
         FROM coupon
         WHERE status = 1
         AND end_time BETWEEN #{startDate} AND #{endDate}
-        ORDER BY end_time ASC
+        ORDER BY end_time
     </select>
 
     <!-- 减少优惠券数量 -->
     <update id="decreaseCouponNum">
         UPDATE coupon
-        SET num = num - #{count},
+        SET num         = num - #{count},
             update_time = NOW()
         WHERE id = #{id}
-        AND num &gt;= #{count}
+          AND num &gt;= #{count}
     </update>
 
     <!-- 检查优惠券是否可用 -->
@@ -139,26 +139,31 @@
 
     <!-- 统计优惠券使用情况 -->
     <select id="getCouponStatistics" resultType="java.util.Map">
-        SELECT c.id, c.name, c.type, c.value,
-               COUNT(uc.id) as used_count,
-               SUM(uc.order_amount) as total_order_amount,
-               SUM(uc.discount_amount) as total_discount_amount
+        SELECT c.id,
+               c.name,
+               c.type,
+               c.value,
+               COUNT(uc.id) as used_count
         FROM coupon c
-        JOIN user_coupon uc ON c.id = uc.coupon_id
+                 JOIN user_coupon uc ON c.id = uc.coupon_id
         WHERE uc.use_time BETWEEN #{startDate} AND #{endDate}
-        AND uc.status = 2 -- 假设2表示已使用
+          AND uc.status = 2 -- 假设2表示已使用
         GROUP BY c.id, c.name, c.type, c.value
         ORDER BY used_count DESC
     </select>
 
     <!-- 获取热门优惠券排行 -->
     <select id="getPopularCoupons" resultType="java.util.Map">
-        SELECT c.id, c.name, c.type, c.value, c.min_amount,
-               COUNT(uc.id) as receive_count,
-               COALESCE(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 0) as used_count,
-               ROUND(COALESCE(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(uc.id), 0), 2) as use_rate
+        SELECT c.id,
+               c.name,
+               c.type,
+               c.value,
+               c.min_amount,
+               COUNT(uc.id)                                                               as receive_count,
+               COALESCE(SUM(IF(uc.status = 2, 1, 0)), 0)                                  as used_count,
+               ROUND(COALESCE(SUM(IF(uc.status = 2, 1, 0)) * 100.0 / COUNT(uc.id), 0), 2) as use_rate
         FROM coupon c
-        JOIN user_coupon uc ON c.id = uc.coupon_id
+                 JOIN user_coupon uc ON c.id = uc.coupon_id
         GROUP BY c.id, c.name, c.type, c.value, c.min_amount
         ORDER BY receive_count DESC
         LIMIT #{limit}
@@ -168,7 +173,7 @@
     <update id="batchUpdateStatus">
         UPDATE coupon
         SET status = #{status},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -189,14 +194,12 @@
         SELECT c.*
         FROM coupon c
         WHERE c.status = 1
-        AND c.num > 0
-        AND c.start_time &lt;= #{now}
-        AND c.end_time &gt;= #{now}
-        AND c.id NOT IN (
-            SELECT coupon_id
-            FROM user_coupon
-            WHERE user_id = #{userId}
-        )
+          AND c.num > 0
+          AND c.start_time &lt;= #{now}
+          AND c.end_time &gt;= #{now}
+          AND c.id NOT IN (SELECT coupon_id
+                           FROM user_coupon
+                           WHERE user_id = #{userId})
         ORDER BY c.value DESC
     </select>
 
@@ -239,21 +242,21 @@
     <!-- 计算优惠券发放效果 -->
     <select id="calculateCouponEffectiveness" resultType="java.util.Map">
         <![CDATA[
-        SELECT
-            c.id,
-            c.name,
-            c.type,
-            c.value,
-            COUNT(uc.id) AS total_received,
-            SUM(CASE WHEN uc.status = 1 THEN 1 ELSE 0 END) AS unused_count,
-            SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) AS used_count,
-            ROUND(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(uc.id), 2) AS usage_rate,
-            SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) AS total_order_amount,
-            SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) AS order_count,
-            ROUND(SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) / SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 2) AS avg_order_amount
+        SELECT c.id,
+               c.name,
+               c.type,
+               c.value,
+               COUNT(uc.id)                                                  AS total_received,
+               SUM(IF(uc.status = 1, 1, 0))                                  AS unused_count,
+               SUM(IF(uc.status = 2, 1, 0))                                  AS used_count,
+               ROUND(SUM(IF(uc.status = 2, 1, 0)) * 100.0 / COUNT(uc.id), 2) AS usage_rate,
+               SUM(IF(uc.status = 2, o.total_amount, 0))                     AS total_order_amount,
+               SUM(IF(uc.status = 2, 1, 0))                                  AS order_count,
+               ROUND(SUM(IF(uc.status = 2, o.total_amount, 0)) /
+                     SUM(IF(uc.status = 2, 1, 0)), 2)                        AS avg_order_amount
         FROM coupon c
-        LEFT JOIN user_coupon uc ON c.id = uc.coupon_id
-        LEFT JOIN orders o ON uc.order_id = o.id
+                 LEFT JOIN user_coupon uc ON c.id = uc.coupon_id
+                 LEFT JOIN orders o ON uc.order_id = o.id
         WHERE c.id = #{couponId}
         GROUP BY c.id, c.name, c.type, c.value
         ]]>
@@ -262,9 +265,9 @@
     <!-- 自动失效过期优惠券 -->
     <update id="expireCoupons">
         UPDATE coupon
-        SET status = 0,
+        SET status      = 0,
             update_time = NOW()
         WHERE status = 1
-        AND end_time &lt; #{now}
+          AND end_time &lt; #{now}
     </update>
 </mapper>

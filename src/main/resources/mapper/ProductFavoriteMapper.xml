@@ -102,7 +102,7 @@
     <!-- 移动商品到指定收藏夹 -->
     <update id="moveToFolder">
         UPDATE product_favorite
-        SET folder_id = #{folderId},
+        SET folder_id   = #{folderId},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -118,14 +118,14 @@
 
     <!-- 查询带商品信息的收藏列表 -->
     <select id="selectWithProductInfo" resultMap="FavoriteWithProductMap">
-        SELECT f.*, 
-               p.name as product_name, 
-               p.price as product_price,
+        SELECT f.*,
+               p.name   as product_name,
+               p.price  as product_price,
                p.images as product_image,
                p.status as product_status,
-               p.stock as product_stock
+               p.stock  as product_stock
         FROM product_favorite f
-        LEFT JOIN products p ON f.product_id = p.id
+                 LEFT JOIN products p ON f.product_id = p.id
         WHERE f.user_id = #{userId}
         ORDER BY f.create_time DESC
     </select>
@@ -141,7 +141,7 @@
 
     <!-- 统计用户收藏夹及各收藏夹中商品数量 -->
     <select id="selectUserFolderStats" resultType="java.util.Map">
-        SELECT folder_id, 
+        SELECT folder_id,
                COUNT(*) as count
         FROM product_favorite
         WHERE user_id = #{userId}

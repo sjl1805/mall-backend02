@@ -29,7 +29,7 @@ public interface CartService extends IService<Cart> {
      * @param page 分页信息
      * @return 购物车列表
      */
-    IPage<Cart> selectPage(IPage<Cart> page);
+    IPage<Cart> selectPage(IPage<Cart> page, Long userId);
 
     /**
      * 根据ID查询购物车
@@ -66,7 +66,7 @@ public interface CartService extends IService<Cart> {
     /**
      * 根据用户ID和商品ID查询购物车商品
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return 购物车商品
      */
@@ -83,7 +83,7 @@ public interface CartService extends IService<Cart> {
     /**
      * 更新购物车商品数量
      *
-     * @param id 购物车ID
+     * @param id       购物车ID
      * @param quantity 数量
      * @return 更新结果
      */
@@ -92,7 +92,7 @@ public interface CartService extends IService<Cart> {
     /**
      * 更新购物车商品选中状态
      *
-     * @param id 购物车ID
+     * @param id      购物车ID
      * @param checked 选中状态
      * @return 更新结果
      */
@@ -101,7 +101,7 @@ public interface CartService extends IService<Cart> {
     /**
      * 全选/取消全选购物车商品
      *
-     * @param userId 用户ID
+     * @param userId  用户ID
      * @param checked 选中状态
      * @return 更新结果
      */
@@ -159,9 +159,9 @@ public interface CartService extends IService<Cart> {
      * 检查并添加商品到购物车
      * 如果购物车中已存在该商品，则更新数量；否则添加新记录
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
-     * @param quantity 数量
+     * @param quantity  数量
      * @return 添加/更新结果
      */
     boolean addOrUpdateCart(Long userId, Long productId, Integer quantity);

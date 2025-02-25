@@ -102,9 +102,9 @@ public interface UsersService extends IService<Users> {
      * 高级条件查询用户
      *
      * @param username 用户名(可选)
-     * @param phone 手机号(可选)
-     * @param status 状态(可选)
-     * @param page 分页参数
+     * @param phone    手机号(可选)
+     * @param status   状态(可选)
+     * @param page     分页参数
      * @return 用户分页数据
      */
     IPage<Users> getUsersByCondition(String username, String phone, Integer status, Page<Users> page);
@@ -137,7 +137,7 @@ public interface UsersService extends IService<Users> {
     /**
      * 重置用户密码
      *
-     * @param userId 用户ID
+     * @param userId      用户ID
      * @param newPassword 新密码
      * @return 重置结果
      */
@@ -146,7 +146,7 @@ public interface UsersService extends IService<Users> {
     /**
      * 用户修改密码
      *
-     * @param userId 用户ID
+     * @param userId      用户ID
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      * @return 修改结果
@@ -157,7 +157,7 @@ public interface UsersService extends IService<Users> {
      * 更新用户角色
      *
      * @param userId 用户ID
-     * @param role 新角色
+     * @param role   新角色
      * @return 更新结果
      */
     boolean updateUserRole(Long userId, Integer role);
@@ -181,7 +181,7 @@ public interface UsersService extends IService<Users> {
     /**
      * 更新用户头像
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param avatarUrl 头像URL
      * @return 更新结果
      */
@@ -190,8 +190,8 @@ public interface UsersService extends IService<Users> {
     /**
      * 更新用户手机号
      *
-     * @param userId 用户ID
-     * @param newPhone 新手机号
+     * @param userId     用户ID
+     * @param newPhone   新手机号
      * @param verifyCode 验证码
      * @return 更新结果
      */

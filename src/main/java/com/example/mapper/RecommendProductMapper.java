@@ -74,11 +74,11 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
     int deleteRecommendProduct(@Param("id") Long id);
 
     /**
-     * 查询当前有效的推荐商品
+     * 查询当前有效地推荐商品
      *
-     * @param type 推荐类型（可选）
+     * @param type  推荐类型（可选）
      * @param limit 限制数量
-     * @return 有效的推荐商品列表
+     * @return 有效地推荐商品列表
      */
     List<RecommendProduct> selectActiveRecommends(
             @Param("type") Integer type,
@@ -95,7 +95,7 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
     /**
      * 更新推荐商品状态
      *
-     * @param id 推荐商品ID
+     * @param id     推荐商品ID
      * @param status 新状态
      * @return 更新结果
      */

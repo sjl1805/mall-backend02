@@ -69,7 +69,7 @@ public interface ProductSpecService extends IService<ProductSpec> {
      * @return 成功插入的数量
      */
     int batchInsertProductSpecs(List<ProductSpec> specList);
-    
+
     /**
      * 批量删除商品规格
      *
@@ -77,7 +77,7 @@ public interface ProductSpecService extends IService<ProductSpec> {
      * @return 成功删除的数量
      */
     int batchDeleteProductSpecs(List<Long> ids);
-    
+
     /**
      * 根据规格值查询商品规格
      *
@@ -86,17 +86,17 @@ public interface ProductSpecService extends IService<ProductSpec> {
      * @return 商品规格列表
      */
     List<ProductSpec> selectBySpecValue(Long productId, String specValue);
-    
+
     /**
      * 生成规格组合
      * 根据多个规格及其值，生成所有可能的规格组合
      *
      * @param productId 商品ID
-     * @param specList 规格列表
+     * @param specList  规格列表
      * @return 规格组合列表，每个组合为一个Map
      */
     List<Map<String, String>> generateSpecCombinations(Long productId, List<ProductSpec> specList);
-    
+
     /**
      * 检查规格是否被SKU引用
      *

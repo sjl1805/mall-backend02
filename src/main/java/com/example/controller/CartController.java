@@ -33,9 +33,10 @@ public class CartController {
     @GetMapping("/list")
     public CommonResult<IPage<Cart>> getCartList(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable Long userId) {
         IPage<Cart> pageParam = new Page<>(page, size);
-        return CommonResult.success(cartService.selectPage(pageParam));
+        return CommonResult.success(cartService.selectPage(pageParam, userId));
     }
 
     @Operation(summary = "根据ID查询购物车")

@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 
 /**
  * 用户地址服务实现类
- * 
+ * <p>
  * 该类实现了用户收货地址相关的业务逻辑，包括地址的添加、修改、删除和查询等功能。
  * 用户地址是电商系统中重要的个人信息，用于订单配送和发票开具。
  * 使用了Spring缓存机制对用户地址信息进行缓存，提高查询效率。
  * 使用MyBatis-Plus的ServiceImpl简化数据访问操作。
- * 
+ *
  * @author 31815
  * @description 针对表【user_address(用户收货地址表)】的数据库操作Service实现
  * @createDate 2025-02-24 12:03:50
@@ -38,7 +38,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 根据用户ID查询用户收货地址列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定用户的所有收货地址信息，
      * 用于用户选择收货地址和管理地址列表
      *
@@ -53,7 +53,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 分页查询用户地址数据
-     * 
+     * <p>
      * 该方法用于后台管理系统分页查看用户地址数据
      *
      * @param page 分页参数
@@ -77,7 +77,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 添加用户收货地址
-     * 
+     * <p>
      * 该方法用于用户添加新的收货地址，
      * 并清除相关用户的地址缓存，确保数据一致性。
      * 需要注意的是，如果设置了默认地址，可能需要更新其他地址的默认状态。
@@ -94,7 +94,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 更新用户收货地址
-     * 
+     * <p>
      * 该方法用于用户修改收货地址信息，
      * 并清除相关用户的地址缓存，确保数据一致性。
      * 如果修改了默认地址状态，可能需要同时更新其他地址的默认状态。
@@ -111,7 +111,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 删除用户收货地址
-     * 
+     * <p>
      * 该方法用于用户删除不需要的收货地址，
      * 并清除相关缓存，确保数据一致性。
      * 如果删除的是默认地址，可能需要选择新的默认地址。
@@ -128,7 +128,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 获取用户默认收货地址
-     * 
+     * <p>
      * 该方法从缓存或数据库获取用户设置的默认收货地址，
      * 用于订单创建时自动选择默认地址，提高用户便利性
      *
@@ -143,11 +143,11 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 设置默认收货地址
-     * 
+     * <p>
      * 该方法将指定地址设置为默认地址，同时取消其他地址的默认状态，
      * 用于用户修改默认收货地址的场景
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param addressId 地址ID
      * @return 设置结果
      */
@@ -164,13 +164,13 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 按地区查询收货地址
-     * 
+     * <p>
      * 该方法根据省份、城市筛选用户的收货地址，
      * 适用于大城市用户拥有多个地址时，按区域快速筛选的场景
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param province 省份
-     * @param city 城市
+     * @param city     城市
      * @return 收货地址列表
      */
     @Override
@@ -181,14 +181,14 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 获取用户常用地址
-     * 
+     * <p>
      * 该方法根据地址使用频率返回用户的常用地址，
      * 用于下单时智能推荐地址，提升用户体验
-     * 
+     * <p>
      * 注意：需要添加地址使用频率记录功能
      *
      * @param userId 用户ID
-     * @param limit 限制数量
+     * @param limit  限制数量
      * @return 常用地址列表
      */
     @Override
@@ -204,17 +204,17 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
             // 如果都不是默认地址，则按创建时间倒序
             return a2.getCreateTime().compareTo(a1.getCreateTime());
         });
-        
+
         // 返回指定数量的地址
         return addresses.stream().limit(limit == null ? 3 : limit).collect(Collectors.toList());
     }
 
     /**
      * 获取用户最近使用的地址
-     * 
+     * <p>
      * 该方法返回用户最近一次下单使用的收货地址，
      * 用于快速复用上次使用的地址，提高用户便利性
-     * 
+     * <p>
      * 注意：需要记录订单使用的地址信息
      *
      * @param userId 用户ID
@@ -230,7 +230,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 批量删除收货地址
-     * 
+     * <p>
      * 该方法批量删除指定的收货地址，
      * 适用于用户批量管理地址的场景
      *
@@ -244,7 +244,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         if (ids == null || ids.isEmpty()) {
             return false;
         }
-        
+
         // 批量删除
         int deletedCount = 0;
         for (Long id : ids) {
@@ -252,17 +252,17 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
                 deletedCount++;
             }
         }
-        
+
         return deletedCount > 0;
     }
 
     /**
      * 检查地址是否属于用户
-     * 
+     * <p>
      * 该方法验证指定地址是否属于该用户，
      * 用于防止越权操作，确保用户只能操作自己的地址
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param addressId 地址ID
      * @return 检查结果
      */
@@ -274,11 +274,11 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 复制地址
-     * 
+     * <p>
      * 该方法复制现有地址为新地址，便于用户快速创建相似地址，
      * 用于用户需要添加多个相似地址的场景，如同一小区不同楼栋
      *
-     * @param addressId 原地址ID
+     * @param addressId      原地址ID
      * @param newAddressName 新地址收件人姓名
      * @return 新地址
      */
@@ -291,7 +291,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         if (sourceAddress == null) {
             return null;
         }
-        
+
         // 创建新地址
         UserAddress newAddress = new UserAddress();
         newAddress.setUserId(sourceAddress.getUserId());
@@ -302,7 +302,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         newAddress.setCity(sourceAddress.getCity());
         newAddress.setDistrict(sourceAddress.getDistrict());
         newAddress.setDetailAddress(sourceAddress.getDetailAddress());
-        
+
         // 保存新地址
         if (insertUserAddress(newAddress)) {
             return newAddress;
@@ -312,7 +312,7 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
 
     /**
      * 检查地址是否可用
-     * 
+     * <p>
      * 该方法验证地址信息的完整性和有效性，
      * 用于在保存地址前进行基本验证，确保地址可用
      *
@@ -331,16 +331,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
                 !StringUtils.hasText(address.getDetailAddress())) {
             return false;
         }
-        
+
         // 检查手机号格式
         String phoneRegex = "^1[3-9]\\d{9}$";
-        if (!address.getReceiverPhone().matches(phoneRegex)) {
-            return false;
-        }
-        
+        return address.getReceiverPhone().matches(phoneRegex);
+
         // 更多验证规则可以根据实际需求添加
-        
-        return true;
     }
 }
 

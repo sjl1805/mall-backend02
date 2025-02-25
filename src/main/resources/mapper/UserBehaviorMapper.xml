@@ -61,8 +61,8 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_behavior
-        WHERE user_id = #{userId} 
-          AND behavior_type = #{behaviorType}
+        WHERE user_id = #{userId}
+        AND behavior_type = #{behaviorType}
         ORDER BY behavior_time DESC
     </select>
 
@@ -77,13 +77,12 @@
 
     <!-- 查询热门商品 -->
     <select id="selectPopularProducts" resultMap="ProductPopularityMap">
-        SELECT 
-            ub.product_id,
-            p.name,
-            COUNT(*) as behavior_count,
-            SUM(ub.weight) as popularity_score
+        SELECT ub.product_id,
+               p.name,
+               COUNT(*)       as behavior_count,
+               SUM(ub.weight) as popularity_score
         FROM user_behavior ub
-        JOIN products p ON ub.product_id = p.id
+                 JOIN products p ON ub.product_id = p.id
         WHERE ub.behavior_type = #{behaviorType}
           AND ub.behavior_time BETWEEN #{startTime} AND #{endTime}
         GROUP BY ub.product_id, p.name
@@ -93,14 +92,13 @@
 
     <!-- 获取用户兴趣分类 -->
     <select id="selectUserInterests" resultMap="UserInterestMap">
-        SELECT 
-            c.id as category_id,
-            c.name,
-            SUM(ub.weight) as interest_score,
-            COUNT(*) as behavior_count
+        SELECT c.id           as category_id,
+               c.name,
+               SUM(ub.weight) as interest_score,
+               COUNT(*)       as behavior_count
         FROM user_behavior ub
-        JOIN products p ON ub.product_id = p.id
-        JOIN category c ON p.category_id = c.id
+                 JOIN products p ON ub.product_id = p.id
+                 JOIN category c ON p.category_id = c.id
         WHERE ub.user_id = #{userId}
           AND ub.behavior_time BETWEEN #{startTime} AND #{endTime}
         GROUP BY c.id, c.name
@@ -109,13 +107,13 @@
 
     <!-- 批量插入用户行为 -->
     <insert id="batchInsertBehaviors">
-        INSERT INTO user_behavior 
+        INSERT INTO user_behavior
         (user_id, product_id, behavior_type, behavior_time, duration, weight, create_time, update_time)
         VALUES
         <foreach collection="behaviors" item="behavior" separator=",">
-            (#{behavior.userId}, #{behavior.productId}, #{behavior.behaviorType}, 
-             #{behavior.behaviorTime}, #{behavior.duration}, #{behavior.weight}, 
-             NOW(), NOW())
+            (#{behavior.userId}, #{behavior.productId}, #{behavior.behaviorType},
+            #{behavior.behaviorTime}, #{behavior.duration}, #{behavior.weight},
+            NOW(), NOW())
         </foreach>
     </insert>
 
@@ -163,14 +161,12 @@
     </select>
 
     <!-- 插入新用户行为 -->
-    <insert id="insertUserBehavior" parameterType="com.example.model.entity.UserBehavior" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user_behavior (
-            user_id, product_id, behavior_type, behavior_time, 
-            duration, weight, create_time, update_time
-        ) VALUES (
-            #{userId}, #{productId}, #{behaviorType}, #{behaviorTime}, 
-            #{duration}, #{weight}, NOW(), NOW()
-        )
+    <insert id="insertUserBehavior" parameterType="com.example.model.entity.UserBehavior" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO user_behavior (user_id, product_id, behavior_type, behavior_time,
+                                   duration, weight, create_time, update_time)
+        VALUES (#{userId}, #{productId}, #{behaviorType}, #{behaviorTime},
+                #{duration}, #{weight}, NOW(), NOW())
     </insert>
 
     <!-- 更新用户行为信息 -->
@@ -190,7 +186,9 @@
 
     <!-- 根据ID删除用户行为 -->
     <delete id="deleteUserBehavior">
-        DELETE FROM user_behavior WHERE id = #{id}
+        DELETE
+        FROM user_behavior
+        WHERE id = #{id}
     </delete>
 
     <!-- 根据用户ID和时间范围查询行为 -->
@@ -199,44 +197,39 @@
         <include refid="Base_Column_List"/>
         FROM user_behavior
         WHERE user_id = #{userId}
-          AND behavior_time BETWEEN #{startTime} AND #{endTime}
-        ORDER BY behavior_time ASC
+        AND behavior_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY behavior_time
     </select>
 
     <!-- 分析用户行为转化 -->
     <select id="analyzeBehaviorConversion" resultType="java.util.Map">
-        SELECT 
-            COUNT(DISTINCT s.user_id) as source_users,
-            COUNT(DISTINCT t.user_id) as target_users,
-            ROUND(COUNT(DISTINCT t.user_id) / COUNT(DISTINCT s.user_id) * 100, 2) as conversion_rate
-        FROM (
-            SELECT user_id
-            FROM user_behavior
-            WHERE behavior_type = #{sourceType}
-              AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
-            GROUP BY user_id
-        ) s
-        LEFT JOIN (
-            SELECT user_id
-            FROM user_behavior
-            WHERE behavior_type = #{targetType}
-              AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
-            GROUP BY user_id
-        ) t ON s.user_id = t.user_id
+        SELECT COUNT(DISTINCT s.user_id)                                             as source_users,
+               COUNT(DISTINCT t.user_id)                                             as target_users,
+               ROUND(COUNT(DISTINCT t.user_id) / COUNT(DISTINCT s.user_id) * 100, 2) as conversion_rate
+        FROM (SELECT user_id
+              FROM user_behavior
+              WHERE behavior_type = #{sourceType}
+                AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+              GROUP BY user_id) s
+                 LEFT JOIN (SELECT user_id
+                            FROM user_behavior
+                            WHERE behavior_type = #{targetType}
+                              AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+                            GROUP BY user_id) t ON s.user_id = t.user_id
     </select>
 
     <!-- 查询用户行为热力图数据 -->
     <select id="selectBehaviorHeatmapData" resultType="java.util.Map">
-        SELECT 
-            HOUR(behavior_time) as hour_of_day,
-            DAYOFWEEK(behavior_time) as day_of_week,
-            COUNT(*) as behavior_count
+        SELECT
+        HOUR(behavior_time) as hour_of_day,
+        DAYOFWEEK(behavior_time) as day_of_week,
+        COUNT(*) as behavior_count
         FROM user_behavior
         WHERE user_id = #{userId}
-          <if test="behaviorType != null">
+        <if test="behaviorType != null">
             AND behavior_type = #{behaviorType}
-          </if>
-          AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        </if>
+        AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
         GROUP BY HOUR(behavior_time), DAYOFWEEK(behavior_time)
         ORDER BY day_of_week, hour_of_day
     </select>
@@ -244,15 +237,16 @@
     <!-- 查询用户行为轨迹 -->
     <select id="selectUserBehaviorTrajectory" resultMap="BaseResultMap">
         SELECT ub.*, p.name as product_name, c.name as category_name
-        FROM (
-            SELECT *
-            FROM user_behavior
-            WHERE user_id = #{userId}
-              AND behavior_time BETWEEN #{startTime} AND #{endTime}
-            ORDER BY behavior_time ASC
-            LIMIT #{limit}
-        ) ub
-        JOIN products p ON ub.product_id = p.id
-        JOIN category c ON p.category_id = c.id
+        FROM (SELECT *
+              FROM user_behavior
+              WHERE user_id = #{userId}
+                AND behavior_time BETWEEN #{startTime} AND #{endTime}
+              ORDER BY behavior_time
+              LIMIT #{limit}) ub
+                 JOIN products p ON ub.product_id = p.id
+                 JOIN category c ON p.category_id = c.id
+    </select>
+    <select id="selectPage" resultType="com.example.model.entity.UserBehavior">
+        SELECT * FROM user_behavior
     </select>
 </mapper>

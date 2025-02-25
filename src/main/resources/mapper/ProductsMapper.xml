@@ -104,7 +104,7 @@
         FROM products
         WHERE price BETWEEN #{minPrice} AND #{maxPrice}
         AND status = 1
-        ORDER BY price ASC
+        ORDER BY price
     </select>
 
     <!-- 根据状态查询商品 -->
@@ -120,74 +120,46 @@
     <select id="selectHotProducts" resultMap="BaseResultMap">
         SELECT p.*
         FROM products p
-        JOIN (
-            SELECT product_id, COUNT(*) as count
-            FROM order_item
-            GROUP BY product_id
-            ORDER BY count DESC
-            LIMIT #{limit}
-        ) hot ON p.id = hot.product_id
+                 JOIN (SELECT product_id, COUNT(*) as count
+                       FROM order_item
+                       GROUP BY product_id
+                       ORDER BY count DESC
+                       LIMIT #{limit}) hot ON p.id = hot.product_id
         WHERE p.status = 1
         ORDER BY hot.count DESC
     </select>
 
-    <!-- 高级条件查询商品 -->
-    <select id="selectProductsByCondition" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM products
-        <where>
-            <if test="categoryId != null">
-                AND category_id = #{categoryId}
-            </if>
-            <if test="keyword != null and keyword != ''">
-                AND name LIKE CONCAT('%', #{keyword}, '%')
-            </if>
-            <if test="minPrice != null">
-                AND price >= #{minPrice}
-            </if>
-            <if test="maxPrice != null">
-                AND price <= #{maxPrice}
-            </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-        </where>
-        ORDER BY create_time DESC
-    </select>
 
     <!-- 批量插入商品 -->
     <insert id="batchInsertProducts">
         INSERT INTO products (category_id, name, description, price, stock, images, create_time, update_time, status)
         VALUES
         <foreach collection="productList" item="product" separator=",">
-            (#{product.categoryId}, #{product.name}, #{product.description}, 
-             #{product.price}, #{product.stock}, #{product.images}, 
-             NOW(), NOW(), #{product.status})
+            (#{product.categoryId}, #{product.name}, #{product.description},
+            #{product.price}, #{product.stock}, #{product.images},
+            NOW(), NOW(), #{product.status})
         </foreach>
     </insert>
 
     <!-- 减少商品库存 -->
     <update id="decreaseStock">
         UPDATE products
-        SET stock = stock - #{quantity},
+        SET stock       = stock - #{quantity},
             update_time = NOW()
         WHERE id = #{id}
-        AND stock >= #{quantity}
+          AND stock >= #{quantity}
     </update>
 
     <!-- 查询推荐商品 -->
     <select id="selectRecommendProducts" resultMap="BaseResultMap">
         SELECT p.*
         FROM products p
-        JOIN (
-            SELECT product_id, COUNT(*) as view_count
-            FROM user_behavior
-            WHERE behavior_type IN (1, 2, 3)  -- 浏览、收藏、购买行为
-            GROUP BY product_id
-            ORDER BY view_count DESC
-            LIMIT #{limit}
-        ) r ON p.id = r.product_id
+                 JOIN (SELECT product_id, COUNT(*) as view_count
+                       FROM user_behavior
+                       WHERE behavior_type IN (1, 2, 3) -- 浏览、收藏、购买行为
+                       GROUP BY product_id
+                       ORDER BY view_count DESC
+                       LIMIT #{limit}) r ON p.id = r.product_id
         WHERE p.status = 1
         ORDER BY r.view_count DESC
     </select>
@@ -203,18 +175,6 @@
         LIMIT #{limit}
     </select>
 
-    <!-- 查询折扣商品 -->
-    <select id="selectDiscountProducts" resultMap="BaseResultMap">
-        SELECT p.*
-        FROM products p
-        JOIN product_promotion pp ON p.id = pp.product_id
-        WHERE p.status = 1
-        AND pp.type = 1  -- 折扣类型
-        AND pp.start_time <= NOW()
-        AND pp.end_time >= NOW()
-        ORDER BY pp.discount_rate ASC
-        LIMIT #{limit}
-    </select>
 
     <!-- 全文搜索商品 -->
     <select id="fullTextSearch" resultMap="BaseResultMap">
@@ -223,14 +183,14 @@
         FROM products
         WHERE status = 1
         AND (
-            name LIKE CONCAT('%', #{keyword}, '%') 
-            OR description LIKE CONCAT('%', #{keyword}, '%')
+        name LIKE CONCAT('%', #{keyword}, '%')
+        OR description LIKE CONCAT('%', #{keyword}, '%')
         )
         ORDER BY
-        CASE 
-            WHEN name LIKE CONCAT(#{keyword}, '%') THEN 1
-            WHEN name LIKE CONCAT('%', #{keyword}, '%') THEN 2
-            ELSE 3
+        CASE
+        WHEN name LIKE CONCAT(#{keyword}, '%') THEN 1
+        WHEN name LIKE CONCAT('%', #{keyword}, '%') THEN 2
+        ELSE 3
         END,
         create_time DESC
     </select>
@@ -238,7 +198,7 @@
     <!-- 增加商品库存 -->
     <update id="increaseStock">
         UPDATE products
-        SET stock = stock + #{quantity},
+        SET stock       = stock + #{quantity},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -247,40 +207,27 @@
     <update id="batchUpdateStatus">
         UPDATE products
         SET status = #{status},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
 
-    <!-- 获取库存预警商品 -->
-    <select id="selectLowStockProducts" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM products
-        WHERE status = 1
-        AND stock <= #{threshold}
-        ORDER BY stock ASC
-    </select>
-
     <!-- 统计商品销量排行 -->
     <select id="getProductSalesRanking" resultType="java.util.Map">
-        SELECT 
-            p.id,
-            p.name,
-            p.price,
-            SUM(oi.quantity) as sales_count,
-            SUM(oi.quantity * oi.price) as sales_amount
+        SELECT
+        p.id,
+        p.name,
+        p.price,
+        SUM(oi.quantity) as sales_count,
+        SUM(oi.quantity * oi.price) as sales_amount
         FROM products p
         JOIN order_item oi ON p.id = oi.product_id
         JOIN orders o ON oi.order_id = o.id
-        WHERE o.order_status >= 3  -- 已支付的订单
+        WHERE o.order_status >= 3 -- 已支付的订单
         <if test="startDate != null">
             AND o.pay_time >= #{startDate}
-        </if>
-        <if test="endDate != null">
-            AND o.pay_time <= #{endDate}
         </if>
         GROUP BY p.id, p.name, p.price
         ORDER BY sales_count DESC
@@ -290,25 +237,21 @@
     <!-- 获取完整商品详情 -->
     <select id="selectProductDetail" resultMap="BaseResultMap">
         SELECT p.*,
-               c.name as category_name,
-               COALESCE(r.avg_rating, 0) as rating,
+               c.name                      as category_name,
+               COALESCE(r.avg_rating, 0)   as rating,
                COALESCE(r.review_count, 0) as review_count,
-               COALESCE(s.sales_count, 0) as sales_count
+               COALESCE(s.sales_count, 0)  as sales_count
         FROM products p
-        LEFT JOIN category c ON p.category_id = c.id
-        LEFT JOIN (
-            SELECT product_id, 
-                   COUNT(*) as review_count,
-                   AVG(rating) as avg_rating
-            FROM product_review
-            GROUP BY product_id
-        ) r ON p.id = r.product_id
-        LEFT JOIN (
-            SELECT product_id, 
-                   SUM(quantity) as sales_count
-            FROM order_item
-            GROUP BY product_id
-        ) s ON p.id = s.product_id
+                 LEFT JOIN category c ON p.category_id = c.id
+                 LEFT JOIN (SELECT product_id,
+                                   COUNT(*)    as review_count,
+                                   AVG(rating) as avg_rating
+                            FROM product_review
+                            GROUP BY product_id) r ON p.id = r.product_id
+                 LEFT JOIN (SELECT product_id,
+                                   SUM(quantity) as sales_count
+                            FROM order_item
+                            GROUP BY product_id) s ON p.id = s.product_id
         WHERE p.id = #{id}
     </select>
 </mapper>

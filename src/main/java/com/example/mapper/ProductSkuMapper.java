@@ -68,7 +68,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
     /**
      * 根据规格值精确匹配SKU
      *
-     * @param productId 商品ID
+     * @param productId  商品ID
      * @param specValues 规格值JSON字符串
      * @return 匹配的SKU
      */
@@ -85,7 +85,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
     /**
      * 减少SKU库存
      *
-     * @param id SKU ID
+     * @param id       SKU ID
      * @param quantity 减少数量
      * @return 更新结果
      */
@@ -94,7 +94,7 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
     /**
      * 增加SKU销量
      *
-     * @param id SKU ID
+     * @param id       SKU ID
      * @param quantity 增加数量
      * @return 更新结果
      */
@@ -112,13 +112,13 @@ public interface ProductSkuMapper extends BaseMapper<ProductSku> {
      * 根据价格区间查询SKU
      *
      * @param productId 商品ID
-     * @param minPrice 最低价格
-     * @param maxPrice 最高价格
+     * @param minPrice  最低价格
+     * @param maxPrice  最高价格
      * @return SKU列表
      */
     List<ProductSku> selectByPriceRange(
             @Param("productId") Long productId,
-            @Param("minPrice") Double minPrice, 
+            @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice);
 }
 

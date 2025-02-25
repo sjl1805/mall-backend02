@@ -76,9 +76,9 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
     /**
      * 按地区查询用户地址
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param province 省份
-     * @param city 城市
+     * @param city     城市
      * @return 地址列表
      */
     List<UserAddress> selectByRegion(
@@ -90,7 +90,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
      * 更新默认地址状态
      * 将指定地址设为默认，同时取消该用户其他地址的默认状态
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param addressId 要设为默认的地址ID
      * @return 影响行数
      */
@@ -124,7 +124,7 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
      * 查询用户在指定城市的地址数量
      *
      * @param userId 用户ID
-     * @param city 城市
+     * @param city   城市
      * @return 地址数量
      */
     int countByCity(@Param("userId") Long userId, @Param("city") String city);

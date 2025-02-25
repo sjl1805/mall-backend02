@@ -16,11 +16,11 @@ import java.util.List;
 
 /**
  * 用户优惠券服务实现类
- * 
+ * <p>
  * 该类实现了用户优惠券相关的业务逻辑，包括优惠券的领取、使用、查询等功能。
  * 使用了Spring缓存机制对用户优惠券信息进行缓存，提高查询效率。
  * 使用MyBatis-Plus的ServiceImpl简化数据访问操作。
- * 
+ *
  * @author 31815
  * @description 针对表【user_coupon(用户优惠券表)】的数据库操作Service实现
  * @createDate 2025-02-24 12:03:44
@@ -35,7 +35,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
 
     /**
      * 根据用户ID查询用户优惠券列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定用户的所有优惠券信息
      *
      * @param userId 用户ID
@@ -49,7 +49,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
 
     /**
      * 添加用户优惠券
-     * 
+     * <p>
      * 该方法用于用户领取优惠券时，向用户优惠券表中插入记录，
      * 并清除相关用户的优惠券缓存，确保数据一致性
      *
@@ -65,7 +65,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
 
     /**
      * 更新用户优惠券
-     * 
+     * <p>
      * 该方法用于更新用户优惠券信息，比如标记优惠券为已使用状态，
      * 并清除相关用户的优惠券缓存，确保数据一致性
      *
@@ -81,7 +81,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
 
     /**
      * 删除用户优惠券
-     * 
+     * <p>
      * 该方法用于删除用户优惠券记录，
      * 并清除相关缓存，确保数据一致性
      *
@@ -119,7 +119,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
 
     /**
      * 根据用户ID和状态查询用户优惠券列表
-     * 
+     * <p>
      * 该方法用于查询指定用户在特定状态下的优惠券，
      * 如未使用的优惠券、已使用的优惠券、已过期的优惠券等
      *

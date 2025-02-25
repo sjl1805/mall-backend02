@@ -92,7 +92,7 @@ public interface OrderItemService extends IService<OrderItem> {
      *
      * @param productId 商品ID
      * @param startTime 开始时间（可选）
-     * @param endTime 结束时间（可选）
+     * @param endTime   结束时间（可选）
      * @return 销量
      */
     int countProductSales(Long productId, Date startTime, Date endTime);
@@ -101,8 +101,8 @@ public interface OrderItemService extends IService<OrderItem> {
      * 查询热销商品
      *
      * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param limit 限制数量
+     * @param endTime   结束时间
+     * @param limit     限制数量
      * @return 热销商品列表
      */
     List<Map<String, Object>> selectHotProducts(Date startTime, Date endTime, Integer limit);
@@ -118,7 +118,7 @@ public interface OrderItemService extends IService<OrderItem> {
     /**
      * 更新订单项的评价状态
      *
-     * @param id 订单项ID
+     * @param id           订单项ID
      * @param reviewStatus 评价状态
      * @return 更新结果
      */
@@ -127,7 +127,7 @@ public interface OrderItemService extends IService<OrderItem> {
     /**
      * 更新订单项的退款状态
      *
-     * @param id 订单项ID
+     * @param id           订单项ID
      * @param refundStatus 退款状态
      * @return 更新结果
      */
@@ -137,7 +137,7 @@ public interface OrderItemService extends IService<OrderItem> {
      * 获取用户购买过的商品ID列表
      *
      * @param userId 用户ID
-     * @param limit 限制数量
+     * @param limit  限制数量
      * @return 商品ID列表
      */
     List<Long> getUserPurchasedProductIds(Long userId, Integer limit);

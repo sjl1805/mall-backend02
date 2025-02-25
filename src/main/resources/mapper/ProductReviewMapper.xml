@@ -85,7 +85,7 @@
         SELECT AVG(rating) as avg_rating
         FROM product_review
         WHERE product_id = #{productId}
-        AND status = 1
+          AND status = 1
     </select>
 
     <!-- 统计各评分数量 -->
@@ -93,7 +93,7 @@
         SELECT rating, COUNT(*) as count
         FROM product_review
         WHERE product_id = #{productId}
-        AND status = 1
+          AND status = 1
         GROUP BY rating
         ORDER BY rating DESC
     </select>
@@ -123,7 +123,7 @@
     <update id="batchUpdateStatus">
         UPDATE product_review
         SET status = #{status},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -132,12 +132,14 @@
 
     <!-- 查询评价详情（含用户和商品信息） -->
     <select id="selectReviewDetail" resultMap="DetailResultMap">
-        SELECT r.*, 
-               u.nickname, u.avatar,
-               p.name as product_name, p.images as product_image
+        SELECT r.*,
+               u.nickname,
+               u.avatar,
+               p.name   as product_name,
+               p.images as product_image
         FROM product_review r
-        LEFT JOIN users u ON r.user_id = u.id
-        LEFT JOIN products p ON r.product_id = p.id
+                 LEFT JOIN users u ON r.user_id = u.id
+                 LEFT JOIN products p ON r.product_id = p.id
         WHERE r.id = #{id}
     </select>
 
@@ -156,10 +158,4 @@
         WHERE status = 0
     </select>
 
-    <!-- 更新评价有用度 -->
-    <update id="updateUsefulCount">
-        UPDATE product_review_useful
-        SET useful_count = useful_count + #{increment}
-        WHERE review_id = #{id}
-    </update>
 </mapper>

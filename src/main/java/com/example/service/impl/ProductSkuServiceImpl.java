@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * 商品SKU服务实现类
- * 
+ * <p>
  * 该类实现了商品SKU(Stock Keeping Unit，库存单位)相关的业务逻辑，包括SKU的添加、修改、删除和查询等功能。
  * 商品SKU是电商系统中最小的库存单位，代表了特定规格组合的商品实体，管理着价格、库存等核心商品属性。
  * 使用了Spring缓存机制对SKU信息进行缓存，提高查询效率，减少数据库压力。
@@ -36,7 +36,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 根据商品ID查询SKU列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定商品的所有SKU信息，
      * 用于商品详情页展示不同规格组合的价格、库存等信息
      *
@@ -51,7 +51,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 分页查询商品SKU数据
-     * 
+     * <p>
      * 该方法用于后台管理系统分页查看商品SKU数据，
      * 便于管理员批量管理和查看SKU信息
      *
@@ -65,7 +65,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 根据ID查询商品SKU
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定ID的SKU详情，
      * 用于购物车、订单创建等场景获取准确的价格和库存信息
      *
@@ -80,7 +80,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 添加商品SKU
-     * 
+     * <p>
      * 该方法用于后台管理系统添加新的商品SKU，
      * 通常在商品创建或编辑过程中批量创建多个SKU，
      * 提供不同规格组合的价格和库存，并清除相关缓存
@@ -97,7 +97,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 更新商品SKU
-     * 
+     * <p>
      * 该方法用于后台管理系统更新商品SKU信息，
      * 如修改价格、库存、状态等关键属性，
      * 是商品管理的核心操作之一，并清除相关缓存
@@ -114,7 +114,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     /**
      * 删除商品SKU
-     * 
+     * <p>
      * 该方法用于后台管理系统删除商品SKU，
      * 需要注意的是，删除SKU前应确保没有相关的订单或购物车引用，
      * 通常建议使用软删除而非物理删除，并清除相关缓存

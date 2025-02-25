@@ -3,12 +3,13 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Products;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 /**
  * @author 31815
@@ -110,24 +111,6 @@ public interface ProductsMapper extends BaseMapper<Products> {
      */
     List<Products> selectHotProducts(@Param("limit") Integer limit);
 
-    /**
-     * 高级条件查询商品
-     *
-     * @param categoryId 分类ID（可选）
-     * @param keyword 关键词（可选）
-     * @param minPrice 最低价格（可选）
-     * @param maxPrice 最高价格（可选）
-     * @param status 状态（可选）
-     * @param page 分页参数
-     * @return 分页商品数据
-     */
-    IPage<Products> selectProductsByCondition(
-            @Param("categoryId") Long categoryId,
-            @Param("keyword") String keyword,
-            @Param("minPrice") Double minPrice,
-            @Param("maxPrice") Double maxPrice,
-            @Param("status") Integer status,
-            IPage<Products> page);
 
     /**
      * 批量插入商品
@@ -140,7 +123,7 @@ public interface ProductsMapper extends BaseMapper<Products> {
     /**
      * 减少商品库存
      *
-     * @param id 商品ID
+     * @param id       商品ID
      * @param quantity 减少数量
      * @return 更新结果
      */
@@ -157,74 +140,60 @@ public interface ProductsMapper extends BaseMapper<Products> {
     /**
      * 查询新品
      *
-     * @param days 最近天数
+     * @param days  最近天数
      * @param limit 限制数量
      * @return 新品列表
      */
     List<Products> selectNewProducts(
             @Param("days") Integer days,
             @Param("limit") Integer limit);
-    
-    /**
-     * 查询折扣商品
-     *
-     * @param limit 限制数量
-     * @return 折扣商品列表
-     */
-    List<Products> selectDiscountProducts(@Param("limit") Integer limit);
-    
+
+
     /**
      * 全文搜索商品
      *
      * @param keyword 关键词
-     * @param page 分页参数
+     * @param page    分页参数
      * @return 商品分页数据
      */
     IPage<Products> fullTextSearch(
             @Param("keyword") String keyword,
             IPage<Products> page);
-    
+
     /**
      * 增加商品库存
      *
-     * @param id 商品ID
+     * @param id       商品ID
      * @param quantity 增加数量
      * @return 更新结果
      */
     int increaseStock(@Param("id") Long id, @Param("quantity") Integer quantity);
-    
+
     /**
      * 批量更新商品状态
      *
-     * @param ids 商品ID列表
+     * @param ids    商品ID列表
      * @param status 状态值
      * @return 更新结果
      */
     int batchUpdateStatus(
             @Param("ids") List<Long> ids,
             @Param("status") Integer status);
-    
-    /**
-     * 获取库存预警商品
-     *
-     * @param threshold 预警阈值
-     * @return 库存预警商品列表
-     */
-    List<Products> selectLowStockProducts(@Param("threshold") Integer threshold);
-    
+
     /**
      * 统计商品销量排行
      *
      * @param startDate 开始日期
-     * @param endDate 结束日期
-     * @param limit 限制数量
+     * @param endDate   结束日期
+     * @param limit     限制数量
      * @return 销量排行数据
      */
+    @MapKey("product_id")
     List<Map<String, Object>> getProductSalesRanking(
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("limit") Integer limit);
-    
+
     /**
      * 获取完整商品详情（包含分类名称、评价等）
      *

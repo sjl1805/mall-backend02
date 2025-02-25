@@ -64,7 +64,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
     /**
      * 更新收藏夹商品数量
      *
-     * @param id 收藏夹ID
+     * @param id    收藏夹ID
      * @param count 增加数量，可为负数（减少）
      * @return 更新结果
      */
@@ -81,7 +81,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
     /**
      * 更新收藏夹排序
      *
-     * @param id 收藏夹ID
+     * @param id   收藏夹ID
      * @param sort 排序值
      * @return 更新结果
      */
@@ -115,7 +115,7 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
      * 按名称查询收藏夹
      *
      * @param userId 用户ID
-     * @param name 收藏夹名称（模糊匹配）
+     * @param name   收藏夹名称（模糊匹配）
      * @return 收藏夹列表
      */
     List<FavoriteFolder> selectByName(Long userId, String name);
@@ -131,12 +131,12 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
     /**
      * 批量更新收藏夹公开状态
      *
-     * @param ids 收藏夹ID列表
+     * @param ids      收藏夹ID列表
      * @param isPublic 公开状态
      * @return 更新结果
      */
     boolean batchUpdatePublicStatus(List<Long> ids, Integer isPublic);
-    
+
     /**
      * 创建默认收藏夹
      *
@@ -144,20 +144,20 @@ public interface FavoriteFolderService extends IService<FavoriteFolder> {
      * @return 创建的收藏夹
      */
     FavoriteFolder createDefaultFolder(Long userId);
-    
+
     /**
      * 检查收藏夹归属权
      *
      * @param folderId 收藏夹ID
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @return 是否属于该用户
      */
     boolean checkOwnership(Long folderId, Long userId);
-    
+
     /**
      * 移动商品到新收藏夹
      *
-     * @param favoriteIds 收藏ID列表
+     * @param favoriteIds    收藏ID列表
      * @param targetFolderId 目标收藏夹ID
      * @return 移动结果
      */

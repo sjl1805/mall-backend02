@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * 收藏夹服务实现类
- * 
+ * <p>
  * 该类实现了收藏夹相关的业务逻辑，包括收藏夹的创建、查询、更新和删除等功能。
  * 收藏夹是用户对收藏商品进行分类管理的工具，能够提升用户收藏体验和检索效率。
  * 用户可以创建多个收藏夹，如"心愿单"、"喜欢的服装"、"下次购买"等，满足不同场景的收藏需求。
@@ -37,7 +37,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 根据用户ID查询收藏夹列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定用户的所有收藏夹，
      * 用于个人中心展示用户创建的收藏分类，便于用户管理收藏商品
      *
@@ -52,7 +52,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 分页查询收藏夹数据
-     * 
+     * <p>
      * 该方法用于后台管理系统分页查看用户收藏夹数据，
      * 可用于分析用户收藏习惯和偏好
      *
@@ -66,7 +66,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 根据ID查询收藏夹
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定ID的收藏夹详情，
      * 用于查看特定收藏夹的内容或进行编辑操作
      *
@@ -81,7 +81,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 创建收藏夹
-     * 
+     * <p>
      * 该方法用于用户创建新的收藏夹，
      * 可以指定收藏夹名称、图标、排序等属性，
      * 为用户提供更有组织的收藏管理功能
@@ -98,7 +98,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 更新收藏夹
-     * 
+     * <p>
      * 该方法用于用户修改收藏夹信息，如重命名、更改图标等，
      * 增强用户对收藏内容的个性化管理能力，
      * 并清除相关缓存，确保数据一致性
@@ -115,7 +115,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 删除收藏夹
-     * 
+     * <p>
      * 该方法用于用户删除不再需要的收藏夹，
      * 需要注意的是，删除收藏夹可能需要同时处理该夹中的收藏商品，
      * 建议使用事务确保数据完整性，并清除相关缓存
@@ -132,11 +132,11 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 更新收藏夹商品数量
-     * 
+     * <p>
      * 该方法在添加或移除收藏商品时更新收藏夹的商品计数，
      * 保持收藏夹数据的准确性
      *
-     * @param id 收藏夹ID
+     * @param id    收藏夹ID
      * @param count 增加数量，可为负数（减少）
      * @return 更新结果
      */
@@ -149,7 +149,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 刷新收藏夹商品数量
-     * 
+     * <p>
      * 该方法通过查询关联的商品收藏记录刷新收藏夹的商品计数，
      * 用于修复因异常导致的计数不准确问题
      *
@@ -165,11 +165,11 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 更新收藏夹排序
-     * 
+     * <p>
      * 该方法用于用户调整收藏夹在列表中的显示顺序，
      * 提供个性化的收藏夹管理体验
      *
-     * @param id 收藏夹ID
+     * @param id   收藏夹ID
      * @param sort 排序值
      * @return 更新结果
      */
@@ -182,7 +182,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 获取用户收藏夹（按排序）
-     * 
+     * <p>
      * 该方法根据设定的排序获取用户的收藏夹列表，
      * 适用于收藏夹列表页面展示
      *
@@ -197,7 +197,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 查询用户公开收藏夹
-     * 
+     * <p>
      * 该方法获取用户设置为公开的收藏夹列表，
      * 用于个人主页展示和社交分享功能
      *
@@ -212,7 +212,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 查询其他用户的公开收藏夹
-     * 
+     * <p>
      * 该方法获取除指定用户外的其他用户公开的收藏夹，
      * 用于社区和推荐功能
      *
@@ -227,12 +227,12 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 按名称查询收藏夹
-     * 
+     * <p>
      * 该方法用于收藏夹搜索功能，支持模糊匹配收藏夹名称，
      * 帮助用户快速找到特定的收藏夹
      *
      * @param userId 用户ID
-     * @param name 收藏夹名称（模糊匹配）
+     * @param name   收藏夹名称（模糊匹配）
      * @return 收藏夹列表
      */
     @Override
@@ -243,7 +243,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 批量删除收藏夹
-     * 
+     * <p>
      * 该方法用于批量删除多个收藏夹，
      * 适用于收藏夹管理页面的批量操作
      *
@@ -263,11 +263,11 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 批量更新收藏夹公开状态
-     * 
+     * <p>
      * 该方法用于批量修改多个收藏夹的公开/私密状态，
      * 适用于隐私设置调整和批量操作
      *
-     * @param ids 收藏夹ID列表
+     * @param ids      收藏夹ID列表
      * @param isPublic 公开状态
      * @return 更新结果
      */
@@ -283,7 +283,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 创建默认收藏夹
-     * 
+     * <p>
      * 该方法在用户注册后自动创建一个默认收藏夹，
      * 通常命名为"我的收藏"或"默认收藏夹"
      *
@@ -300,7 +300,7 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
         folder.setIsPublic(0); // 默认私密
         folder.setItemCount(0);
         folder.setSort(0); // 默认排序最前
-        
+
         if (insertFavoriteFolder(folder)) {
             return folder;
         }
@@ -309,12 +309,12 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 检查收藏夹归属权
-     * 
+     * <p>
      * 该方法验证收藏夹是否属于指定用户，
      * 用于权限控制，确保用户只能操作自己的收藏夹
      *
      * @param folderId 收藏夹ID
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @return 是否属于该用户
      */
     @Override
@@ -325,11 +325,11 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
 
     /**
      * 移动商品到新收藏夹
-     * 
+     * <p>
      * 该方法将一组收藏商品移动到指定的收藏夹，
      * 需要同时更新原收藏夹和目标收藏夹的商品计数
      *
-     * @param favoriteIds 收藏ID列表
+     * @param favoriteIds    收藏ID列表
      * @param targetFolderId 目标收藏夹ID
      * @return 移动结果
      */
@@ -337,22 +337,19 @@ public class FavoriteFolderServiceImpl extends ServiceImpl<FavoriteFolderMapper,
     @Transactional
     @CacheEvict(value = "favoriteFolders", allEntries = true)
     public boolean moveFavorites(List<Long> favoriteIds, Long targetFolderId) {
-        if (favoriteIds == null || favoriteIds.isEmpty()) {
-            return false;
-        }
-        
+        return favoriteIds != null && !favoriteIds.isEmpty();
+
         // 实际实现需要调用ProductFavoriteMapper的相关方法
         // 1. 更新收藏记录的folderId
         // 2. 更新原收藏夹和目标收藏夹的itemCount
-        
+
         // 简化实现，假设有一个方法可以移动收藏记录
         // boolean result = productFavoriteMapper.batchMoveToFolder(favoriteIds, targetFolderId);
-        
+
         // 之后需要刷新相关收藏夹的计数
         // refreshItemCount(sourceFolderId);
         // refreshItemCount(targetFolderId);
-        
-        return true; // 简化实现，实际应返回真实结果
+// 简化实现，实际应返回真实结果
     }
 }
 

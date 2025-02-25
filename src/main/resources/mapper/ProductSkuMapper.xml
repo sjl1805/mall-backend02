@@ -100,27 +100,28 @@
     <!-- 减少SKU库存 -->
     <update id="decreaseStock">
         UPDATE product_sku
-        SET stock = stock - #{quantity},
+        SET stock       = stock - #{quantity},
             update_time = NOW()
         WHERE id = #{id}
-        AND stock >= #{quantity}
+          AND stock >= #{quantity}
     </update>
 
     <!-- 增加SKU销量 -->
     <update id="increaseSales">
         UPDATE product_sku
-        SET sales = sales + #{quantity},
+        SET sales       = sales + #{quantity},
             update_time = NOW()
         WHERE id = #{id}
     </update>
 
     <!-- 批量插入SKU -->
     <insert id="batchInsertSkus">
-        INSERT INTO product_sku (product_id, spec_values, price, stock, sales, main_image, create_time, update_time, status)
+        INSERT INTO product_sku (product_id, spec_values, price, stock, sales, main_image, create_time, update_time,
+        status)
         VALUES
         <foreach collection="skuList" item="sku" separator=",">
-            (#{sku.productId}, #{sku.specValues}, #{sku.price}, #{sku.stock}, 
-             #{sku.sales}, #{sku.mainImage}, NOW(), NOW(), #{sku.status})
+            (#{sku.productId}, #{sku.specValues}, #{sku.price}, #{sku.stock},
+            #{sku.sales}, #{sku.mainImage}, NOW(), NOW(), #{sku.status})
         </foreach>
     </insert>
 
@@ -132,6 +133,6 @@
         WHERE product_id = #{productId}
         AND price BETWEEN #{minPrice} AND #{maxPrice}
         AND status = 1
-        ORDER BY price ASC
+        ORDER BY price
     </select>
 </mapper>

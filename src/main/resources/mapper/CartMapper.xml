@@ -56,10 +56,9 @@
     <insert id="insertOrUpdateCart" parameterType="com.example.model.entity.Cart">
         INSERT INTO cart (user_id, product_id, quantity, checked, create_time, update_time)
         VALUES (#{userId}, #{productId}, #{quantity}, #{checked}, NOW(), NOW())
-        ON DUPLICATE KEY UPDATE 
-            quantity = quantity + #{quantity},
-            checked = #{checked},
-            update_time = NOW()
+        ON DUPLICATE KEY UPDATE quantity    = quantity + #{quantity},
+                                checked     = #{checked},
+                                update_time = NOW()
     </insert>
 
     <!-- 更新购物车商品信息 -->
@@ -81,14 +80,14 @@
     <!-- 查询购物车商品详情（增加商品状态过滤） -->
     <select id="selectCartDetail" resultType="java.util.Map">
         SELECT c.*,
-               p.name as product_name,
-               p.price as product_price,
-               p.stock as product_stock,
-               p.images as product_images,
-               p.status as product_status,
+               p.name                 as product_name,
+               p.price                as product_price,
+               p.stock                as product_stock,
+               p.images               as product_images,
+               p.status               as product_status,
                (p.price * c.quantity) as total_price
         FROM cart c
-        LEFT JOIN product p ON c.product_id = p.id
+                 LEFT JOIN products p ON c.product_id = p.id
         WHERE c.user_id = #{userId}
         ORDER BY c.create_time DESC
     </select>
@@ -96,7 +95,7 @@
     <!-- 更新购物车商品数量 -->
     <update id="updateQuantity">
         UPDATE cart
-        SET quantity = #{quantity},
+        SET quantity    = #{quantity},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -104,7 +103,7 @@
     <!-- 更新购物车商品勾选状态 -->
     <update id="updateChecked">
         UPDATE cart
-        SET checked = #{checked},
+        SET checked     = #{checked},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -112,7 +111,7 @@
     <!-- 批量更新购物车商品勾选状态 -->
     <update id="updateCheckedByUserId">
         UPDATE cart
-        SET checked = #{checked},
+        SET checked     = #{checked},
             update_time = NOW()
         WHERE user_id = #{userId}
     </update>
@@ -121,7 +120,7 @@
     <update id="batchUpdateChecked">
         UPDATE cart
         SET checked = #{checked},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -131,15 +130,17 @@
 
     <!-- 清空用户购物车 -->
     <delete id="deleteByUserId">
-        DELETE FROM cart
+        DELETE
+        FROM cart
         WHERE user_id = #{userId}
     </delete>
 
     <!-- 删除用户勾选的购物车商品 -->
     <delete id="deleteCheckedByUserId">
-        DELETE FROM cart
+        DELETE
+        FROM cart
         WHERE user_id = #{userId}
-        AND checked = 1
+          AND checked = 1
     </delete>
 
     <!-- 查询用户勾选的购物车商品 -->
@@ -154,15 +155,15 @@
     <!-- 查询用户勾选的购物车商品详情 -->
     <select id="selectCheckedCartDetail" resultType="java.util.Map">
         SELECT c.*,
-               p.name as product_name,
-               p.price as product_price,
-               p.stock as product_stock,
-               p.images as product_images,
+               p.name                 as product_name,
+               p.price                as product_price,
+               p.stock                as product_stock,
+               p.images               as product_images,
                (p.price * c.quantity) as total_price
         FROM cart c
-        LEFT JOIN product p ON c.product_id = p.id
+                 LEFT JOIN products p ON c.product_id = p.id
         WHERE c.user_id = #{userId}
-        AND c.checked = 1
+          AND c.checked = 1
         ORDER BY c.create_time DESC
     </select>
 

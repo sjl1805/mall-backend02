@@ -43,7 +43,7 @@
                 ${ew.sqlSegment}
             </if>
         </where>
-        ORDER BY sort ASC, create_time DESC
+        ORDER BY sort , create_time DESC
     </select>
 
     <!-- 根据ID查询推荐商品 -->
@@ -55,15 +55,12 @@
     </select>
 
     <!-- 插入新推荐商品 -->
-    <insert id="insertRecommendProduct" parameterType="com.example.model.entity.RecommendProduct" 
+    <insert id="insertRecommendProduct" parameterType="com.example.model.entity.RecommendProduct"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO recommend_product (
-            product_id, type, sort, status, 
-            start_time, end_time, algorithm_version, recommend_reason
-        ) VALUES (
-            #{productId}, #{type}, #{sort}, #{status}, 
-            #{startTime}, #{endTime}, #{algorithmVersion}, #{recommendReason}
-        )
+        INSERT INTO recommend_product (product_id, type, sort, status,
+                                       start_time, end_time, algorithm_version, recommend_reason)
+        VALUES (#{productId}, #{type}, #{sort}, #{status},
+                #{startTime}, #{endTime}, #{algorithmVersion}, #{recommendReason})
     </insert>
 
     <!-- 更新推荐商品信息 -->
@@ -94,15 +91,15 @@
     <select id="selectByUserId" resultMap="BaseResultMap">
         SELECT r.*
         FROM recommend_product r
-        JOIN product_favorite pf ON r.product_id = pf.product_id
+                 JOIN product_favorite pf ON r.product_id = pf.product_id
         WHERE pf.user_id = #{userId}
-        AND r.status = 1
-        AND r.start_time &lt;= NOW()
-        AND r.end_time &gt; NOW()
-        ORDER BY r.sort ASC
+          AND r.status = 1
+          AND r.start_time &lt;= NOW()
+          AND r.end_time &gt; NOW()
+        ORDER BY r.sort
     </select>
 
-    <!-- 查询当前有效的推荐商品 -->
+    <!-- 查询当前有效地推荐商品 -->
     <select id="selectActiveRecommends" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -113,7 +110,7 @@
         <if test="type != null">
             AND type = #{type}
         </if>
-        ORDER BY sort ASC
+        ORDER BY sort
         <if test="limit != null">
             LIMIT #{limit}
         </if>
@@ -125,13 +122,13 @@
         <include refid="Base_Column_List"/>
         FROM recommend_product
         WHERE type = #{type}
-        ORDER BY sort ASC
+        ORDER BY sort
     </select>
 
     <!-- 更新推荐商品状态 -->
     <update id="updateStatus">
         UPDATE recommend_product
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{id}
     </update>

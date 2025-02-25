@@ -77,17 +77,18 @@
     <!-- 批量插入订单商品 -->
     <insert id="batchInsertOrderItems" parameterType="java.util.List">
         INSERT INTO order_item (order_id, product_id, product_name, product_image, price, quantity, total_amount,
-                                create_time, update_time)
+        create_time, update_time)
         VALUES
         <foreach collection="orderItems" item="item" separator=",">
-            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.productImage}, 
-             #{item.price}, #{item.quantity}, #{item.totalAmount}, NOW(), NOW())
+            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.productImage},
+            #{item.price}, #{item.quantity}, #{item.totalAmount}, NOW(), NOW())
         </foreach>
     </insert>
 
     <!-- 根据订单ID批量删除订单商品 -->
     <delete id="deleteByOrderId">
-        DELETE FROM order_item
+        DELETE
+        FROM order_item
         WHERE order_id = #{orderId}
     </delete>
 
@@ -110,36 +111,38 @@
         <if test="startTime != null">
             AND oi.create_time >= #{startTime}
         </if>
-        <if test="endTime != null">
-            AND oi.create_time <= #{endTime}
-        </if>
     </select>
 
     <!-- 查询热销商品 -->
     <select id="selectHotProducts" resultType="java.util.Map">
+        <![CDATA[
         SELECT oi.product_id, oi.product_name, SUM(oi.quantity) as sales_count, 
                AVG(oi.price) as avg_price
         FROM order_item oi
         JOIN orders o ON oi.order_id = o.id
-        WHERE <![CDATA[ o.status >= 2 ]]>  <!-- 假设状态2以上为已支付订单 -->
+        WHERE o.status >= 2
+        ]]>
         <if test="startTime != null">
             AND oi.create_time >= #{startTime}
         </if>
-        <if test="endTime != null">
-            AND oi.create_time <= #{endTime}
-        </if>
+        <![CDATA[
         GROUP BY oi.product_id, oi.product_name
         ORDER BY sales_count DESC
         LIMIT #{limit}
+        ]]>
     </select>
 
     <!-- 查询订单项关联的商品详情 -->
     <select id="selectOrderItemsWithProductDetails" resultType="java.util.Map">
-        SELECT oi.*, p.description, p.images, p.price as current_price, 
-               p.stock, c.name as category_name
+        SELECT oi.*,
+               p.description,
+               p.images,
+               p.price as current_price,
+               p.stock,
+               c.name  as category_name
         FROM order_item oi
-        LEFT JOIN products p ON oi.product_id = p.id
-        LEFT JOIN product_category c ON p.category_id = c.id
+                 LEFT JOIN products p ON oi.product_id = p.id
+                 LEFT JOIN category c ON p.category_id = c.id
         WHERE oi.order_id = #{orderId}
     </select>
 
@@ -154,31 +157,5 @@
         LIMIT #{limit}
     </select>
 
-    <!-- 获取订单项状态汇总 -->
-    <select id="getOrderItemStatusSummary" resultType="java.util.Map">
-        SELECT 
-            COUNT(*) as total_items,
-            SUM(CASE WHEN pr.id IS NOT NULL THEN 1 ELSE 0 END) as reviewed_items,
-            SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) as refunded_items
-        FROM order_item oi
-        LEFT JOIN product_review pr ON oi.id = pr.order_item_id
-        LEFT JOIN refund r ON oi.id = r.order_item_id
-        WHERE oi.order_id = #{orderId}
-    </select>
 
-    <!-- 更新订单项评价状态 -->
-    <update id="updateReviewStatus">
-        UPDATE order_item
-        SET review_status = #{reviewStatus},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <!-- 更新订单项退款状态 -->
-    <update id="updateRefundStatus">
-        UPDATE order_item
-        SET refund_status = #{refundStatus},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
 </mapper>

@@ -35,7 +35,7 @@
         FROM users
         WHERE username = #{username}
     </select>
-    
+
     <!-- 根据电话号码查询用户 -->
     <select id="selectByPhone" resultMap="BaseResultMap">
         SELECT
@@ -43,7 +43,7 @@
         FROM users
         WHERE phone = #{phone}
     </select>
-    
+
     <!-- 根据邮箱查询用户 -->
     <select id="selectByEmail" resultMap="BaseResultMap">
         SELECT
@@ -51,7 +51,7 @@
         FROM users
         WHERE email = #{email}
     </select>
-    
+
     <!-- 根据状态查询用户列表 -->
     <select id="selectByStatus" resultMap="BaseResultMap">
         SELECT
@@ -60,7 +60,7 @@
         WHERE status = #{status}
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 高级查询用户列表 -->
     <select id="selectUsersByCondition" resultMap="BaseResultMap">
         SELECT
@@ -79,15 +79,15 @@
         </where>
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 修改用户状态 -->
     <update id="updateUserStatus">
         UPDATE users
-        SET status = #{status},
+        SET status      = #{status},
             update_time = NOW()
         WHERE id = #{id}
     </update>
-    
+
     <!-- 批量删除用户 -->
     <delete id="batchDeleteUsers">
         DELETE FROM users
@@ -96,21 +96,20 @@
             #{id}
         </foreach>
     </delete>
-    
+
     <!-- 检查用户名是否存在 -->
     <select id="checkUsernameExists" resultType="int">
-        SELECT COUNT(1) FROM users WHERE username = #{username}
+        SELECT COUNT(1)
+        FROM users
+        WHERE username = #{username}
     </select>
 
     <!-- 插入新用户 -->
     <insert id="insertUser" parameterType="com.example.model.entity.Users" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (
-            username, password, nickname, phone, email, 
-            avatar, gender, status, role
-        ) VALUES (
-            #{username}, #{password}, #{nickname}, #{phone}, #{email}, 
-            #{avatar}, #{gender}, #{status}, #{role}
-        )
+        INSERT INTO users (username, password, nickname, phone, email,
+                           avatar, gender, status, role)
+        VALUES (#{username}, #{password}, #{nickname}, #{phone}, #{email},
+                #{avatar}, #{gender}, #{status}, #{role})
     </insert>
 
     <!-- 更新用户信息 -->
@@ -133,13 +132,15 @@
 
     <!-- 根据ID删除用户 -->
     <delete id="deleteUser">
-        DELETE FROM users WHERE id = #{id}
+        DELETE
+        FROM users
+        WHERE id = #{id}
     </delete>
 
     <!-- 分页查询用户 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT 
-        <include refid="Base_Column_List" />
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM users
         ORDER BY create_time DESC
     </select>

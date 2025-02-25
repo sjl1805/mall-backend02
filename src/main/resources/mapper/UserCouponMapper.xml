@@ -15,26 +15,6 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
-    
-    <!-- 用户优惠券与优惠券连接的结果映射 -->
-    <resultMap id="UserCouponWithDetailMap" type="com.example.model.vo.UserCouponVO">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="userId" column="user_id" jdbcType="BIGINT"/>
-        <result property="couponId" column="coupon_id" jdbcType="BIGINT"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="orderId" column="order_id" jdbcType="BIGINT"/>
-        <result property="getTime" column="get_time" jdbcType="TIMESTAMP"/>
-        <result property="useTime" column="use_time" jdbcType="TIMESTAMP"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-        <!-- 优惠券信息 -->
-        <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="type" column="type" jdbcType="TINYINT"/>
-        <result property="value" column="value" jdbcType="DECIMAL"/>
-        <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
-        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
-        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
-    </resultMap>
 
     <sql id="Base_Column_List">
         id,user_id,coupon_id,
@@ -50,7 +30,7 @@
         WHERE user_id = #{userId}
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 根据用户ID和状态查询用户优惠券 -->
     <select id="selectByUserIdAndStatus" resultMap="BaseResultMap">
         SELECT
@@ -59,47 +39,47 @@
         WHERE user_id = #{userId} AND status = #{status}
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 查询用户可用优惠券（未使用且未过期） -->
     <select id="selectAvailableCoupons" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE user_id = #{userId}
-          AND status = 0
+        AND status = 0
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 获取即将过期的优惠券 -->
     <select id="selectSoonExpiredCoupons" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE user_id = #{userId}
-          AND status = 0
+        AND status = 0
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 根据订单金额查询用户可用优惠券 -->
     <select id="selectCouponsByOrderAmount" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_coupon
         WHERE user_id = #{userId}
-          AND status = 0
+        AND status = 0
         ORDER BY create_time DESC
     </select>
-    
+
     <!-- 更新优惠券使用状态 -->
     <update id="updateCouponStatus">
         UPDATE user_coupon
-        SET status = #{status},
-            order_id = #{orderId},
-            use_time = #{useTime},
+        SET status      = #{status},
+            order_id    = #{orderId},
+            use_time    = #{useTime},
             update_time = NOW()
         WHERE id = #{id}
     </update>
-    
+
     <!-- 批量添加用户优惠券 -->
     <insert id="batchInsertUserCoupons">
         INSERT INTO user_coupon (user_id, coupon_id, status, get_time, create_time, update_time)
@@ -108,7 +88,7 @@
             (#{userId}, #{couponId}, #{status}, #{getTime}, NOW(), NOW())
         </foreach>
     </insert>
-    
+
     <!-- 高级查询用户优惠券 -->
     <select id="selectUserCouponsByCondition" resultMap="BaseResultMap">
         SELECT

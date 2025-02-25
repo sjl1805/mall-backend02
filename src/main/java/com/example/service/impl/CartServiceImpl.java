@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 购物车服务实现类
- * 
+ * <p>
  * 该类实现了购物车相关的业务逻辑，包括购物车的添加、查询、更新和删除等功能。
  * 购物车是电商系统中连接浏览和下单的关键环节，直接影响用户的购买决策和转化率。
  * 购物车记录了用户选择的商品、数量、规格等信息，并提供了结算前的商品预览和价格计算功能。
@@ -40,7 +41,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 根据用户ID查询购物车列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定用户的所有购物车记录，
      * 用于展示用户购物车中的商品，便于用户进行结算操作
      *
@@ -55,7 +56,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 分页查询购物车数据
-     * 
+     * <p>
      * 该方法用于后台管理系统分页查看用户购物车数据，
      * 可用于分析用户购买意向和商品受欢迎程度
      *
@@ -63,13 +64,13 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
      * @return 购物车分页数据
      */
     @Override
-    public IPage<Cart> selectPage(IPage<Cart> page) {
-        return cartMapper.selectPage(page);
+    public IPage<Cart> selectPage(IPage<Cart> page, Long userId) {
+        return cartMapper.selectPage(page, userId);
     }
 
     /**
      * 根据ID查询购物车记录
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定ID的购物车记录，
      * 用于查看特定购物车记录的详细信息
      *
@@ -84,7 +85,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 添加购物车记录
-     * 
+     * <p>
      * 该方法用于用户将商品添加到购物车，
      * 如果用户购物车中已有相同商品，应考虑合并数量而非创建新记录，
      * 添加成功后需要清除用户购物车缓存
@@ -101,7 +102,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 更新购物车记录
-     * 
+     * <p>
      * 该方法用于更新购物车中商品的数量、规格等信息，
      * 是用户调整购物意向的重要功能，需要实时反映，
      * 并清除相关缓存，确保数据一致性
@@ -118,7 +119,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 删除购物车记录
-     * 
+     * <p>
      * 该方法用于用户从购物车中移除商品，
      * 或在下单完成后清理已购买的商品，
      * 并清除相关缓存，确保数据一致性
@@ -135,11 +136,11 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 根据用户ID和商品ID查询购物车商品
-     * 
+     * <p>
      * 该方法用于检查用户购物车中是否已有特定商品，
      * 添加商品到购物车前需要检查，避免重复添加
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return 购物车商品，不存在返回null
      */
@@ -151,7 +152,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 获取购物车商品详情
-     * 
+     * <p>
      * 该方法关联商品表获取详细信息，包括商品名称、价格、图片等，
      * 用于购物车页面展示完整的商品信息
      *
@@ -161,16 +162,17 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
     @Override
     @Cacheable(value = "carts", key = "'detail_' + #userId")
     public List<Map<String, Object>> getCartDetail(Long userId) {
-        return cartMapper.selectCartDetail(userId);
+        Map<Long, Map<String, Object>> cartMap = cartMapper.selectCartDetail(userId);
+        return new ArrayList<>(cartMap.values());
     }
 
     /**
      * 更新购物车商品数量
-     * 
+     * <p>
      * 该方法用于用户调整购物车中商品的购买数量，
      * 需要在更新后清除相关缓存，确保数据一致性
      *
-     * @param id 购物车ID
+     * @param id       购物车ID
      * @param quantity 数量
      * @return 更新结果
      */
@@ -187,11 +189,11 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 更新购物车商品选中状态
-     * 
+     * <p>
      * 该方法用于用户勾选或取消勾选购物车中的商品，
      * 影响结算时的商品范围和总价计算
      *
-     * @param id 购物车ID
+     * @param id      购物车ID
      * @param checked 选中状态
      * @return 更新结果
      */
@@ -204,11 +206,11 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 全选/取消全选购物车商品
-     * 
+     * <p>
      * 该方法用于一键勾选或取消勾选用户购物车中的所有商品，
      * 提供批量操作的便捷性
      *
-     * @param userId 用户ID
+     * @param userId  用户ID
      * @param checked 选中状态
      * @return 更新结果
      */
@@ -221,7 +223,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 查询用户选中的购物车商品
-     * 
+     * <p>
      * 该方法获取用户购物车中已勾选的商品，
      * 用于订单创建前的商品确认和清单展示
      *
@@ -236,7 +238,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 获取选中商品详情
-     * 
+     * <p>
      * 该方法获取用户购物车中已勾选商品的详细信息，
      * 包括商品名称、价格、图片等，用于订单确认页展示
      *
@@ -246,12 +248,13 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
     @Override
     @Cacheable(value = "carts", key = "'checked_detail_' + #userId")
     public List<Map<String, Object>> getCheckedCartDetail(Long userId) {
-        return cartMapper.selectCheckedCartDetail(userId);
+        Map<Long, Map<String, Object>> cartMap = cartMapper.selectCheckedCartDetail(userId);
+        return new ArrayList<>(cartMap.values());
     }
 
     /**
      * 清空用户购物车
-     * 
+     * <p>
      * 该方法用于清空用户的整个购物车，
      * 适用于批量删除、下单后清理等场景
      *
@@ -267,7 +270,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 删除选中的购物车商品
-     * 
+     * <p>
      * 该方法用于删除用户购物车中已勾选的商品，
      * 通常在提交订单后调用，清理已购买的商品
      *
@@ -283,7 +286,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 批量删除购物车商品
-     * 
+     * <p>
      * 该方法用于批量删除指定的购物车商品，
      * 适用于用户选择性删除多个商品的场景
      *
@@ -302,7 +305,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 统计用户购物车商品数量
-     * 
+     * <p>
      * 该方法用于获取用户购物车中的商品总数，
      * 通常用于头部导航栏的购物车图标旁显示数量
      *
@@ -317,13 +320,13 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 检查并添加商品到购物车
-     * 
+     * <p>
      * 该方法先检查购物车中是否已有该商品，
      * 有则更新数量，无则添加新记录，避免重复添加相同商品
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
-     * @param quantity 数量
+     * @param quantity  数量
      * @return 添加/更新结果
      */
     @Override
@@ -333,7 +336,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
         if (quantity == null || quantity < 1) {
             return false;
         }
-        
+
         // 查询是否已存在
         Cart existCart = selectByUserIdAndProductId(userId, productId);
         if (existCart != null) {
@@ -353,7 +356,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
 
     /**
      * 计算购物车选中商品价格
-     * 
+     * <p>
      * 该方法计算用户购物车中已勾选商品的总价，
      * 用于结算页面显示和订单创建时的金额校验
      *
@@ -364,7 +367,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
     public BigDecimal calculateCheckedAmount(Long userId) {
         List<Map<String, Object>> cartItems = getCheckedCartDetail(userId);
         BigDecimal totalAmount = BigDecimal.ZERO;
-        
+
         if (cartItems != null && !cartItems.isEmpty()) {
             for (Map<String, Object> item : cartItems) {
                 if (item.containsKey("total_price")) {
@@ -373,7 +376,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
                 }
             }
         }
-        
+
         return totalAmount;
     }
 }

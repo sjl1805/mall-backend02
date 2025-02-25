@@ -3,12 +3,13 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Coupon;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 /**
  * @author 31815
@@ -78,7 +79,7 @@ public interface CouponMapper extends BaseMapper<Coupon> {
     /**
      * 查询可用优惠券
      *
-     * @param now 当前时间
+     * @param now    当前时间
      * @param amount 订单金额
      * @return 可用优惠券列表
      */
@@ -90,7 +91,7 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * 查询即将过期的优惠券
      *
      * @param startDate 开始日期
-     * @param endDate 结束日期
+     * @param endDate   结束日期
      * @return 即将过期优惠券列表
      */
     List<Coupon> selectExpiringSoon(
@@ -100,7 +101,7 @@ public interface CouponMapper extends BaseMapper<Coupon> {
     /**
      * 减少优惠券数量（领取/使用）
      *
-     * @param id 优惠券ID
+     * @param id    优惠券ID
      * @param count 减少数量
      * @return 更新结果
      */
@@ -109,9 +110,9 @@ public interface CouponMapper extends BaseMapper<Coupon> {
     /**
      * 检查优惠券是否可用于指定金额
      *
-     * @param id 优惠券ID
+     * @param id     优惠券ID
      * @param amount 订单金额
-     * @param now 当前时间
+     * @param now    当前时间
      * @return 可用优惠券信息，无可用返回null
      */
     Coupon checkCouponAvailable(
@@ -123,9 +124,10 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * 统计优惠券使用情况
      *
      * @param startDate 开始日期
-     * @param endDate 结束日期
+     * @param endDate   结束日期
      * @return 优惠券统计数据
      */
+    @MapKey("id")
     List<Map<String, Object>> getCouponStatistics(
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
@@ -136,12 +138,13 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @param limit 限制数量
      * @return 热门优惠券列表
      */
+    @MapKey("id")
     List<Map<String, Object>> getPopularCoupons(@Param("limit") Integer limit);
 
     /**
      * 批量更新优惠券状态
      *
-     * @param ids 优惠券ID列表
+     * @param ids    优惠券ID列表
      * @param status 新状态
      * @return 更新结果
      */
@@ -161,7 +164,7 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * 查询用户未领取的优惠券
      *
      * @param userId 用户ID
-     * @param now 当前时间
+     * @param now    当前时间
      * @return 未领取的有效优惠券
      */
     List<Coupon> selectNotReceivedCoupons(
@@ -178,10 +181,11 @@ public interface CouponMapper extends BaseMapper<Coupon> {
 
     /**
      * 计算优惠券发放效果
-     * 
+     *
      * @param couponId 优惠券ID
      * @return 统计数据，包含发放量、使用量、使用率、带动销售额等
      */
+    @MapKey("coupon_id")
     Map<String, Object> calculateCouponEffectiveness(@Param("couponId") Long couponId);
 
     /**

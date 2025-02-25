@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * 商品服务实现类
- * 
+ * <p>
  * 该类实现了商品相关的业务逻辑，包括商品的添加、修改、删除和查询等核心功能。
  * 商品是电商系统的核心资源，此服务提供对商品全生命周期的管理。
  * 使用了Spring缓存机制对商品信息进行缓存，提高查询效率，减轻数据库压力。
@@ -41,7 +41,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 根据商品名称查询商品列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取包含指定名称的商品列表，
      * 支持模糊查询，用于前台商品搜索和后台商品管理
      *
@@ -56,7 +56,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 分页查询商品数据
-     * 
+     * <p>
      * 该方法用于前台商品列表展示和后台商品管理，
      * 支持各种复杂的分页、排序和筛选条件
      *
@@ -70,7 +70,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 根据ID查询商品详细信息
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定ID的商品详情，
      * 用于商品详情页展示和后台商品编辑
      *
@@ -85,7 +85,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 添加商品
-     * 
+     * <p>
      * 该方法用于后台管理系统添加新商品，
      * 包括商品基本信息、价格、库存、图片等数据，
      * 并清除相关缓存，确保数据一致性
@@ -102,7 +102,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 更新商品信息
-     * 
+     * <p>
      * 该方法用于后台管理系统更新商品信息，
      * 如修改价格、库存、描述、状态等，
      * 并清除相关缓存，确保数据一致性
@@ -119,7 +119,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 删除商品
-     * 
+     * <p>
      * 该方法用于后台管理系统删除商品，
      * 实际业务中通常建议使用软删除（修改状态）而非物理删除，
      * 并清除相关缓存，确保数据一致性
@@ -136,12 +136,12 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
 
     /**
      * 根据分类ID查询商品
-     * 
+     * <p>
      * 该方法用于前台按分类浏览商品，
      * 是电商系统中最常用的商品查询方式之一
      *
      * @param categoryId 分类ID
-     * @param page 分页参数
+     * @param page       分页参数
      * @return 商品分页列表
      */
     @Override
@@ -149,44 +149,16 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
     public IPage<Products> selectByCategoryId(Long categoryId, IPage<Products> page) {
         QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category_id", categoryId)
-                   .eq("status", 1)
-                   .orderByDesc("create_time");
+                .eq("status", 1)
+                .orderByDesc("create_time");
         return page(page, queryWrapper);
     }
-    
-    /**
-     * 按条件高级查询商品
-     * 
-     * 该方法支持多条件组合查询商品，
-     * 用于前台商品搜索和后台商品管理的高级筛选
-     *
-     * @param categoryId 分类ID
-     * @param keyword 关键词
-     * @param minPrice 最低价格
-     * @param maxPrice 最高价格
-     * @param page 分页参数
-     * @return 商品分页列表
-     */
-    @Override
-    public IPage<Products> searchProducts(
-            Long categoryId, 
-            String keyword, 
-            BigDecimal minPrice, 
-            BigDecimal maxPrice, 
-            IPage<Products> page) {
-        
-        return productsMapper.selectProductsByCondition(
-                categoryId,
-                keyword,
-                minPrice != null ? minPrice.doubleValue() : null,
-                maxPrice != null ? maxPrice.doubleValue() : null,
-                1, // 只查询上架商品
-                page);
-    }
-    
+
+
+
     /**
      * 获取热门商品
-     * 
+     * <p>
      * 该方法获取销量最高的商品，
      * 用于首页推荐或热销榜单展示
      *
@@ -201,10 +173,10 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.selectHotProducts(limit);
     }
-    
+
     /**
      * 获取推荐商品
-     * 
+     * <p>
      * 该方法基于用户行为分析，获取推荐的商品，
      * 提高用户购买意愿和转化率
      *
@@ -219,14 +191,14 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.selectRecommendProducts(limit);
     }
-    
+
     /**
      * 获取新品
-     * 
+     * <p>
      * 该方法获取最近添加的商品，
      * 用于首页新品推荐或新品专区
      *
-     * @param days 最近天数
+     * @param days  最近天数
      * @param limit 限制数量
      * @return 新品列表
      */
@@ -241,32 +213,16 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.selectNewProducts(days, limit);
     }
-    
-    /**
-     * 获取折扣商品
-     * 
-     * 该方法获取当前参与促销活动的商品，
-     * 用于促销活动页面或折扣专区
-     *
-     * @param limit 限制数量
-     * @return 折扣商品列表
-     */
-    @Override
-    @Cacheable(key = "'discount_products_'+#limit")
-    public List<Products> getDiscountProducts(Integer limit) {
-        if (limit == null || limit <= 0) {
-            limit = 10; // 默认返回10个
-        }
-        return productsMapper.selectDiscountProducts(limit);
-    }
-    
+
+
+
     /**
      * 更新商品库存
-     * 
+     * <p>
      * 该方法用于增加或减少商品库存，
      * 支持正数（增加）和负数（减少）
      *
-     * @param id 商品ID
+     * @param id       商品ID
      * @param quantity 变动数量
      * @return 更新结果
      */
@@ -277,7 +233,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         if (quantity == 0) {
             return true; // 无变化，直接返回成功
         }
-        
+
         if (quantity > 0) {
             // 增加库存
             return productsMapper.increaseStock(id, quantity) > 0;
@@ -286,14 +242,14 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
             return productsMapper.decreaseStock(id, -quantity) > 0;
         }
     }
-    
+
     /**
      * 批量更新商品状态
-     * 
+     * <p>
      * 该方法一次性更新多个商品的状态，
      * 如批量上架或下架商品，提高管理效率
      *
-     * @param ids 商品ID列表
+     * @param ids    商品ID列表
      * @param status 状态值
      * @return 更新结果
      */
@@ -306,33 +262,17 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.batchUpdateStatus(ids, status) > 0;
     }
-    
-    /**
-     * 获取库存预警商品
-     * 
-     * 该方法获取库存低于指定阈值的商品，
-     * 用于库存管理和补货提醒
-     *
-     * @param threshold 预警阈值
-     * @return 库存预警商品列表
-     */
-    @Override
-    public List<Products> getLowStockProducts(Integer threshold) {
-        if (threshold == null || threshold < 0) {
-            threshold = 10; // 默认库存少于10个预警
-        }
-        return productsMapper.selectLowStockProducts(threshold);
-    }
-    
+
+
     /**
      * 统计商品销量排行
-     * 
+     * <p>
      * 该方法统计指定时间段内的商品销量排行，
      * 用于销售分析和商品管理
      *
      * @param startDate 开始日期
-     * @param endDate 结束日期
-     * @param limit 限制数量
+     * @param endDate   结束日期
+     * @param limit     限制数量
      * @return 销量排行数据
      */
     @Override
@@ -344,10 +284,10 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.getProductSalesRanking(startDate, endDate, limit);
     }
-    
+
     /**
      * 获取完整商品详情
-     * 
+     * <p>
      * 该方法获取商品的完整信息，包括分类名称、评价等，
      * 用于商品详情页展示
      *
@@ -359,10 +299,10 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
     public Products getProductDetail(Long id) {
         return productsMapper.selectProductDetail(id);
     }
-    
+
     /**
      * 批量导入商品
-     * 
+     * <p>
      * 该方法批量导入商品数据，
      * 用于初始化商品数据或批量上架新商品
      *
@@ -378,31 +318,31 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         }
         return productsMapper.batchInsertProducts(productList);
     }
-    
+
     /**
      * 导出商品数据
-     * 
+     * <p>
      * 该方法导出符合条件的商品数据，
      * 用于数据备份或报表生成
      *
      * @param categoryId 分类ID
-     * @param keyword 关键词
+     * @param keyword    关键词
      * @return 商品列表
      */
     @Override
     public List<Products> exportProducts(Long categoryId, String keyword) {
         QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
-        
+
         if (categoryId != null && categoryId > 0) {
             queryWrapper.eq("category_id", categoryId);
         }
-        
+
         if (StringUtils.hasText(keyword)) {
             queryWrapper.like("name", keyword)
-                       .or()
-                       .like("description", keyword);
+                    .or()
+                    .like("description", keyword);
         }
-        
+
         return list(queryWrapper);
     }
 }

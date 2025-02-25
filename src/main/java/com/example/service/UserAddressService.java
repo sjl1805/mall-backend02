@@ -72,7 +72,7 @@ public interface UserAddressService extends IService<UserAddress> {
     /**
      * 设置默认收货地址
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param addressId 地址ID
      * @return 设置结果
      */
@@ -81,9 +81,9 @@ public interface UserAddressService extends IService<UserAddress> {
     /**
      * 按地区查询收货地址
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param province 省份
-     * @param city 城市
+     * @param city     城市
      * @return 收货地址列表
      */
     List<UserAddress> selectByRegion(Long userId, String province, String city);
@@ -93,7 +93,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * 根据使用频率返回最常用的几个地址
      *
      * @param userId 用户ID
-     * @param limit 限制数量
+     * @param limit  限制数量
      * @return 常用地址列表
      */
     List<UserAddress> getFrequentlyUsedAddresses(Long userId, Integer limit);
@@ -117,7 +117,7 @@ public interface UserAddressService extends IService<UserAddress> {
     /**
      * 检查地址是否属于用户
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param addressId 地址ID
      * @return 检查结果
      */
@@ -127,7 +127,7 @@ public interface UserAddressService extends IService<UserAddress> {
      * 复制地址
      * 复制现有地址为新地址，便于用户快速创建相似地址
      *
-     * @param addressId 原地址ID
+     * @param addressId      原地址ID
      * @param newAddressName 新地址收件人姓名
      * @return 新地址
      */

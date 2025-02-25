@@ -18,94 +18,79 @@ import java.time.LocalDateTime;
 @Data
 public class Cart implements Serializable {
     /**
+     * 非数据库字段，序列化ID
+     */
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+    /**
      * 购物车ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
-
     /**
      * 用户ID
      */
     private Long userId;
-
     /**
      * 商品ID
      */
     private Long productId;
-
     /**
      * 商品数量
      */
     private Integer quantity;
-
     /**
      * 选中状态：0-未选中 1-已选中
      */
     private Integer checked;
-
     /**
      * 创建时间（带时区）
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
     /**
      * 更新时间（带时区）
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-
     /**
      * 非数据库字段，商品名称
      */
     @TableField(exist = false)
     private String productName;
-    
     /**
      * 非数据库字段，商品价格
      */
     @TableField(exist = false)
     private BigDecimal productPrice;
-    
     /**
      * 非数据库字段，商品库存
      */
     @TableField(exist = false)
     private Integer productStock;
-    
     /**
      * 非数据库字段，商品图片
      */
     @TableField(exist = false)
     private String productImages;
-    
     /**
      * 非数据库字段，商品总价
      */
     @TableField(exist = false)
     private BigDecimal totalPrice;
-    
     /**
      * 非数据库字段，商品状态：0-下架 1-正常
      */
     @TableField(exist = false)
     private Integer productStatus;
-    
     /**
      * 非数据库字段，商品规格信息
      */
     @TableField(exist = false)
     private String specifications;
-    
     /**
      * 非数据库字段，是否可购买（商品上架且库存足够）
      */
     @TableField(exist = false)
     private Boolean canBuy;
-    
-    /**
-     * 非数据库字段，序列化ID
-     */
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

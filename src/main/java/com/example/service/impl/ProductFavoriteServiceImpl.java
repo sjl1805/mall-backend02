@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * 商品收藏服务实现类
- * 
+ * <p>
  * 该类实现了商品收藏相关的业务逻辑，包括收藏的添加、取消、查询等功能。
  * 商品收藏是电商系统中重要的用户互动功能，既便于用户快速找到感兴趣的商品，
  * 也为个性化推荐系统提供重要的用户偏好数据。
@@ -39,7 +39,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 根据用户ID查询收藏商品列表
-     * 
+     * <p>
      * 该方法从缓存或数据库获取指定用户的所有收藏商品，
      * 用于个人中心的收藏列表展示，方便用户快速访问感兴趣的商品
      *
@@ -54,7 +54,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 分页查询商品收藏数据
-     * 
+     * <p>
      * 该方法用于后台管理系统分页查看用户收藏数据，
      * 可用于分析热门收藏商品、用户偏好等
      *
@@ -80,7 +80,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 添加商品收藏
-     * 
+     * <p>
      * 该方法用于用户收藏商品时创建收藏记录，
      * 收藏操作会影响用户的个性化推荐结果，
      * 并清除相关缓存，确保数据一致性
@@ -97,7 +97,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 更新商品收藏
-     * 
+     * <p>
      * 该方法用于更新收藏记录的信息，如修改收藏时间、分组等，
      * 并清除相关缓存，确保数据一致性
      *
@@ -113,7 +113,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 删除商品收藏
-     * 
+     * <p>
      * 该方法用于用户取消收藏商品，
      * 取消收藏可能会影响用户的个性化推荐结果，
      * 并清除相关缓存，确保数据一致性
@@ -130,11 +130,11 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
 
     /**
      * 检查用户是否已收藏商品
-     * 
+     * <p>
      * 该方法检查指定用户是否已经收藏了指定商品，
      * 用于前台展示收藏状态和后台防止重复收藏
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return 收藏记录，未收藏则返回null
      */
@@ -143,15 +143,15 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     public ProductFavorite checkFavorite(Long userId, Long productId) {
         return productFavoriteMapper.checkFavorite(userId, productId);
     }
-    
+
     /**
      * 切换收藏状态（收藏/取消收藏）
-     * 
+     * <p>
      * 该方法实现一键收藏或取消收藏功能，
      * 如果商品未收藏则添加收藏，已收藏则取消收藏，
      * 简化前端操作逻辑
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return true-收藏成功，false-取消收藏成功
      */
@@ -160,7 +160,7 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     @CacheEvict(key = "#userId + '_' + #productId")
     public boolean toggleFavorite(Long userId, Long productId) {
         ProductFavorite existingFavorite = checkFavorite(userId, productId);
-        
+
         if (existingFavorite == null) {
             // 未收藏，执行收藏操作
             ProductFavorite favorite = new ProductFavorite();
@@ -172,14 +172,14 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
             return deleteProductFavorite(existingFavorite.getId());
         }
     }
-    
+
     /**
      * 根据收藏夹查询收藏商品
-     * 
+     * <p>
      * 该方法查询用户指定收藏夹中的商品，
      * 支持收藏分类管理，提高用户收藏体验
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param folderId 收藏夹ID，为null则查询默认收藏夹
      * @return 收藏商品列表
      */
@@ -188,10 +188,10 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     public List<ProductFavorite> selectByFolder(Long userId, Long folderId) {
         return productFavoriteMapper.selectByFolder(userId, folderId);
     }
-    
+
     /**
      * 获取用户的收藏夹列表
-     * 
+     * <p>
      * 该方法查询用户创建的所有收藏夹，
      * 用于前台展示收藏夹选择和管理
      *
@@ -205,14 +205,14 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         // 实际应该返回folderMapper.selectByUserId(userId);
         return new java.util.ArrayList<>();
     }
-    
+
     /**
      * 创建收藏夹
-     * 
+     * <p>
      * 该方法用于用户创建新的收藏夹，
      * 用于收藏分类管理
      *
-     * @param userId 用户ID
+     * @param userId     用户ID
      * @param folderName 收藏夹名称
      * @return 创建结果
      */
@@ -224,14 +224,14 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         // 实际应该调用folderMapper.insert(folder);
         return true;
     }
-    
+
     /**
      * 移动商品到指定收藏夹
-     * 
+     * <p>
      * 该方法用于将收藏的商品移动到指定的收藏夹，
      * 方便用户整理和管理收藏商品
      *
-     * @param id 收藏ID
+     * @param id       收藏ID
      * @param folderId 目标收藏夹ID
      * @return 移动结果
      */
@@ -241,10 +241,10 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
     public boolean moveToFolder(Long id, Long folderId) {
         return productFavoriteMapper.moveToFolder(id, folderId) > 0;
     }
-    
+
     /**
      * 查询热门收藏商品
-     * 
+     * <p>
      * 该方法统计被收藏最多的商品，
      * 用于发现热门商品和推荐系统
      *
@@ -259,10 +259,10 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         }
         return productFavoriteMapper.selectHotFavorites(limit);
     }
-    
+
     /**
      * 获取带商品信息的收藏列表
-     * 
+     * <p>
      * 该方法查询用户收藏的商品，并包含商品详细信息，
      * 减少前端请求次数，提高用户体验
      *
@@ -276,10 +276,10 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         // 简化实现，返回基础收藏列表
         return selectByUserId(userId);
     }
-    
+
     /**
      * 批量删除收藏
-     * 
+     * <p>
      * 该方法批量删除用户的收藏记录，
      * 用于用户批量取消收藏或清空收藏夹
      *
@@ -295,10 +295,10 @@ public class ProductFavoriteServiceImpl extends ServiceImpl<ProductFavoriteMappe
         }
         return productFavoriteMapper.batchDelete(ids) > 0;
     }
-    
+
     /**
      * 统计用户收藏商品数量
-     * 
+     * <p>
      * 该方法统计用户收藏的商品总数，
      * 用于个人中心展示和收藏数据分析
      *

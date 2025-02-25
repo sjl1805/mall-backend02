@@ -75,7 +75,7 @@
     <!-- 增加收藏夹商品数量 -->
     <update id="updateItemCount">
         UPDATE favorite_folder
-        SET item_count = item_count + #{count},
+        SET item_count  = item_count + #{count},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -83,19 +83,17 @@
     <!-- 刷新收藏夹商品数量 -->
     <update id="refreshItemCount">
         UPDATE favorite_folder f
-        SET item_count = (
-            SELECT COUNT(*)
-            FROM product_favorite
-            WHERE folder_id = f.id
-        ),
-        update_time = NOW()
+        SET item_count  = (SELECT COUNT(*)
+                           FROM product_favorite
+                           WHERE folder_id = f.id),
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
     <!-- 更新收藏夹排序 -->
     <update id="updateSort">
         UPDATE favorite_folder
-        SET sort = #{sort},
+        SET sort        = #{sort},
             update_time = NOW()
         WHERE id = #{id}
     </update>
@@ -106,7 +104,7 @@
         <include refid="Base_Column_List"/>
         FROM favorite_folder
         WHERE user_id = #{userId}
-        ORDER BY sort ASC, create_time DESC
+        ORDER BY sort , create_time DESC
     </select>
 
     <!-- 查询公开收藏夹 -->
@@ -116,7 +114,7 @@
         FROM favorite_folder
         WHERE user_id = #{userId}
         AND is_public = 1
-        ORDER BY sort ASC, create_time DESC
+        ORDER BY sort , create_time DESC
     </select>
 
     <!-- 查询其他用户的公开收藏夹 -->
@@ -136,7 +134,7 @@
         FROM favorite_folder
         WHERE user_id = #{userId}
         AND name LIKE CONCAT('%', #{name}, '%')
-        ORDER BY sort ASC, create_time DESC
+        ORDER BY sort , create_time DESC
     </select>
 
     <!-- 批量删除收藏夹 -->
@@ -152,7 +150,7 @@
     <update id="batchUpdatePublicStatus">
         UPDATE favorite_folder
         SET is_public = #{isPublic},
-            update_time = NOW()
+        update_time = NOW()
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -171,27 +169,28 @@
 
     <!-- 获取收藏夹简要信息（含缩略图） -->
     <select id="selectFolderBriefs" resultType="java.util.Map">
-        SELECT f.id, f.name, f.item_count, f.is_public,
+        SELECT f.id,
+               f.name,
+               f.item_count,
+               f.is_public,
                p.images as thumbnail
         FROM favorite_folder f
-        LEFT JOIN (
-            SELECT pf.folder_id, p.images
-            FROM product_favorite pf
-            JOIN products p ON pf.product_id = p.id
-            WHERE pf.user_id = #{userId}
-            GROUP BY pf.folder_id
-        ) p ON f.id = p.folder_id
+                 LEFT JOIN (SELECT pf.folder_id, p.images
+                            FROM product_favorite pf
+                                     JOIN products p ON pf.product_id = p.id
+                            WHERE pf.user_id = #{userId}
+                            GROUP BY pf.folder_id) p ON f.id = p.folder_id
         WHERE f.user_id = #{userId}
-        ORDER BY f.sort ASC, f.create_time DESC
+        ORDER BY f.sort, f.create_time DESC
     </select>
 
     <!-- 查询最热门的公开收藏夹 -->
     <select id="selectHotPublicFolders" resultMap="BaseResultMap">
         SELECT f.*, u.nickname as creator_name, u.avatar as creator_avatar
         FROM favorite_folder f
-        JOIN users u ON f.user_id = u.id
+                 JOIN users u ON f.user_id = u.id
         WHERE f.is_public = 1
-        AND f.item_count > 0
+          AND f.item_count > 0
         ORDER BY f.item_count DESC
         LIMIT #{limit}
     </select>

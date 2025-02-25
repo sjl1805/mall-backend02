@@ -3,9 +3,10 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.model.entity.UserBehavior;
 import com.example.model.entity.Products;
+import com.example.model.entity.UserBehavior;
 import com.example.model.entity.Users;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,32 +42,32 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 根据用户ID和行为类型查询
      *
-     * @param userId 用户ID
+     * @param userId       用户ID
      * @param behaviorType 行为类型
      * @return 用户行为列表
      */
     List<UserBehavior> selectByUserIdAndType(
-            @Param("userId") Long userId, 
+            @Param("userId") Long userId,
             @Param("behaviorType") Integer behaviorType);
 
     /**
      * 根据时间范围查询用户行为
      *
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 用户行为列表
      */
     List<UserBehavior> selectByTimeRange(
-            @Param("startTime") Date startTime, 
+            @Param("startTime") Date startTime,
             @Param("endTime") Date endTime);
 
     /**
      * 查询热门商品
      *
      * @param behaviorType 行为类型
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param limit 限制数量
+     * @param startTime    开始时间
+     * @param endTime      结束时间
+     * @param limit        限制数量
      * @return 热门商品列表
      */
     List<Products> selectPopularProducts(
@@ -78,9 +79,9 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 获取用户兴趣分类
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 用户兴趣分类
      */
     List<Users> selectUserInterests(
@@ -99,12 +100,12 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 高级条件查询用户行为
      *
-     * @param userId 用户ID（可选）
-     * @param productId 商品ID（可选）
+     * @param userId       用户ID（可选）
+     * @param productId    商品ID（可选）
      * @param behaviorType 行为类型（可选）
-     * @param startTime 开始时间（可选）
-     * @param endTime 结束时间（可选）
-     * @param page 分页参数
+     * @param startTime    开始时间（可选）
+     * @param endTime      结束时间（可选）
+     * @param page         分页参数
      * @return 分页用户行为
      */
     IPage<UserBehavior> selectBehaviorsByCondition(
@@ -118,7 +119,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 统计用户行为数量
      *
-     * @param userId 用户ID
+     * @param userId       用户ID
      * @param behaviorType 行为类型
      * @return 行为数量
      */
@@ -126,13 +127,6 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
             @Param("userId") Long userId,
             @Param("behaviorType") Integer behaviorType);
 
-    /**
-     * 分页查询用户行为
-     *
-     * @param page 分页信息
-     * @return 用户行为列表
-     */
-    IPage<UserBehavior> selectPage(IPage<UserBehavior> page);
 
     /**
      * 根据ID查询用户行为
@@ -169,9 +163,9 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
     /**
      * 根据用户ID和时间范围查询行为
      *
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 用户行为列表
      */
     List<UserBehavior> selectByUserIdAndTimeRange(
@@ -184,41 +178,31 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
      *
      * @param sourceType 源行为类型
      * @param targetType 目标行为类型
-     * @param days 天数
+     * @param days       天数
      * @return 转化数据
      */
+    @MapKey("source_type")
     Map<String, Object> analyzeBehaviorConversion(
             @Param("sourceType") Integer sourceType,
             @Param("targetType") Integer targetType,
             @Param("days") Integer days);
 
     /**
-     * 查询用户连续行为
-     * 查找用户短时间内的连续行为序列
-     *
-     * @param userId 用户ID
-     * @param timeInterval 时间间隔（秒）
-     * @param limit 限制数量
-     * @return 连续行为序列
-     */
-    List<List<UserBehavior>> selectUserContinuousBehaviors(
-            @Param("userId") Long userId,
-            @Param("timeInterval") Integer timeInterval,
-            @Param("limit") Integer limit);
-
-    /**
      * 查询用户行为热力图数据
      * 按小时和星期几统计行为频率
      *
-     * @param userId 用户ID
+     * @param userId       用户ID
      * @param behaviorType 行为类型
-     * @param days 天数
+     * @param days         天数
      * @return 热力图数据
      */
+    @MapKey("hour")
     List<Map<String, Object>> selectBehaviorHeatmapData(
             @Param("userId") Long userId,
             @Param("behaviorType") Integer behaviorType,
             @Param("days") Integer days);
+
+    IPage<UserBehavior> selectPage(IPage<UserBehavior> page);
 }
 
 

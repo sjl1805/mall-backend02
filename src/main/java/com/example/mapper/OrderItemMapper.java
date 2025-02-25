@@ -3,12 +3,13 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.OrderItem;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 /**
  * @author 31815
@@ -96,7 +97,7 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
      *
      * @param productId 商品ID
      * @param startTime 开始时间（可选）
-     * @param endTime 结束时间（可选）
+     * @param endTime   结束时间（可选）
      * @return 销量
      */
     int countProductSales(
@@ -108,10 +109,11 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
      * 查询热销商品
      *
      * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param limit 限制数量
+     * @param endTime   结束时间
+     * @param limit     限制数量
      * @return 热销商品列表
      */
+    @MapKey("product_id")
     List<Map<String, Object>> selectHotProducts(
             @Param("startTime") Date startTime,
             @Param("endTime") Date endTime,
@@ -123,48 +125,21 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
      * @param orderId 订单ID
      * @return 订单项商品详情列表
      */
+    @MapKey("id")
     List<Map<String, Object>> selectOrderItemsWithProductDetails(@Param("orderId") Long orderId);
 
     /**
      * 获取用户购买过的商品ID列表
      *
      * @param userId 用户ID
-     * @param limit 限制数量
+     * @param limit  限制数量
      * @return 商品ID列表
      */
     List<Long> getUserPurchasedProductIds(
-            @Param("userId") Long userId, 
+            @Param("userId") Long userId,
             @Param("limit") Integer limit);
 
-    /**
-     * 获取订单项状态汇总
-     *
-     * @param orderId 订单ID
-     * @return 状态汇总
-     */
-    Map<String, Object> getOrderItemStatusSummary(@Param("orderId") Long orderId);
 
-    /**
-     * 更新订单项评价状态
-     *
-     * @param id 订单项ID
-     * @param reviewStatus 评价状态
-     * @return 更新结果
-     */
-    int updateReviewStatus(
-            @Param("id") Long id, 
-            @Param("reviewStatus") Integer reviewStatus);
-
-    /**
-     * 更新订单项退款状态
-     *
-     * @param id 订单项ID
-     * @param refundStatus 退款状态
-     * @return 更新结果
-     */
-    int updateRefundStatus(
-            @Param("id") Long id, 
-            @Param("refundStatus") Integer refundStatus);
 }
 
 

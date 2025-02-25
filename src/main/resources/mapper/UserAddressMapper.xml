@@ -56,16 +56,14 @@
     </select>
 
     <!-- 插入新用户收货地址 -->
-    <insert id="insertUserAddress" parameterType="com.example.model.entity.UserAddress" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user_address (
-            user_id, is_default, receiver_name, receiver_phone, 
-            province, city, district, detail_address, 
-            create_time, update_time
-        ) VALUES (
-            #{userId}, #{isDefault}, #{receiverName}, #{receiverPhone}, 
-            #{province}, #{city}, #{district}, #{detailAddress}, 
-            NOW(), NOW()
-        )
+    <insert id="insertUserAddress" parameterType="com.example.model.entity.UserAddress" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO user_address (user_id, is_default, receiver_name, receiver_phone,
+                                  province, city, district, detail_address,
+                                  create_time, update_time)
+        VALUES (#{userId}, #{isDefault}, #{receiverName}, #{receiverPhone},
+                #{province}, #{city}, #{district}, #{detailAddress},
+                NOW(), NOW())
     </insert>
 
     <!-- 更新用户收货地址信息 -->
@@ -119,10 +117,8 @@
     <!-- 更新默认地址状态 -->
     <update id="updateDefaultStatus">
         UPDATE user_address
-        SET is_default = CASE
-            WHEN id = #{addressId} THEN 1
-            ELSE 0
-            END,
+        SET is_default  = IF(id = #{addressId}, 1, 0)
+                ,
             update_time = NOW()
         WHERE user_id = #{userId}
     </update>
@@ -157,6 +153,7 @@
     <select id="countByCity" resultType="int">
         SELECT COUNT(*)
         FROM user_address
-        WHERE user_id = #{userId} AND city = #{city}
+        WHERE user_id = #{userId}
+          AND city = #{city}
     </select>
 </mapper>
