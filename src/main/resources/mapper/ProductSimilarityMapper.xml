@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductSimilarityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSimilarity">
+        <id column="product_id_a" property="productIdA"/>
+        <id column="product_id_b" property="productIdB"/>
+        <result column="similarity" property="similarity"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        product_id_a, product_id_b, similarity, update_time
+    </sql>
+    
+    <!-- 获取与指定商品相似度最高的N个商品 -->
+    <select id="selectMostSimilarProducts" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_similarity
+        WHERE product_id_a = #{productId} OR product_id_b = #{productId}
+        ORDER BY similarity DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询两个商品之间的相似度 -->
+    <select id="selectByProductIds" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_similarity
+        WHERE (product_id_a = #{productIdA} AND product_id_b = #{productIdB})
+           OR (product_id_a = #{productIdB} AND product_id_b = #{productIdA})
+        LIMIT 1
+    </select>
+    
+    <!-- 更新或插入商品相似度记录 -->
+    <insert id="insertOrUpdate">
+        INSERT INTO product_similarity(product_id_a, product_id_b, similarity, update_time)
+        VALUES (#{productIdA}, #{productIdB}, #{similarity}, #{updateTime})
+        ON DUPLICATE KEY UPDATE
+            similarity = #{similarity},
+            update_time = #{updateTime}
+    </insert>
+    
+    <!-- 批量插入商品相似度数据 -->
+    <insert id="batchInsert">
+        INSERT INTO product_similarity(product_id_a, product_id_b, similarity, update_time)
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.productIdA}, #{item.productIdB}, #{item.similarity}, #{item.updateTime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            similarity = VALUES(similarity),
+            update_time = VALUES(update_time)
+    </insert>
+    
+    <!-- 根据相似度阈值查询高相似度商品对 -->
+    <select id="selectByThreshold" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_similarity
+        WHERE similarity >= #{threshold}
+        ORDER BY similarity DESC
+    </select>
+    
+    <!-- 删除指定日期之前的相似度数据 -->
+    <delete id="deleteBeforeTime">
+        DELETE FROM product_similarity
+        WHERE update_time &lt; #{beforeTime}
+    </delete>
+    
+    <!-- 查询指定商品的所有相似度记录 -->
+    <select id="selectAllByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_similarity
+        WHERE product_id_a = #{productId} OR product_id_b = #{productId}
+        ORDER BY similarity DESC
+    </select>
+    
+    <!-- 获取相似度最高的N个商品对 -->
+    <select id="selectTopSimilarityPairs" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_similarity
+        ORDER BY similarity DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询特定分类下的相似商品 -->
+    <select id="selectSimilarProductsByCategory" resultMap="BaseResultMap">
+        SELECT ps.*
+        FROM product_similarity ps
+        JOIN products p1 ON (ps.product_id_a = #{productId} AND ps.product_id_b = p1.id) 
+                          OR (ps.product_id_b = #{productId} AND ps.product_id_a = p1.id)
+        WHERE p1.category_id = #{categoryId}
+        ORDER BY ps.similarity DESC
+        LIMIT #{limit}
+    </select>
+    
+</mapper> 

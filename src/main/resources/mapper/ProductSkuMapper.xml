@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductSkuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.ProductSku">
+        <id column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="sku_code" property="skuCode"/>
+        <result column="specifications" property="specifications" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product_id, sku_code, specifications, price, stock, image, status, create_time, update_time
+    </sql>
+    
+    <!-- 根据商品ID查询所有SKU -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        ORDER BY price
+    </select>
+    
+    <!-- 根据SKU编码查询 -->
+    <select id="selectBySkuCode" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE sku_code = #{skuCode}
+        LIMIT 1
+    </select>
+    
+    <!-- 更新SKU库存 -->
+    <update id="updateStock">
+        UPDATE product_sku
+        SET stock = #{stock},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 批量更新SKU库存 -->
+    <update id="batchUpdateStock">
+        UPDATE product_sku
+        <trim prefix="SET" suffixOverrides=",">
+            <trim prefix="stock = CASE" suffix="END,">
+                <foreach collection="skuStockMap" index="skuId" item="stockValue">
+                    WHEN id = #{skuId} THEN #{stockValue}
+                </foreach>
+            </trim>
+            update_time = NOW()
+        </trim>
+        WHERE id IN
+        <foreach collection="skuStockMap.keys()" item="skuId" open="(" separator="," close=")">
+            #{skuId}
+        </foreach>
+    </update>
+    
+    <!-- 增加或减少SKU库存 -->
+    <update id="incrementStock">
+        UPDATE product_sku
+        SET stock = stock + #{amount},
+            update_time = NOW()
+        WHERE id = #{id}
+        AND stock + #{amount} >= 0
+    </update>
+    
+    <!-- 查询库存低于指定值的SKU -->
+    <select id="selectLowStock" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE stock &lt; #{threshold}
+        AND status = 1
+        ORDER BY stock
+    </select>
+    
+    <!-- 更新SKU价格 -->
+    <update id="updatePrice">
+        UPDATE product_sku
+        SET price = #{price},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 批量插入SKU -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product_sku(
+            product_id, sku_code, specifications, price, stock, image, status
+        ) VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.productId}, 
+                #{item.skuCode}, 
+                #{item.specifications, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler}, 
+                #{item.price}, 
+                #{item.stock}, 
+                #{item.image}, 
+                #{item.status}
+            )
+        </foreach>
+    </insert>
+    
+    <!-- 根据商品ID查询SKU，分页 -->
+    <select id="selectPageByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        ORDER BY price
+    </select>
+    
+    <!-- 获取商品的价格范围 -->
+    <select id="selectPriceRange" resultType="java.util.Map">
+        SELECT 
+            MIN(price) AS minPrice, 
+            MAX(price) AS maxPrice
+        FROM product_sku
+        WHERE product_id = #{productId}
+        AND status = 1
+    </select>
+    
+    <!-- 根据多个商品ID批量查询SKU -->
+    <select id="selectByProductIds" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id IN
+        <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+        AND status = 1
+        ORDER BY product_id, price
+    </select>
+    
+    <!-- 查询商品的可用SKU数量 -->
+    <select id="countAvailableSkus" resultType="int">
+        SELECT COUNT(*)
+        FROM product_sku
+        WHERE product_id = #{productId}
+        AND status = 1
+        AND stock > 0
+    </select>
+    
+</mapper> 

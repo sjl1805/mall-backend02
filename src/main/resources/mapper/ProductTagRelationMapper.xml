@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductTagRelationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.ProductTagRelation">
+        <id column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="tag_id" property="tagId"/>
+        <result column="weight" property="weight"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product_id, tag_id, weight, create_time, update_time
+    </sql>
+    
+    <!-- 根据商品ID查询所有标签关联 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_tag_relation
+        WHERE product_id = #{productId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 根据标签ID查询所有商品关联 -->
+    <select id="selectByTagId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_tag_relation
+        WHERE tag_id = #{tagId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询商品的高权重标签 -->
+    <select id="selectHighWeightTags" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_tag_relation
+        WHERE product_id = #{productId}
+        AND weight >= #{minWeight}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询标签的高权重商品 -->
+    <select id="selectHighWeightProducts" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_tag_relation
+        WHERE tag_id = #{tagId}
+        AND weight >= #{minWeight}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 更新商品标签权重 -->
+    <update id="updateWeight">
+        UPDATE product_tag_relation
+        SET weight = #{weight}, update_time = NOW()
+        WHERE product_id = #{productId} AND tag_id = #{tagId}
+    </update>
+    
+    <!-- 批量插入商品标签关联 -->
+    <insert id="batchInsert">
+        INSERT INTO product_tag_relation(product_id, tag_id, weight) 
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.productId}, #{item.tagId}, #{item.weight})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            weight = VALUES(weight),
+            update_time = NOW()
+    </insert>
+    
+    <!-- 删除商品的所有标签关联 -->
+    <delete id="deleteByProductId">
+        DELETE FROM product_tag_relation
+        WHERE product_id = #{productId}
+    </delete>
+    
+    <!-- 删除特定的商品标签关联 -->
+    <delete id="deleteByProductIdAndTagId">
+        DELETE FROM product_tag_relation
+        WHERE product_id = #{productId} AND tag_id = #{tagId}
+    </delete>
+    
+    <!-- 根据标签ID查询热门商品 -->
+    <select id="selectHotProductsByTagId" resultMap="BaseResultMap">
+        SELECT ptr.*
+        FROM product_tag_relation ptr
+        JOIN products p ON ptr.product_id = p.id
+        WHERE ptr.tag_id = #{tagId}
+        AND p.status = 1
+        ORDER BY ptr.weight DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询标签的使用统计 -->
+    <select id="selectTagUsageStats" resultType="java.util.Map">
+        SELECT 
+            tag_id,
+            COUNT(*) AS product_count,
+            AVG(weight) AS avg_weight
+        FROM product_tag_relation
+        GROUP BY tag_id
+        ORDER BY product_count DESC
+    </select>
+    
+    <!-- 分页查询某标签的关联商品 -->
+    <select id="selectProductsByTagIdPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM product_tag_relation
+        WHERE tag_id = #{tagId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询商品的标签数量 -->
+    <select id="countByProductId" resultType="int">
+        SELECT COUNT(*)
+        FROM product_tag_relation
+        WHERE product_id = #{productId}
+    </select>
+    
+    <!-- 查询标签关联的商品数量 -->
+    <select id="countByTagId" resultType="int">
+        SELECT COUNT(*)
+        FROM product_tag_relation
+        WHERE tag_id = #{tagId}
+    </select>
+    
+    <!-- 增加标签权重 -->
+    <update id="incrementWeight">
+        UPDATE product_tag_relation
+        SET weight = weight + #{increment}, update_time = NOW()
+        WHERE product_id = #{productId} AND tag_id = #{tagId}
+    </update>
+    
+</mapper> 
