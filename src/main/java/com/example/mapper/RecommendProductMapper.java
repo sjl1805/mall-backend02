@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.RecommendProduct;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:53
  * @Entity model.entity.RecommendProduct
  */
+@Mapper
 public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
 
     /**
@@ -70,6 +72,34 @@ public interface RecommendProductMapper extends BaseMapper<RecommendProduct> {
      * @return 删除结果
      */
     int deleteRecommendProduct(@Param("id") Long id);
+
+    /**
+     * 查询当前有效的推荐商品
+     *
+     * @param type 推荐类型（可选）
+     * @param limit 限制数量
+     * @return 有效的推荐商品列表
+     */
+    List<RecommendProduct> selectActiveRecommends(
+            @Param("type") Integer type,
+            @Param("limit") Integer limit);
+
+    /**
+     * 按类型查询推荐商品
+     *
+     * @param type 推荐类型
+     * @return 推荐商品列表
+     */
+    List<RecommendProduct> selectByType(@Param("type") Integer type);
+
+    /**
+     * 更新推荐商品状态
+     *
+     * @param id 推荐商品ID
+     * @param status 新状态
+     * @return 更新结果
+     */
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 }
 
 

@@ -39,7 +39,12 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_address
-        ORDER BY create_time DESC
+        <where>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">
+                ${ew.sqlSegment}
+            </if>
+        </where>
+        ORDER BY is_default DESC, create_time DESC
     </select>
 
     <!-- 根据ID查询用户收货地址 -->
@@ -51,25 +56,32 @@
     </select>
 
     <!-- 插入新用户收货地址 -->
-    <insert id="insertUserAddress" parameterType="com.example.model.entity.UserAddress">
-        INSERT INTO user_address (user_id, is_default, receiver_name, receiver_phone, province, city, district,
-                                  detail_address, create_time, update_time)
-        VALUES (#{userId}, #{isDefault}, #{receiverName}, #{receiverPhone}, #{province}, #{city}, #{district},
-                #{detailAddress}, #{createTime}, #{updateTime})
+    <insert id="insertUserAddress" parameterType="com.example.model.entity.UserAddress" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_address (
+            user_id, is_default, receiver_name, receiver_phone, 
+            province, city, district, detail_address, 
+            create_time, update_time
+        ) VALUES (
+            #{userId}, #{isDefault}, #{receiverName}, #{receiverPhone}, 
+            #{province}, #{city}, #{district}, #{detailAddress}, 
+            NOW(), NOW()
+        )
     </insert>
 
     <!-- 更新用户收货地址信息 -->
     <update id="updateUserAddress" parameterType="com.example.model.entity.UserAddress">
         UPDATE user_address
-        SET user_id        = #{userId},
-            is_default     = #{isDefault},
-            receiver_name  = #{receiverName},
-            receiver_phone = #{receiverPhone},
-            province       = #{province},
-            city           = #{city},
-            district       = #{district},
-            detail_address = #{detailAddress},
-            update_time    = #{updateTime}
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="receiverPhone != null">receiver_phone = #{receiverPhone},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="detailAddress != null">detail_address = #{detailAddress},</if>
+            update_time = NOW()
+        </set>
         WHERE id = #{id}
     </update>
 
@@ -79,4 +91,39 @@
         FROM user_address
         WHERE id = #{id}
     </delete>
+
+    <!-- 查询用户默认地址 -->
+    <select id="selectDefaultAddress" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId} AND is_default = 1
+        LIMIT 1
+    </select>
+
+    <!-- 按地区查询用户地址 -->
+    <select id="selectByRegion" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId}
+        <if test="province != null and province != ''">
+            AND province = #{province}
+        </if>
+        <if test="city != null and city != ''">
+            AND city = #{city}
+        </if>
+        ORDER BY is_default DESC, create_time DESC
+    </select>
+
+    <!-- 更新默认地址状态 -->
+    <update id="updateDefaultStatus">
+        UPDATE user_address
+        SET is_default = CASE
+            WHEN id = #{addressId} THEN 1
+            ELSE 0
+            END,
+            update_time = NOW()
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

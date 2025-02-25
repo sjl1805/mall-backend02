@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.model.entity.UserCoupon;
+import com.example.model.vo.UserCouponVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -44,7 +45,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
      * @param currentTime 当前时间
      * @return 可用优惠券列表
      */
-    List<UserCoupon> selectAvailableCoupons(@Param("userId") Long userId, @Param("currentTime") Date currentTime);
+    List<UserCouponVO> selectAvailableCoupons(@Param("userId") Long userId, @Param("currentTime") Date currentTime);
     
     /**
      * 获取即将过期的优惠券
@@ -54,7 +55,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
      * @param endTime 结束时间
      * @return 即将过期的优惠券
      */
-    List<UserCoupon> selectSoonExpiredCoupons(
+    List<UserCouponVO> selectSoonExpiredCoupons(
             @Param("userId") Long userId, 
             @Param("startTime") Date startTime, 
             @Param("endTime") Date endTime);
@@ -67,7 +68,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
      * @param currentTime 当前时间
      * @return 可用优惠券列表
      */
-    List<UserCoupon> selectCouponsByOrderAmount(
+    List<UserCouponVO> selectCouponsByOrderAmount(
             @Param("userId") Long userId, 
             @Param("orderAmount") Double orderAmount, 
             @Param("currentTime") Date currentTime);
@@ -112,7 +113,7 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
      * @param page 分页参数
      * @return 优惠券列表
      */
-    IPage<UserCoupon> selectUserCouponsByCondition(
+    IPage<UserCouponVO> selectUserCouponsByCondition(
             @Param("userId") Long userId,
             @Param("status") Integer status,
             @Param("startTime") Date startTime,

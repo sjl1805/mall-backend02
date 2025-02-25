@@ -38,7 +38,12 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM recommend_product
-        ORDER BY sort ASC
+        <where>
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">
+                ${ew.sqlSegment}
+            </if>
+        </where>
+        ORDER BY sort ASC, create_time DESC
     </select>
 
     <!-- 根据ID查询推荐商品 -->
@@ -50,25 +55,31 @@
     </select>
 
     <!-- 插入新推荐商品 -->
-    <insert id="insertRecommendProduct" parameterType="com.example.model.entity.RecommendProduct">
-        INSERT INTO recommend_product (product_id, type, sort, status, start_time, end_time, algorithm_version,
-                                       recommend_reason, create_time, update_time)
-        VALUES (#{productId}, #{type}, #{sort}, #{status}, #{startTime}, #{endTime}, #{algorithmVersion},
-                #{recommendReason}, #{createTime}, #{updateTime})
+    <insert id="insertRecommendProduct" parameterType="com.example.model.entity.RecommendProduct" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommend_product (
+            product_id, type, sort, status, 
+            start_time, end_time, algorithm_version, recommend_reason
+        ) VALUES (
+            #{productId}, #{type}, #{sort}, #{status}, 
+            #{startTime}, #{endTime}, #{algorithmVersion}, #{recommendReason}
+        )
     </insert>
 
     <!-- 更新推荐商品信息 -->
     <update id="updateRecommendProduct" parameterType="com.example.model.entity.RecommendProduct">
         UPDATE recommend_product
-        SET product_id        = #{productId},
-            type              = #{type},
-            sort              = #{sort},
-            status            = #{status},
-            start_time        = #{startTime},
-            end_time          = #{endTime},
-            algorithm_version = #{algorithmVersion},
-            recommend_reason  = #{recommendReason},
-            update_time       = #{updateTime}
+        <set>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="algorithmVersion != null">algorithm_version = #{algorithmVersion},</if>
+            <if test="recommendReason != null">recommend_reason = #{recommendReason},</if>
+            update_time = NOW()
+        </set>
         WHERE id = #{id}
     </update>
 
@@ -78,4 +89,50 @@
         FROM recommend_product
         WHERE id = #{id}
     </delete>
+
+    <!-- 根据用户ID查询推荐商品 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT r.*
+        FROM recommend_product r
+        JOIN product_favorite pf ON r.product_id = pf.product_id
+        WHERE pf.user_id = #{userId}
+        AND r.status = 1
+        AND r.start_time &lt;= NOW()
+        AND r.end_time &gt; NOW()
+        ORDER BY r.sort ASC
+    </select>
+
+    <!-- 查询当前有效的推荐商品 -->
+    <select id="selectActiveRecommends" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM recommend_product
+        WHERE status = 1
+        AND start_time &lt;= NOW()
+        AND end_time &gt; NOW()
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        ORDER BY sort ASC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 按类型查询推荐商品 -->
+    <select id="selectByType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM recommend_product
+        WHERE type = #{type}
+        ORDER BY sort ASC
+    </select>
+
+    <!-- 更新推荐商品状态 -->
+    <update id="updateStatus">
+        UPDATE recommend_product
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper>

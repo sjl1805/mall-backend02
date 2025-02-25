@@ -3,9 +3,11 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Category;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 31815
@@ -13,6 +15,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:22
  * @Entity model.entity.Category
  */
+@Mapper
 public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
@@ -54,6 +57,90 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 分类列表
      */
     List<Category> selectByLevel(@Param("level") Integer level);
+
+    /**
+     * 插入分类
+     *
+     * @param category 分类信息
+     * @return 插入结果
+     */
+    int insertCategory(Category category);
+
+    /**
+     * 更新分类
+     *
+     * @param category 分类信息
+     * @return 更新结果
+     */
+    int updateCategory(Category category);
+
+    /**
+     * 删除分类
+     *
+     * @param id 分类ID
+     * @return 删除结果
+     */
+    int deleteCategory(@Param("id") Long id);
+
+    /**
+     * 查询所有分类并按层级组织
+     *
+     * @return 分类树结构
+     */
+    List<Map<String, Object>> selectCategoryTree();
+
+    /**
+     * 根据父ID查询子分类（包含子分类的商品数量）
+     *
+     * @param parentId 父分类ID
+     * @return 子分类列表
+     */
+    List<Map<String, Object>> selectChildrenWithProductCount(@Param("parentId") Long parentId);
+
+    /**
+     * 更新分类排序
+     *
+     * @param id 分类ID
+     * @param sort 排序值
+     * @return 更新结果
+     */
+    int updateSort(@Param("id") Long id, @Param("sort") Integer sort);
+
+    /**
+     * 更新分类状态
+     *
+     * @param id 分类ID
+     * @param status 状态值
+     * @return 更新结果
+     */
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    /**
+     * 获取分类路径（面包屑导航）
+     *
+     * @param categoryId 分类ID
+     * @return 分类路径
+     */
+    List<Category> selectCategoryPath(@Param("categoryId") Long categoryId);
+
+    /**
+     * 批量删除分类
+     *
+     * @param ids 分类ID列表
+     * @return 删除结果
+     */
+    int batchDeleteCategories(@Param("ids") List<Long> ids);
+
+    /**
+     * 批量更新分类状态
+     *
+     * @param ids 分类ID列表
+     * @param status 状态值
+     * @return 更新结果
+     */
+    int batchUpdateStatus(
+            @Param("ids") List<Long> ids,
+            @Param("status") Integer status);
 }
 
 

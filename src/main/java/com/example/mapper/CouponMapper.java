@@ -3,9 +3,12 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.Coupon;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Date;
 
 /**
  * @author 31815
@@ -13,6 +16,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:19
  * @Entity model.entity.Coupon
  */
+@Mapper
 public interface CouponMapper extends BaseMapper<Coupon> {
 
     /**
@@ -70,6 +74,88 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @return 删除结果
      */
     int deleteCoupon(@Param("id") Long id);
+
+    /**
+     * 查询可用优惠券
+     *
+     * @param now 当前时间
+     * @param amount 订单金额
+     * @return 可用优惠券列表
+     */
+    List<Coupon> selectAvailableCoupons(
+            @Param("now") Date now,
+            @Param("amount") Double amount);
+
+    /**
+     * 查询即将过期的优惠券
+     *
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 即将过期优惠券列表
+     */
+    List<Coupon> selectExpiringSoon(
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
+
+    /**
+     * 减少优惠券数量（领取/使用）
+     *
+     * @param id 优惠券ID
+     * @param count 减少数量
+     * @return 更新结果
+     */
+    int decreaseCouponNum(@Param("id") Long id, @Param("count") Integer count);
+
+    /**
+     * 检查优惠券是否可用于指定金额
+     *
+     * @param id 优惠券ID
+     * @param amount 订单金额
+     * @param now 当前时间
+     * @return 可用优惠券信息，无可用返回null
+     */
+    Coupon checkCouponAvailable(
+            @Param("id") Long id,
+            @Param("amount") Double amount,
+            @Param("now") Date now);
+
+    /**
+     * 统计优惠券使用情况
+     *
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 优惠券统计数据
+     */
+    List<Map<String, Object>> getCouponStatistics(
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
+
+    /**
+     * 获取热门优惠券排行
+     *
+     * @param limit 限制数量
+     * @return 热门优惠券列表
+     */
+    List<Map<String, Object>> getPopularCoupons(@Param("limit") Integer limit);
+
+    /**
+     * 批量更新优惠券状态
+     *
+     * @param ids 优惠券ID列表
+     * @param status 新状态
+     * @return 更新结果
+     */
+    int batchUpdateStatus(
+            @Param("ids") List<Long> ids,
+            @Param("status") Integer status);
+
+    /**
+     * 批量删除优惠券
+     *
+     * @param ids 优惠券ID列表
+     * @return 删除结果
+     */
+    int batchDelete(@Param("ids") List<Long> ids);
 }
 
 

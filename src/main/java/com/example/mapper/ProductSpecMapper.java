@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.ProductSpec;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:03:58
  * @Entity model.entity.ProductSpec
  */
+@Mapper
 public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
 
     /**
@@ -62,6 +64,31 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
      * @return 删除结果
      */
     int deleteProductSpec(@Param("id") Long id);
+
+    /**
+     * 批量插入商品规格
+     *
+     * @param specList 商品规格列表
+     * @return 插入结果
+     */
+    int batchInsertProductSpecs(@Param("specList") List<ProductSpec> specList);
+
+    /**
+     * 批量删除商品规格
+     *
+     * @param ids 规格ID列表
+     * @return 删除结果
+     */
+    int batchDeleteProductSpecs(@Param("ids") List<Long> ids);
+
+    /**
+     * 根据规格值查询商品规格
+     *
+     * @param productId 商品ID
+     * @param specValue 规格值
+     * @return 商品规格列表
+     */
+    List<ProductSpec> selectBySpecValue(@Param("productId") Long productId, @Param("specValue") String specValue);
 }
 
 

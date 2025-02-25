@@ -49,14 +49,21 @@
         <include refid="Base_Column_List"/>
         FROM products
         WHERE id = #{id}
+    </select>
+
+    <!-- 根据商品名称查询商品 -->
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE name = #{name}
         AND status = 1
     </select>
 
     <!-- 插入新商品 -->
     <insert id="insertProduct" parameterType="com.example.model.entity.Products">
         INSERT INTO products (category_id, name, description, price, stock, images, create_time, update_time, status)
-        VALUES (#{categoryId}, #{name}, #{description}, #{price}, #{stock}, #{images}, #{createTime}, #{updateTime},
-                #{status})
+        VALUES (#{categoryId}, #{name}, #{description}, #{price}, #{stock}, #{images}, NOW(), NOW(), #{status})
     </insert>
 
     <!-- 更新商品信息 -->
@@ -68,7 +75,7 @@
             price       = #{price},
             stock       = #{stock},
             images      = #{images},
-            update_time = #{updateTime},
+            update_time = NOW(),
             status      = #{status}
         WHERE id = #{id}
     </update>
@@ -79,4 +86,93 @@
         FROM products
         WHERE id = #{id}
     </delete>
+
+    <!-- 根据分类ID查询商品 -->
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE category_id = #{categoryId}
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据价格范围查询商品 -->
+    <select id="selectByPriceRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE price BETWEEN #{minPrice} AND #{maxPrice}
+        AND status = 1
+        ORDER BY price ASC
+    </select>
+
+    <!-- 根据状态查询商品 -->
+    <select id="selectByStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE status = #{status}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询热门商品 -->
+    <select id="selectHotProducts" resultMap="BaseResultMap">
+        SELECT p.*
+        FROM products p
+        JOIN (
+            SELECT product_id, COUNT(*) as count
+            FROM order_item
+            GROUP BY product_id
+            ORDER BY count DESC
+            LIMIT #{limit}
+        ) hot ON p.id = hot.product_id
+        WHERE p.status = 1
+        ORDER BY hot.count DESC
+    </select>
+
+    <!-- 高级条件查询商品 -->
+    <select id="selectProductsByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        <where>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="minPrice != null">
+                AND price >= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND price <= #{maxPrice}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 批量插入商品 -->
+    <insert id="batchInsertProducts">
+        INSERT INTO products (category_id, name, description, price, stock, images, create_time, update_time, status)
+        VALUES
+        <foreach collection="productList" item="product" separator=",">
+            (#{product.categoryId}, #{product.name}, #{product.description}, 
+             #{product.price}, #{product.stock}, #{product.images}, 
+             NOW(), NOW(), #{product.status})
+        </foreach>
+    </insert>
+
+    <!-- 减少商品库存 -->
+    <update id="decreaseStock">
+        UPDATE products
+        SET stock = stock - #{quantity},
+            update_time = NOW()
+        WHERE id = #{id}
+        AND stock >= #{quantity}
+    </update>
 </mapper>

@@ -3,9 +3,12 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.OrderItem;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Date;
 
 /**
  * @author 31815
@@ -13,6 +16,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:13
  * @Entity model.entity.OrderItem
  */
+@Mapper
 public interface OrderItemMapper extends BaseMapper<OrderItem> {
 
     /**
@@ -62,6 +66,64 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
      * @return 删除结果
      */
     int deleteOrderItem(@Param("id") Long id);
+
+    /**
+     * 批量插入订单商品
+     *
+     * @param orderItems 订单商品列表
+     * @return 插入结果
+     */
+    int batchInsertOrderItems(@Param("orderItems") List<OrderItem> orderItems);
+
+    /**
+     * 根据订单ID批量删除订单商品
+     *
+     * @param orderId 订单ID
+     * @return 删除结果
+     */
+    int deleteByOrderId(@Param("orderId") Long orderId);
+
+    /**
+     * 根据商品ID查询订单商品
+     *
+     * @param productId 商品ID
+     * @return 订单商品列表
+     */
+    List<OrderItem> selectByProductId(@Param("productId") Long productId);
+
+    /**
+     * 统计商品销量
+     *
+     * @param productId 商品ID
+     * @param startTime 开始时间（可选）
+     * @param endTime 结束时间（可选）
+     * @return 销量
+     */
+    int countProductSales(
+            @Param("productId") Long productId,
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
+
+    /**
+     * 查询热销商品
+     *
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param limit 限制数量
+     * @return 热销商品列表
+     */
+    List<Map<String, Object>> selectHotProducts(
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime,
+            @Param("limit") Integer limit);
+
+    /**
+     * 查询订单项关联的商品详情
+     *
+     * @param orderId 订单ID
+     * @return 订单项商品详情列表
+     */
+    List<Map<String, Object>> selectOrderItemsWithProductDetails(@Param("orderId") Long orderId);
 }
 
 

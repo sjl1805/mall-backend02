@@ -58,15 +58,27 @@
     </select>
 
     <!-- 插入订单 -->
-    <insert id="insertOrder">
-        INSERT INTO orders (...)
-        VALUES (...)
+    <insert id="insertOrder" parameterType="com.example.model.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (
+            order_no, user_id, total_amount, pay_amount, status,
+            receiver_name, receiver_phone, receiver_address,
+            payment_time, delivery_time, receive_time,
+            payment_method, logistics_company, tracking_number,
+            comment_status, create_time, update_time, timezone
+        ) VALUES (
+            #{orderNo}, #{userId}, #{totalAmount}, #{payAmount}, #{status},
+            #{receiverName}, #{receiverPhone}, #{receiverAddress},
+            #{paymentTime}, #{deliveryTime}, #{receiveTime},
+            #{paymentMethod}, #{logisticsCompany}, #{trackingNumber},
+            #{commentStatus}, NOW(), NOW(), #{timezone}
+        )
     </insert>
 
     <!-- 更新状态 -->
     <update id="updateOrderStatus">
         UPDATE orders
-        SET status = #{status}
+        SET status = #{status},
+            update_time = NOW()
         WHERE order_no = #{orderNo}
     </update>
 
@@ -76,5 +88,90 @@
         FROM orders
         WHERE id = #{id}
     </delete>
+
+    <!-- 根据订单状态查询 -->
+    <select id="selectByStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE status = #{status}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询用户特定状态的订单 -->
+    <select id="selectByUserIdAndStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        AND status = #{status}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据时间范围查询订单 -->
+    <select id="selectByTimeRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 获取订单统计数据 -->
+    <select id="getOrderStatistics" resultType="java.util.Map">
+        SELECT status, COUNT(*) as count, SUM(pay_amount) as total_amount
+        FROM orders
+        <if test="userId != null">
+            WHERE user_id = #{userId}
+        </if>
+        GROUP BY status
+        ORDER BY status
+    </select>
+
+    <!-- 查询最近创建的订单 -->
+    <select id="selectRecentOrders" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 更新订单支付信息 -->
+    <update id="updatePaymentInfo">
+        UPDATE orders
+        SET payment_method = #{paymentMethod},
+            payment_time = #{paymentTime},
+            status = 2, <!-- 假设2为已支付状态 -->
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 1 <!-- 假设1为待支付状态 -->
+    </update>
+
+    <!-- 更新订单物流信息 -->
+    <update id="updateShippingInfo">
+        UPDATE orders
+        SET logistics_company = #{logisticsCompany},
+            tracking_number = #{trackingNumber},
+            delivery_time = NOW(),
+            status = 3, <!-- 假设3为已发货状态 -->
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 2 <!-- 假设2为已支付状态 -->
+    </update>
+
+    <!-- 查询订单详情（包含订单项） -->
+    <select id="selectOrderDetail" resultType="java.util.Map">
+        SELECT o.*, 
+               p.name as product_name, 
+               p.images as product_images,
+               oi.quantity, 
+               oi.price as item_price, 
+               oi.total_price as item_total_price
+        FROM orders o
+        JOIN order_item oi ON o.id = oi.order_id
+        JOIN products p ON oi.product_id = p.id
+        WHERE o.order_no = #{orderNo}
+    </select>
 
 </mapper>

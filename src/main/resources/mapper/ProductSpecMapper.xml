@@ -45,7 +45,7 @@
     <!-- 插入新商品规格 -->
     <insert id="insertProductSpec" parameterType="com.example.model.entity.ProductSpec">
         INSERT INTO product_spec (product_id, spec_name, spec_values, create_time, update_time)
-        VALUES (#{productId}, #{specName}, #{specValues}, #{createTime}, #{updateTime})
+        VALUES (#{productId}, #{specName}, #{specValues}, NOW(), NOW())
     </insert>
 
     <!-- 更新商品规格信息 -->
@@ -54,7 +54,7 @@
         SET product_id  = #{productId},
             spec_name   = #{specName},
             spec_values = #{specValues},
-            update_time = #{updateTime}
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
@@ -64,4 +64,31 @@
         FROM product_spec
         WHERE id = #{id}
     </delete>
+
+    <!-- 批量插入商品规格 -->
+    <insert id="batchInsertProductSpecs">
+        INSERT INTO product_spec (product_id, spec_name, spec_values, create_time, update_time)
+        VALUES
+        <foreach collection="specList" item="spec" separator=",">
+            (#{spec.productId}, #{spec.specName}, #{spec.specValues}, NOW(), NOW())
+        </foreach>
+    </insert>
+
+    <!-- 批量删除商品规格 -->
+    <delete id="batchDeleteProductSpecs">
+        DELETE FROM product_spec
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据规格值查询商品规格 -->
+    <select id="selectBySpecValue" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_spec
+        WHERE product_id = #{productId}
+        AND spec_values LIKE CONCAT('%', #{specValue}, '%')
+    </select>
 </mapper>

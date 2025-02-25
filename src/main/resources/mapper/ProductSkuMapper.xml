@@ -52,7 +52,7 @@
     <insert id="insertProductSku" parameterType="com.example.model.entity.ProductSku">
         INSERT INTO product_sku (product_id, spec_values, price, stock, sales, main_image, create_time, update_time,
                                  status)
-        VALUES (#{productId}, #{specValues}, #{price}, #{stock}, #{sales}, #{mainImage}, #{createTime}, #{updateTime},
+        VALUES (#{productId}, #{specValues}, #{price}, #{stock}, #{sales}, #{mainImage}, NOW(), NOW(),
                 #{status})
     </insert>
 
@@ -65,7 +65,7 @@
             stock       = #{stock},
             sales       = #{sales},
             main_image  = #{mainImage},
-            update_time = #{updateTime},
+            update_time = NOW(),
             status      = #{status}
         WHERE id = #{id}
     </update>
@@ -76,4 +76,62 @@
         FROM product_sku
         WHERE id = #{id}
     </delete>
+
+    <!-- 根据规格值精确匹配SKU -->
+    <select id="selectBySpecValues" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        AND spec_values = #{specValues}
+        AND status = 1
+    </select>
+
+    <!-- 查询可售SKU（有库存且上架） -->
+    <select id="selectAvailableSkus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        AND stock > 0
+        AND status = 1
+    </select>
+
+    <!-- 减少SKU库存 -->
+    <update id="decreaseStock">
+        UPDATE product_sku
+        SET stock = stock - #{quantity},
+            update_time = NOW()
+        WHERE id = #{id}
+        AND stock >= #{quantity}
+    </update>
+
+    <!-- 增加SKU销量 -->
+    <update id="increaseSales">
+        UPDATE product_sku
+        SET sales = sales + #{quantity},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量插入SKU -->
+    <insert id="batchInsertSkus">
+        INSERT INTO product_sku (product_id, spec_values, price, stock, sales, main_image, create_time, update_time, status)
+        VALUES
+        <foreach collection="skuList" item="sku" separator=",">
+            (#{sku.productId}, #{sku.specValues}, #{sku.price}, #{sku.stock}, 
+             #{sku.sales}, #{sku.mainImage}, NOW(), NOW(), #{sku.status})
+        </foreach>
+    </insert>
+
+    <!-- 根据价格区间查询SKU -->
+    <select id="selectByPriceRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_sku
+        WHERE product_id = #{productId}
+        AND price BETWEEN #{minPrice} AND #{maxPrice}
+        AND status = 1
+        ORDER BY price ASC
+    </select>
 </mapper>

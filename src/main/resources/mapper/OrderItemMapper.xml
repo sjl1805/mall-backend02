@@ -50,7 +50,7 @@
         INSERT INTO order_item (order_id, product_id, product_name, product_image, price, quantity, total_amount,
                                 create_time, update_time)
         VALUES (#{orderId}, #{productId}, #{productName}, #{productImage}, #{price}, #{quantity}, #{totalAmount},
-                #{createTime}, #{updateTime})
+                NOW(), NOW())
     </insert>
 
     <!-- 更新订单商品信息 -->
@@ -63,7 +63,7 @@
             price         = #{price},
             quantity      = #{quantity},
             total_amount  = #{totalAmount},
-            update_time   = #{updateTime}
+            update_time   = NOW()
         WHERE id = #{id}
     </update>
 
@@ -73,4 +73,73 @@
         FROM order_item
         WHERE id = #{id}
     </delete>
+
+    <!-- 批量插入订单商品 -->
+    <insert id="batchInsertOrderItems" parameterType="java.util.List">
+        INSERT INTO order_item (order_id, product_id, product_name, product_image, price, quantity, total_amount,
+                                create_time, update_time)
+        VALUES
+        <foreach collection="orderItems" item="item" separator=",">
+            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.productImage}, 
+             #{item.price}, #{item.quantity}, #{item.totalAmount}, NOW(), NOW())
+        </foreach>
+    </insert>
+
+    <!-- 根据订单ID批量删除订单商品 -->
+    <delete id="deleteByOrderId">
+        DELETE FROM order_item
+        WHERE order_id = #{orderId}
+    </delete>
+
+    <!-- 根据商品ID查询订单商品 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE product_id = #{productId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计商品销量 -->
+    <select id="countProductSales" resultType="int">
+        SELECT COALESCE(SUM(quantity), 0)
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE oi.product_id = #{productId}
+        AND o.status >= 2  <!-- 假设状态2以上为已支付订单 -->
+        <if test="startTime != null">
+            AND oi.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND oi.create_time <= #{endTime}
+        </if>
+    </select>
+
+    <!-- 查询热销商品 -->
+    <select id="selectHotProducts" resultType="java.util.Map">
+        SELECT oi.product_id, oi.product_name, SUM(oi.quantity) as sales_count, 
+               AVG(oi.price) as avg_price
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.status >= 2  <!-- 假设状态2以上为已支付订单 -->
+        <if test="startTime != null">
+            AND oi.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND oi.create_time <= #{endTime}
+        </if>
+        GROUP BY oi.product_id, oi.product_name
+        ORDER BY sales_count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询订单项关联的商品详情 -->
+    <select id="selectOrderItemsWithProductDetails" resultType="java.util.Map">
+        SELECT oi.*, p.description, p.images, p.price as current_price, 
+               p.stock, c.name as category_name
+        FROM order_item oi
+        LEFT JOIN products p ON oi.product_id = p.id
+        LEFT JOIN product_category c ON p.category_id = c.id
+        WHERE oi.order_id = #{orderId}
+    </select>
 </mapper>

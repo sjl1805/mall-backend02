@@ -55,8 +55,8 @@
     <insert id="insertProductReview" parameterType="com.example.model.entity.ProductReview">
         INSERT INTO product_review (order_id, user_id, product_id, rating, content, images, status, create_time,
                                     update_time)
-        VALUES (#{orderId}, #{userId}, #{productId}, #{rating}, #{content}, #{images}, #{status}, #{createTime},
-                #{updateTime})
+        VALUES (#{orderId}, #{userId}, #{productId}, #{rating}, #{content}, #{images}, #{status}, NOW(),
+                NOW())
     </insert>
 
     <!-- 更新评价信息 -->
@@ -69,7 +69,7 @@
             content     = #{content},
             images      = #{images},
             status      = #{status},
-            update_time = #{updateTime}
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
@@ -79,4 +79,54 @@
         FROM product_review
         WHERE id = #{id}
     </delete>
+
+    <!-- 计算商品平均评分 -->
+    <select id="calculateAverageRating" resultType="Double">
+        SELECT AVG(rating) as avg_rating
+        FROM product_review
+        WHERE product_id = #{productId}
+        AND status = 1
+    </select>
+
+    <!-- 统计各评分数量 -->
+    <select id="countByRating" resultType="java.util.Map">
+        SELECT rating, COUNT(*) as count
+        FROM product_review
+        WHERE product_id = #{productId}
+        AND status = 1
+        GROUP BY rating
+        ORDER BY rating DESC
+    </select>
+
+    <!-- 根据评分范围查询评价 -->
+    <select id="selectByRatingRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_review
+        WHERE product_id = #{productId}
+        AND rating BETWEEN #{minRating} AND #{maxRating}
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询用户所有评价 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_review
+        WHERE user_id = #{userId}
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 批量更新评价状态 -->
+    <update id="batchUpdateStatus">
+        UPDATE product_review
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

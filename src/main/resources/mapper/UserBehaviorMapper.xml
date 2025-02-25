@@ -153,4 +153,43 @@
             AND behavior_type = #{behaviorType}
         </if>
     </select>
+
+    <!-- 根据ID查询用户行为 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入新用户行为 -->
+    <insert id="insertUserBehavior" parameterType="com.example.model.entity.UserBehavior" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_behavior (
+            user_id, product_id, behavior_type, behavior_time, 
+            duration, weight, create_time, update_time
+        ) VALUES (
+            #{userId}, #{productId}, #{behaviorType}, #{behaviorTime}, 
+            #{duration}, #{weight}, NOW(), NOW()
+        )
+    </insert>
+
+    <!-- 更新用户行为信息 -->
+    <update id="updateUserBehavior" parameterType="com.example.model.entity.UserBehavior">
+        UPDATE user_behavior
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="behaviorType != null">behavior_type = #{behaviorType},</if>
+            <if test="behaviorTime != null">behavior_time = #{behaviorTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除用户行为 -->
+    <delete id="deleteUserBehavior">
+        DELETE FROM user_behavior WHERE id = #{id}
+    </delete>
 </mapper>

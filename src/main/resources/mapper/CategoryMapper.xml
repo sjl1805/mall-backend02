@@ -57,4 +57,129 @@
         ORDER BY sort DESC
     </select>
 
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM category
+        WHERE name = #{name}
+        AND status = 1
+        ORDER BY sort DESC
+    </select>
+
+    <insert id="insertCategory" parameterType="com.example.model.entity.Category">
+        INSERT INTO category (parent_id, name, icon, level, sort, status, create_time, update_time)
+        VALUES (#{parentId}, #{name}, #{icon}, #{level}, #{sort}, #{status}, NOW(), NOW())
+    </insert>
+
+    <update id="updateCategory" parameterType="com.example.model.entity.Category">
+        UPDATE category
+        SET parent_id   = #{parentId},
+            name        = #{name},
+            icon        = #{icon},
+            level       = #{level},
+            sort        = #{sort},
+            status      = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCategory">
+        DELETE FROM category
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 查询所有分类并按层级组织 -->
+    <select id="selectCategoryTree" resultType="java.util.Map">
+        SELECT c1.id, c1.name, c1.icon, c1.level, c1.sort,
+               (SELECT COUNT(*) FROM product WHERE category_id = c1.id AND status = 1) as product_count,
+               (
+                   SELECT JSON_ARRAYAGG(
+                       JSON_OBJECT(
+                           'id', c2.id,
+                           'name', c2.name,
+                           'icon', c2.icon,
+                           'level', c2.level,
+                           'sort', c2.sort,
+                           'children', (
+                               SELECT JSON_ARRAYAGG(
+                                   JSON_OBJECT(
+                                       'id', c3.id,
+                                       'name', c3.name,
+                                       'icon', c3.icon,
+                                       'level', c3.level,
+                                       'sort', c3.sort
+                                   )
+                               )
+                               FROM category c3
+                               WHERE c3.parent_id = c2.id AND c3.status = 1
+                               ORDER BY c3.sort DESC
+                           )
+                       )
+                   )
+               )
+               FROM category c2
+               WHERE c2.parent_id = c1.id AND c2.status = 1
+               ORDER BY c2.sort DESC
+           ) as children
+        FROM category c1
+        WHERE c1.parent_id = 0 AND c1.status = 1
+        ORDER BY c1.sort DESC
+    </select>
+
+    <!-- 根据父ID查询子分类（包含子分类的商品数量） -->
+    <select id="selectChildrenWithProductCount" resultType="java.util.Map">
+        SELECT c.*, 
+               (SELECT COUNT(*) FROM product WHERE category_id = c.id AND status = 1) as product_count
+        FROM category c
+        WHERE c.parent_id = #{parentId}
+        AND c.status = 1
+        ORDER BY c.sort DESC
+    </select>
+
+    <!-- 更新分类排序 -->
+    <update id="updateSort">
+        UPDATE category
+        SET sort = #{sort},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新分类状态 -->
+    <update id="updateStatus">
+        UPDATE category
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取分类路径 -->
+    <select id="selectCategoryPath" resultMap="BaseResultMap">
+        WITH RECURSIVE category_path AS (
+            SELECT * FROM category WHERE id = #{categoryId}
+            UNION ALL
+            SELECT c.* FROM category c, category_path cp WHERE c.id = cp.parent_id
+        )
+        SELECT * FROM category_path ORDER BY level ASC
+    </select>
+
+    <!-- 批量删除分类 -->
+    <delete id="batchDeleteCategories">
+        DELETE FROM category
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 批量更新分类状态 -->
+    <update id="batchUpdateStatus">
+        UPDATE category
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

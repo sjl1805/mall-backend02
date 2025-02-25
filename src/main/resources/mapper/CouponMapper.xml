@@ -52,11 +52,20 @@
         WHERE id = #{id}
     </select>
 
+    <!-- 根据名称查询优惠券（精确匹配） -->
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE name = #{name}
+        AND status = 1
+    </select>
+
     <!-- 插入新优惠券 -->
     <insert id="insertCoupon" parameterType="com.example.model.entity.Coupon">
         INSERT INTO coupon (name, type, value, num, min_amount, start_time, end_time, status, create_time, update_time)
-        VALUES (#{name}, #{type}, #{value}, #{num}, #{minAmount}, #{startTime}, #{endTime}, #{status}, #{createTime},
-                #{updateTime})
+        VALUES (#{name}, #{type}, #{value}, #{num}, #{minAmount}, #{startTime}, #{endTime}, #{status}, NOW(),
+                NOW())
     </insert>
 
     <!-- 更新优惠券信息 -->
@@ -70,7 +79,7 @@
             start_time  = #{startTime},
             end_time    = #{endTime},
             status      = #{status},
-            update_time = #{updateTime}
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
@@ -79,5 +88,99 @@
         DELETE
         FROM coupon
         WHERE id = #{id}
+    </delete>
+
+    <!-- 查询可用优惠券 -->
+    <select id="selectAvailableCoupons" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+        AND num > 0
+        AND start_time <= #{now}
+        AND end_time >= #{now}
+        <if test="amount != null">
+            AND min_amount <= #{amount}
+        </if>
+        ORDER BY value DESC
+    </select>
+
+    <!-- 查询即将过期的优惠券 -->
+    <select id="selectExpiringSoon" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+        AND end_time BETWEEN #{startDate} AND #{endDate}
+        ORDER BY end_time ASC
+    </select>
+
+    <!-- 减少优惠券数量 -->
+    <update id="decreaseCouponNum">
+        UPDATE coupon
+        SET num = num - #{count},
+            update_time = NOW()
+        WHERE id = #{id}
+        AND num >= #{count}
+    </update>
+
+    <!-- 检查优惠券是否可用 -->
+    <select id="checkCouponAvailable" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE id = #{id}
+        AND status = 1
+        AND num > 0
+        AND start_time <= #{now}
+        AND end_time >= #{now}
+        AND min_amount <= #{amount}
+    </select>
+
+    <!-- 统计优惠券使用情况 -->
+    <select id="getCouponStatistics" resultType="java.util.Map">
+        SELECT c.id, c.name, c.type, c.value,
+               COUNT(uc.id) as used_count,
+               SUM(uc.order_amount) as total_order_amount,
+               SUM(uc.discount_amount) as total_discount_amount
+        FROM coupon c
+        JOIN user_coupon uc ON c.id = uc.coupon_id
+        WHERE uc.use_time BETWEEN #{startDate} AND #{endDate}
+        AND uc.status = 2 -- 假设2表示已使用
+        GROUP BY c.id, c.name, c.type, c.value
+        ORDER BY used_count DESC
+    </select>
+
+    <!-- 获取热门优惠券排行 -->
+    <select id="getPopularCoupons" resultType="java.util.Map">
+        SELECT c.id, c.name, c.type, c.value, c.min_amount,
+               COUNT(uc.id) as receive_count,
+               COALESCE(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 0) as used_count,
+               ROUND(COALESCE(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(uc.id), 0), 2) as use_rate
+        FROM coupon c
+        JOIN user_coupon uc ON c.id = uc.coupon_id
+        GROUP BY c.id, c.name, c.type, c.value, c.min_amount
+        ORDER BY receive_count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 批量更新优惠券状态 -->
+    <update id="batchUpdateStatus">
+        UPDATE coupon
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 批量删除优惠券 -->
+    <delete id="batchDelete">
+        DELETE FROM coupon
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
 </mapper>

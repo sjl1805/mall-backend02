@@ -37,7 +37,6 @@ public interface UsersMapper extends BaseMapper<Users> {
      * @param username 用户名
      * @return 用户信息
      */
-    @Select("select * from users where username = #{username}")
     Users selectByUsername(@Param("username") String username);
 
     /**
@@ -119,7 +118,7 @@ public interface UsersMapper extends BaseMapper<Users> {
      * @return 用户信息
      */
     @Override
-    @Select("select * from users where user_id = #{id}")
+    @Select("select * from users where id = #{id}")
     Users selectById(Serializable id);
 
     /**

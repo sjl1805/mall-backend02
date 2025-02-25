@@ -3,9 +3,11 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.model.entity.ProductReview;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 31815
@@ -13,6 +15,7 @@ import java.util.List;
  * @createDate 2025-02-24 12:04:04
  * @Entity model.entity.ProductReview
  */
+@Mapper
 public interface ProductReviewMapper extends BaseMapper<ProductReview> {
 
     /**
@@ -62,6 +65,52 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      * @return 删除结果
      */
     int deleteProductReview(@Param("id") Long id);
+
+    /**
+     * 计算商品平均评分
+     *
+     * @param productId 商品ID
+     * @return 平均评分
+     */
+    Double calculateAverageRating(@Param("productId") Long productId);
+
+    /**
+     * 统计各评分数量
+     *
+     * @param productId 商品ID
+     * @return 各评分数量统计，格式：[{rating: 5, count: 10}, ...]
+     */
+    List<Map<String, Object>> countByRating(@Param("productId") Long productId);
+
+    /**
+     * 根据评分范围查询评价
+     *
+     * @param productId 商品ID
+     * @param minRating 最低评分
+     * @param maxRating 最高评分
+     * @return 评价列表
+     */
+    List<ProductReview> selectByRatingRange(
+            @Param("productId") Long productId,
+            @Param("minRating") Integer minRating,
+            @Param("maxRating") Integer maxRating);
+
+    /**
+     * 查询用户所有评价
+     *
+     * @param userId 用户ID
+     * @return 用户评价列表
+     */
+    List<ProductReview> selectByUserId(@Param("userId") Long userId);
+
+    /**
+     * 批量更新评价状态
+     *
+     * @param ids 评价ID列表
+     * @param status 新状态
+     * @return 更新结果
+     */
+    int batchUpdateStatus(@Param("ids") List<Long> ids, @Param("status") Integer status);
 }
 
 

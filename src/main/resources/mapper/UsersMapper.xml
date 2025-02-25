@@ -101,4 +101,46 @@
     <select id="checkUsernameExists" resultType="int">
         SELECT COUNT(1) FROM users WHERE username = #{username}
     </select>
+
+    <!-- 插入新用户 -->
+    <insert id="insertUser" parameterType="com.example.model.entity.Users" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (
+            username, password, nickname, phone, email, 
+            avatar, gender, status, role
+        ) VALUES (
+            #{username}, #{password}, #{nickname}, #{phone}, #{email}, 
+            #{avatar}, #{gender}, #{status}, #{role}
+        )
+    </insert>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="com.example.model.entity.Users">
+        UPDATE users
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="role != null">role = #{role},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除用户 -->
+    <delete id="deleteUser">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <!-- 分页查询用户 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM users
+        ORDER BY create_time DESC
+    </select>
 </mapper> 

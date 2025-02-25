@@ -45,7 +45,7 @@
     <!-- 插入新收藏商品 -->
     <insert id="insertProductFavorite" parameterType="com.example.model.entity.ProductFavorite">
         INSERT INTO product_favorite (user_id, product_id, folder_id, create_time, update_time)
-        VALUES (#{userId}, #{productId}, #{folderId}, #{createTime}, #{updateTime})
+        VALUES (#{userId}, #{productId}, #{folderId}, NOW(), NOW())
     </insert>
 
     <!-- 更新收藏商品信息 -->
@@ -54,7 +54,7 @@
         SET user_id     = #{userId},
             product_id  = #{productId},
             folder_id   = #{folderId},
-            update_time = #{updateTime}
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
@@ -63,5 +63,56 @@
         DELETE
         FROM product_favorite
         WHERE id = #{id}
+    </delete>
+
+    <!-- 查询用户是否已收藏商品 -->
+    <select id="checkFavorite" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_favorite
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+        LIMIT 1
+    </select>
+
+    <!-- 根据文件夹ID查询收藏商品 -->
+    <select id="selectByFolder" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_favorite
+        WHERE user_id = #{userId}
+        <if test="folderId != null">
+            AND folder_id = #{folderId}
+        </if>
+        <if test="folderId == null">
+            AND (folder_id IS NULL OR folder_id = 0)
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询热门收藏商品 -->
+    <select id="selectHotFavorites" resultType="java.util.Map">
+        SELECT product_id, COUNT(*) as favorite_count
+        FROM product_favorite
+        GROUP BY product_id
+        ORDER BY favorite_count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 移动商品到指定收藏夹 -->
+    <update id="moveToFolder">
+        UPDATE product_favorite
+        SET folder_id = #{folderId},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除收藏 -->
+    <delete id="batchDelete">
+        DELETE FROM product_favorite
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
 </mapper>

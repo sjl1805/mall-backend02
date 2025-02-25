@@ -49,7 +49,7 @@
     <!-- 插入新收藏夹 -->
     <insert id="insertFavoriteFolder" parameterType="com.example.model.entity.FavoriteFolder">
         INSERT INTO favorite_folder (user_id, name, description, is_public, item_count, sort, create_time, update_time)
-        VALUES (#{userId}, #{name}, #{description}, #{isPublic}, #{itemCount}, #{sort}, #{createTime}, #{updateTime})
+        VALUES (#{userId}, #{name}, #{description}, #{isPublic}, #{itemCount}, #{sort}, NOW(), NOW())
     </insert>
 
     <!-- 更新收藏夹信息 -->
@@ -61,7 +61,7 @@
             is_public   = #{isPublic},
             item_count  = #{itemCount},
             sort        = #{sort},
-            update_time = #{updateTime}
+            update_time = NOW()
         WHERE id = #{id}
     </update>
 
@@ -71,4 +71,91 @@
         FROM favorite_folder
         WHERE id = #{id}
     </delete>
+
+    <!-- 增加收藏夹商品数量 -->
+    <update id="updateItemCount">
+        UPDATE favorite_folder
+        SET item_count = item_count + #{count},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 刷新收藏夹商品数量 -->
+    <update id="refreshItemCount">
+        UPDATE favorite_folder f
+        SET item_count = (
+            SELECT COUNT(*)
+            FROM product_favorite
+            WHERE folder_id = f.id
+        ),
+        update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新收藏夹排序 -->
+    <update id="updateSort">
+        UPDATE favorite_folder
+        SET sort = #{sort},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取用户收藏夹（按排序） -->
+    <select id="selectByUserIdOrderBySort" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询公开收藏夹 -->
+    <select id="selectPublicFolders" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+        AND is_public = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询其他用户的公开收藏夹 -->
+    <select id="selectOtherPublicFolders" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id != #{userId}
+        AND is_public = 1
+        ORDER BY item_count DESC, create_time DESC
+    </select>
+
+    <!-- 按名称查询收藏夹 -->
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+        AND name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 批量删除收藏夹 -->
+    <delete id="batchDelete">
+        DELETE FROM favorite_folder
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 批量更新收藏夹公开状态 -->
+    <update id="batchUpdatePublicStatus">
+        UPDATE favorite_folder
+        SET is_public = #{isPublic},
+            update_time = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>
