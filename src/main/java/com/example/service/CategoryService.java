@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.entity.Category;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 31815
@@ -60,4 +61,78 @@ public interface CategoryService extends IService<Category> {
      * @return 删除结果
      */
     boolean deleteCategory(Long id);
+    
+    /**
+     * 根据父ID查询子分类
+     *
+     * @param parentId 父分类ID
+     * @return 子分类列表
+     */
+    List<Category> selectByParentId(Long parentId);
+    
+    /**
+     * 根据分类层级查询分类
+     *
+     * @param level 分类层级（1-一级 2-二级 3-三级）
+     * @return 分类列表
+     */
+    List<Category> selectByLevel(Integer level);
+    
+    /**
+     * 获取分类树结构
+     *
+     * @return 分类树结构
+     */
+    List<Map<String, Object>> selectCategoryTree();
+    
+    /**
+     * 获取子分类及其商品数量
+     *
+     * @param parentId 父分类ID
+     * @return 子分类及商品数量列表
+     */
+    List<Map<String, Object>> selectChildrenWithProductCount(Long parentId);
+    
+    /**
+     * 更新分类排序
+     *
+     * @param id 分类ID
+     * @param sort 排序值
+     * @return 更新结果
+     */
+    boolean updateSort(Long id, Integer sort);
+    
+    /**
+     * 更新分类状态
+     *
+     * @param id 分类ID
+     * @param status 状态值
+     * @return 更新结果
+     */
+    boolean updateStatus(Long id, Integer status);
+    
+    /**
+     * 获取分类路径（面包屑导航）
+     *
+     * @param categoryId 分类ID
+     * @return 分类路径
+     */
+    List<Category> selectCategoryPath(Long categoryId);
+    
+    /**
+     * 批量删除分类
+     *
+     * @param ids 分类ID列表
+     * @return 删除结果
+     */
+    boolean batchDeleteCategories(List<Long> ids);
+    
+    /**
+     * 批量更新分类状态
+     *
+     * @param ids 分类ID列表
+     * @param status 状态值
+     * @return 更新结果
+     */
+    boolean batchUpdateStatus(List<Long> ids, Integer status);
 }

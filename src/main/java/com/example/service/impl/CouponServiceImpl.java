@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 优惠券服务实现类
@@ -48,7 +52,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      * @return 优惠券列表
      */
     @Override
-    @Cacheable(value = "coupons", key = "#name") // 缓存优惠券数据，提高查询效率
+    @Cacheable(key = "#name") // 缓存优惠券数据，提高查询效率
     public List<Coupon> selectByName(String name) {
         return couponMapper.selectByName(name);
     }
@@ -77,7 +81,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      * @return 优惠券实体
      */
     @Override
-    @Cacheable(value = "coupons", key = "#id") // 缓存优惠券详情，提高查询效率
+    @Cacheable(key = "#id") // 缓存优惠券详情，提高查询效率
     public Coupon selectById(Long id) {
         return couponMapper.selectById(id);
     }
@@ -94,7 +98,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "coupons", key = "#coupon.id") // 清除优惠券缓存
+    @CacheEvict(allEntries = true) // 清除所有优惠券缓存
     public boolean insertCoupon(Coupon coupon) {
         return couponMapper.insert(coupon) > 0;
     }
@@ -111,7 +115,10 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "coupons", key = "#coupon.id") // 清除优惠券缓存
+    @Caching(evict = {
+        @CacheEvict(key = "#coupon.id"),
+        @CacheEvict(key = "'available'")
+    })
     public boolean updateCoupon(Coupon coupon) {
         return couponMapper.updateById(coupon) > 0;
     }
@@ -129,7 +136,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "coupons", key = "#id") // 清除被删除优惠券的缓存
+    @CacheEvict(allEntries = true) // 清除所有优惠券缓存
     public boolean deleteCoupon(Long id) {
         return couponMapper.deleteById(id) > 0;
     }
@@ -149,6 +156,11 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(key = "#id"),
+        @CacheEvict(key = "'available'"),
+        @CacheEvict(key = "'expiring'")
+    })
     public boolean setCouponValidity(Long id, String startTime, String endTime) {
         Coupon coupon = couponMapper.selectById(id);
         if (coupon == null) {
@@ -173,6 +185,10 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
      */
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(key = "#id"),
+        @CacheEvict(key = "'available'")
+    })
     public boolean setCouponConditions(Long id, BigDecimal minAmount) {
         Coupon coupon = couponMapper.selectById(id);
         if (coupon == null) {
@@ -180,6 +196,144 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
         }
         coupon.setMinAmount(minAmount);
         return couponMapper.updateById(coupon) > 0;
+    }
+    
+    /**
+     * 查询可用优惠券
+     * 
+     * 该方法根据订单金额查询当前可用的优惠券，
+     * 通常用于结算页面向用户推荐可用的优惠券，
+     * 提高用户体验和促进转化
+     *
+     * @param amount 订单金额
+     * @return 可用优惠券列表
+     */
+    @Override
+    @Cacheable(key = "'available_'+#amount")
+    public List<Coupon> selectAvailableCoupons(BigDecimal amount) {
+        return couponMapper.selectAvailableCoupons(new Date(), amount.doubleValue());
+    }
+    
+    /**
+     * 查询即将过期的优惠券
+     * 
+     * 该方法查询指定天数内即将过期的优惠券，
+     * 用于向用户发送提醒或在前台显示"即将过期"标签，
+     * 促进用户使用优惠券，提高活动效果
+     *
+     * @param days 天数，如7天内过期
+     * @return 即将过期的优惠券列表
+     */
+    @Override
+    @Cacheable(key = "'expiring_'+#days")
+    public List<Coupon> selectExpiringSoon(Integer days) {
+        Calendar calendar = Calendar.getInstance();
+        Date startDate = calendar.getTime();
+        
+        calendar.add(Calendar.DAY_OF_MONTH, days);
+        Date endDate = calendar.getTime();
+        
+        return couponMapper.selectExpiringSoon(startDate, endDate);
+    }
+    
+    /**
+     * 减少优惠券数量
+     * 
+     * 该方法在用户领取优惠券时调用，
+     * 减少优惠券的可领取数量，防止超发，
+     * 是优惠券发放环节的关键控制点
+     *
+     * @param id 优惠券ID
+     * @param count 减少数量
+     * @return 减少成功返回true，失败返回false
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "#id")
+    public boolean decreaseCouponNum(Long id, Integer count) {
+        return couponMapper.decreaseCouponNum(id, count) > 0;
+    }
+    
+    /**
+     * 检查优惠券是否可用于指定金额
+     * 
+     * 该方法在用户选择优惠券时调用，
+     * 验证优惠券是否满足使用条件（如最低消费金额），
+     * 确保优惠券使用的合规性
+     *
+     * @param id 优惠券ID
+     * @param amount 订单金额
+     * @return 可用优惠券，不可用返回null
+     */
+    @Override
+    public Coupon checkCouponAvailable(Long id, BigDecimal amount) {
+        return couponMapper.checkCouponAvailable(id, amount.doubleValue(), new Date());
+    }
+    
+    /**
+     * 获取优惠券使用统计
+     * 
+     * 该方法统计指定时间段内优惠券的使用情况，
+     * 包括使用次数、优惠总额、关联订单总额等数据，
+     * 用于评估营销活动效果，为运营决策提供依据
+     *
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 优惠券统计数据
+     */
+    @Override
+    public List<Map<String, Object>> getCouponStatistics(Date startDate, Date endDate) {
+        return couponMapper.getCouponStatistics(startDate, endDate);
+    }
+    
+    /**
+     * 获取热门优惠券排行
+     * 
+     * 该方法获取领取量最多的优惠券排行，
+     * 同时计算使用率等指标，
+     * 用于分析用户偏好和评估优惠券吸引力
+     *
+     * @param limit 限制数量
+     * @return 热门优惠券列表
+     */
+    @Override
+    public List<Map<String, Object>> getPopularCoupons(Integer limit) {
+        return couponMapper.getPopularCoupons(limit);
+    }
+    
+    /**
+     * 批量更新优惠券状态
+     * 
+     * 该方法一次性更新多个优惠券的状态，
+     * 如批量上线或下线优惠券，
+     * 提高管理效率
+     *
+     * @param ids 优惠券ID列表
+     * @param status 状态
+     * @return 更新成功返回true，失败返回false
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchUpdateStatus(List<Long> ids, Integer status) {
+        return couponMapper.batchUpdateStatus(ids, status) > 0;
+    }
+    
+    /**
+     * 批量删除优惠券
+     * 
+     * 该方法一次性删除多个优惠券，
+     * 通常用于清理过期或无效的优惠券，
+     * 提高管理效率
+     *
+     * @param ids 优惠券ID列表
+     * @return 删除成功返回true，失败返回false
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchDelete(List<Long> ids) {
+        return couponMapper.batchDelete(ids) > 0;
     }
 }
 

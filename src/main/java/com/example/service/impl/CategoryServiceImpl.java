@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品分类服务实现类
@@ -46,7 +48,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      * @return 商品分类列表
      */
     @Override
-    @Cacheable(value = "categories", key = "#name") // 缓存分类数据，提高查询效率
+    @Cacheable(key = "#name") // 缓存分类数据，提高查询效率
     public List<Category> selectByName(String name) {
         return categoryMapper.selectByName(name);
     }
@@ -75,7 +77,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      * @return 商品分类实体
      */
     @Override
-    @Cacheable(value = "categories", key = "#id") // 缓存分类详情，提高查询效率
+    @Cacheable(key = "#id") // 缓存分类详情，提高查询效率
     public Category selectById(Long id) {
         return categoryMapper.selectById(id);
     }
@@ -92,7 +94,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "#category.id") // 清除分类缓存
+    @CacheEvict(allEntries = true) // 清除所有分类缓存
     public boolean insertCategory(Category category) {
         return categoryMapper.insert(category) > 0;
     }
@@ -109,7 +111,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "#category.id") // 清除分类缓存
+    @Caching(evict = {
+        @CacheEvict(key = "#category.id"),
+        @CacheEvict(key = "'tree'")
+    })
     public boolean updateCategory(Category category) {
         return categoryMapper.updateById(category) > 0;
     }
@@ -127,9 +132,152 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
      */
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "#id") // 清除被删除分类的缓存
+    @CacheEvict(allEntries = true) // 清除所有分类缓存
     public boolean deleteCategory(Long id) {
         return categoryMapper.deleteById(id) > 0;
+    }
+    
+    /**
+     * 根据父ID查询子分类
+     * 
+     * 该方法用于查询某个分类下的所有直接子分类，
+     * 用于构建分类导航或分类选择器
+     *
+     * @param parentId 父分类ID
+     * @return 子分类列表
+     */
+    @Override
+    @Cacheable(key = "'parent_'+#parentId")
+    public List<Category> selectByParentId(Long parentId) {
+        return categoryMapper.selectByParentId(parentId);
+    }
+    
+    /**
+     * 根据分类层级查询分类
+     * 
+     * 该方法用于查询特定层级的所有分类，
+     * 如查询所有一级分类、二级分类等
+     *
+     * @param level 分类层级（1-一级 2-二级 3-三级）
+     * @return 分类列表
+     */
+    @Override
+    @Cacheable(key = "'level_'+#level")
+    public List<Category> selectByLevel(Integer level) {
+        return categoryMapper.selectByLevel(level);
+    }
+    
+    /**
+     * 获取分类树结构
+     * 
+     * 该方法返回完整的分类树结构，
+     * 包括所有层级的分类及其子分类，
+     * 通常用于前端导航菜单或后台分类管理
+     *
+     * @return 分类树结构
+     */
+    @Override
+    @Cacheable(key = "'tree'")
+    public List<Map<String, Object>> selectCategoryTree() {
+        return categoryMapper.selectCategoryTree();
+    }
+    
+    /**
+     * 获取子分类及其商品数量
+     * 
+     * 该方法返回指定分类的子分类，
+     * 并统计每个子分类下的商品数量，
+     * 用于分类页面展示或数据分析
+     *
+     * @param parentId 父分类ID
+     * @return 子分类及商品数量列表
+     */
+    @Override
+    @Cacheable(key = "'count_'+#parentId")
+    public List<Map<String, Object>> selectChildrenWithProductCount(Long parentId) {
+        return categoryMapper.selectChildrenWithProductCount(parentId);
+    }
+    
+    /**
+     * 更新分类排序
+     * 
+     * 该方法用于调整分类在同级中的显示顺序，
+     * 影响前端分类导航的展示顺序
+     *
+     * @param id 分类ID
+     * @param sort 排序值
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean updateSort(Long id, Integer sort) {
+        return categoryMapper.updateSort(id, sort) > 0;
+    }
+    
+    /**
+     * 更新分类状态
+     * 
+     * 该方法用于启用或禁用分类，
+     * 禁用的分类及其子分类在前端将不可见
+     *
+     * @param id 分类ID
+     * @param status 状态值
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean updateStatus(Long id, Integer status) {
+        return categoryMapper.updateStatus(id, status) > 0;
+    }
+    
+    /**
+     * 获取分类路径（面包屑导航）
+     * 
+     * 该方法返回从顶级分类到指定分类的完整路径，
+     * 用于构建面包屑导航，帮助用户了解当前分类在整体分类体系中的位置
+     *
+     * @param categoryId 分类ID
+     * @return 分类路径
+     */
+    @Override
+    @Cacheable(key = "'path_'+#categoryId")
+    public List<Category> selectCategoryPath(Long categoryId) {
+        return categoryMapper.selectCategoryPath(categoryId);
+    }
+    
+    /**
+     * 批量删除分类
+     * 
+     * 该方法用于一次性删除多个分类，
+     * 适用于后台批量管理操作
+     *
+     * @param ids 分类ID列表
+     * @return 删除结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchDeleteCategories(List<Long> ids) {
+        return categoryMapper.batchDeleteCategories(ids) > 0;
+    }
+    
+    /**
+     * 批量更新分类状态
+     * 
+     * 该方法用于一次性更新多个分类的状态，
+     * 适用于后台批量启用或禁用分类
+     *
+     * @param ids 分类ID列表
+     * @param status 状态值
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchUpdateStatus(List<Long> ids, Integer status) {
+        return categoryMapper.batchUpdateStatus(ids, status) > 0;
     }
 }
 
