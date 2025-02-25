@@ -1,5 +1,8 @@
 package com.example.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 返回结果状态码
  */
@@ -31,7 +34,10 @@ public enum ResultCode {
     USER_ROLE_ERROR(1010, "用户角色异常"),
     USER_UPDATE_FAILED(1011, "用户信息更新失败"),
     USER_AVATAR_UPLOAD_FAILED(1012, "头像上传失败"),
-    
+    USER_EXISTS(1013, "用户已存在"),
+    USER_NOT_FOUND(1014, "用户不存在"),
+    PASSWORD_INCORRECT(1015, "密码不正确"),
+    LOGIN_FAILED(1016, "登录失败"),
     // 商品分类相关: 1100-1199
     CATEGORY_NOT_EXIST(1100, "商品分类不存在"),
     CATEGORY_HAS_CHILD(1101, "分类下存在子分类，无法删除"),
@@ -135,11 +141,28 @@ public enum ResultCode {
     SERVICE_UNAVAILABLE(9001, "服务不可用"),
     DATABASE_ERROR(9002, "数据库操作异常"),
     CACHE_ERROR(9003, "缓存操作异常"),
-    REMOTE_SERVICE_ERROR(9004, "远程服务调用异常");
+    REMOTE_SERVICE_ERROR(9004, "远程服务调用异常"),
     
+    // 业务异常：8000-8099
+    BUSINESS_ERROR(8000, "业务处理异常"),
+    PARAM_ERROR(8001, "请求参数错误"),
+    DATA_NOT_EXIST(8002, "数据不存在"),
+    DATA_ALREADY_EXIST(8003, "数据已存在"),
+    DATA_UPDATE_ERROR(8004, "数据更新失败"),
+    DATA_DELETE_ERROR(8005, "数据删除失败");
     
     private final Integer code;
     private final String message;
+    
+    // 用于根据code查找枚举的映射
+    private static final Map<Integer, ResultCode> CODE_MAP = new HashMap<>();
+    
+    // 静态初始化块，填充映射
+    static {
+        for (ResultCode resultCode : ResultCode.values()) {
+            CODE_MAP.put(resultCode.getCode(), resultCode);
+        }
+    }
     
     ResultCode(Integer code, String message) {
         this.code = code;
@@ -152,5 +175,24 @@ public enum ResultCode {
     
     public String getMessage() {
         return message;
+    }
+    
+    /**
+     * 根据状态码获取对应的ResultCode
+     * @param code 状态码
+     * @return ResultCode枚举实例，如果不存在则返回FAILED
+     */
+    public static ResultCode getByCode(Integer code) {
+        ResultCode resultCode = CODE_MAP.get(code);
+        return resultCode == null ? FAILED : resultCode;
+    }
+    
+    /**
+     * 判断状态码是否表示成功
+     * @param code 状态码
+     * @return 是否成功
+     */
+    public static boolean isSuccess(Integer code) {
+        return SUCCESS.getCode().equals(code);
     }
 } 

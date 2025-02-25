@@ -404,14 +404,5 @@ public class CartController {
         return  Result.success(totalAmount);
     }
 
-    /**
-     * 辅助方法：判断当前用户是否拥有所有指定的购物车记录
-     * 此方法应该在SecurityConfig中配置，这里仅作占位符
-     */
-    private boolean isCurrentUserOwnAllCarts(List<Long> cartIds) {
-        // 此方法应该检查当前用户是否拥有所有指定的购物车记录
-        // 实际应该遍历cartIds，对每个id检查所属用户是否是当前用户
-        return true; // 默认允许，实际实现中应该返回正确的判断结果
-    }
 }
 
