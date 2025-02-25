@@ -25,6 +25,10 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
+  profiles:
+    active: dev  # 添加环境配置，便于区分开发、测试、生产环境
+  password:
+    encoder-strength: 10
 
 jwt:
   secret: "U2fromV0S2V5Rm9ySldUMTS2NDg2NTQzMjEwOTg3NjU0MzIxMDk4NzY1NDMyCg=="
@@ -64,6 +68,14 @@ logging:
     com.example: DEBUG  # 设置自定义日志级别为 DEBUG
   file:
     name: logs/application.log  # 设置日志文件存储路径
+
+# 添加应用程序特定配置
+app:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    max-age: 3600
 
 
 
