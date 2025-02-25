@@ -13,71 +13,59 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 /**
- * 商品实体类
+ * 商品SKU实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value = "products", autoResultMap = true)
-public class Product implements Serializable {
+@TableName(value = "product_sku", autoResultMap = true)
+public class ProductSku implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 商品ID
+     * SKU ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
-     * 分类ID
+     * 商品ID
      */
-    private Long categoryId;
+    private Long productId;
     
     /**
-     * 商品名称
+     * SKU编码
      */
-    private String name;
+    private String skuCode;
     
     /**
-     * 商品描述
+     * 规格JSON，如：{"颜色":"红色","尺寸":"XL"}
      */
-    private String description;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Map<String, String> specifications;
     
     /**
-     * 价格
+     * SKU价格
      */
     private BigDecimal price;
     
     /**
-     * 库存
+     * SKU库存
      */
     private Integer stock;
     
     /**
-     * 主图URL
+     * SKU图片
      */
-    private String imageMain;
+    private String image;
     
     /**
-     * 商品图片JSON数组
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> images;
-    
-    /**
-     * 商品标签JSON，包含标签ID和权重
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<Map<String, Object>> tags;
-    
-    /**
-     * 商品状态：0-下架 1-上架
+     * 状态：0-禁用 1-启用
      */
     private Integer status;
     

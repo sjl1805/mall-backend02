@@ -9,73 +9,54 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 推荐结果实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("recommendation_result")
+public class RecommendationResult implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 推荐记录ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
-     * 用户ID
+     * 被推荐用户ID
      */
     private Long userId;
     
     /**
-     * 默认地址：0-否 1-是
+     * 推荐商品ID
      */
-    private Integer isDefault;
+    private Long productId;
     
     /**
-     * 收货人
+     * 推荐分数（根据算法模型生成）
      */
-    private String receiverName;
+    private BigDecimal score;
     
     /**
-     * 联系电话
+     * 算法类型：1-基于用户的CF 2-基于物品的CF 3-混合CF 4-热门推荐 5-新品推荐
      */
-    private String receiverPhone;
+    private Integer algorithmType;
     
     /**
-     * 省份
+     * 推荐结果过期时间
      */
-    private String province;
+    private LocalDateTime expireTime;
     
     /**
-     * 城市
-     */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
-    
-    /**
-     * 创建时间
+     * 生成时间
      */
     private LocalDateTime createTime;
-    
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
 } 

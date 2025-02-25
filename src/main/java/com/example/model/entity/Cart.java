@@ -12,19 +12,19 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 购物车实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("cart")
+public class Cart implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 购物车ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -35,39 +35,24 @@ public class UserAddress implements Serializable {
     private Long userId;
     
     /**
-     * 默认地址：0-否 1-是
+     * 商品ID
      */
-    private Integer isDefault;
+    private Long productId;
     
     /**
-     * 收货人
+     * SKU ID
      */
-    private String receiverName;
+    private Long skuId;
     
     /**
-     * 联系电话
+     * 商品数量
      */
-    private String receiverPhone;
+    private Integer quantity;
     
     /**
-     * 省份
+     * 选中状态：0-未选中 1-已选中
      */
-    private String province;
-    
-    /**
-     * 城市
-     */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
+    private Integer checked;
     
     /**
      * 创建时间

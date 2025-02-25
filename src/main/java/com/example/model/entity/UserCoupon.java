@@ -12,19 +12,19 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 用户优惠券实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("user_coupon")
+public class UserCoupon implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 用户优惠券ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -35,39 +35,29 @@ public class UserAddress implements Serializable {
     private Long userId;
     
     /**
-     * 默认地址：0-否 1-是
+     * 优惠券ID
      */
-    private Integer isDefault;
+    private Long couponId;
     
     /**
-     * 收货人
+     * 状态：0-未使用 1-已使用 2-已过期
      */
-    private String receiverName;
+    private Integer status;
     
     /**
-     * 联系电话
+     * 使用订单ID
      */
-    private String receiverPhone;
+    private Long orderId;
     
     /**
-     * 省份
+     * 获取时间
      */
-    private String province;
+    private LocalDateTime getTime;
     
     /**
-     * 城市
+     * 使用时间
      */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
+    private LocalDateTime useTime;
     
     /**
      * 创建时间

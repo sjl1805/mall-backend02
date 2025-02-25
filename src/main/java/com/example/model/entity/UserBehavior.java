@@ -1,10 +1,8 @@
 package com.example.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,26 +11,34 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 /**
- * 商品实体类
+ * 用户行为与交互实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value = "products", autoResultMap = true)
-public class Product implements Serializable {
+@TableName("user_behavior")
+public class UserBehavior implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 商品ID
+     * 行为ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+    
+    /**
+     * 用户ID
+     */
+    private Long userId;
+    
+    /**
+     * 商品ID
+     */
+    private Long productId;
     
     /**
      * 分类ID
@@ -40,46 +46,54 @@ public class Product implements Serializable {
     private Long categoryId;
     
     /**
-     * 商品名称
+     * 行为类型：1-浏览 2-点击 3-加入购物车 4-收藏 5-搜索 6-评分 7-评价
      */
-    private String name;
+    private Integer behaviorType;
     
     /**
-     * 商品描述
+     * 搜索关键词
      */
-    private String description;
+    private String searchKeyword;
     
     /**
-     * 价格
+     * 停留时间(秒)
      */
-    private BigDecimal price;
+    private Integer stayTime;
     
     /**
-     * 库存
+     * 评分：1-5分
      */
-    private Integer stock;
+    private BigDecimal rating;
     
     /**
-     * 主图URL
+     * 评价内容
      */
-    private String imageMain;
+    private String reviewContent;
     
     /**
-     * 商品图片JSON数组
+     * 浏览次数
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> images;
+    private Integer viewCount;
     
     /**
-     * 商品标签JSON，包含标签ID和权重
+     * 加购次数
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<Map<String, Object>> tags;
+    private Integer cartCount;
     
     /**
-     * 商品状态：0-下架 1-上架
+     * 购买次数
      */
-    private Integer status;
+    private Integer buyCount;
+    
+    /**
+     * IP地址
+     */
+    private String ipAddress;
+    
+    /**
+     * 用户设备信息
+     */
+    private String userAgent;
     
     /**
      * 创建时间

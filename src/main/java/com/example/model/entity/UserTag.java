@@ -12,62 +12,32 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 用户标签实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("user_tag")
+public class UserTag implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 标签ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
-     * 用户ID
+     * 标签名称
      */
-    private Long userId;
+    private String name;
     
     /**
-     * 默认地址：0-否 1-是
+     * 标签类型：1-兴趣 2-行为 3-人口特征 4-其他
      */
-    private Integer isDefault;
-    
-    /**
-     * 收货人
-     */
-    private String receiverName;
-    
-    /**
-     * 联系电话
-     */
-    private String receiverPhone;
-    
-    /**
-     * 省份
-     */
-    private String province;
-    
-    /**
-     * 城市
-     */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
+    private Integer type;
     
     /**
      * 创建时间

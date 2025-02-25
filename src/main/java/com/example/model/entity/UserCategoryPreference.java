@@ -9,22 +9,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 用户分类偏好实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("user_category_preference")
+public class UserCategoryPreference implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 关联ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -35,39 +36,14 @@ public class UserAddress implements Serializable {
     private Long userId;
     
     /**
-     * 默认地址：0-否 1-是
+     * 分类ID
      */
-    private Integer isDefault;
+    private Long categoryId;
     
     /**
-     * 收货人
+     * 偏好程度
      */
-    private String receiverName;
-    
-    /**
-     * 联系电话
-     */
-    private String receiverPhone;
-    
-    /**
-     * 省份
-     */
-    private String province;
-    
-    /**
-     * 城市
-     */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
+    private BigDecimal preferenceLevel;
     
     /**
      * 创建时间

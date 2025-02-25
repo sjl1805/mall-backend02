@@ -9,65 +9,41 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户收货地址实体类
+ * 商品-标签关联实体类
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_address")
-public class UserAddress implements Serializable {
+@TableName("product_tag_relation")
+public class ProductTagRelation implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     /**
-     * 地址ID
+     * 关联ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
-     * 用户ID
+     * 商品ID
      */
-    private Long userId;
+    private Long productId;
     
     /**
-     * 默认地址：0-否 1-是
+     * 标签ID
      */
-    private Integer isDefault;
+    private Long tagId;
     
     /**
-     * 收货人
+     * 标签权重，用于计算相关度
      */
-    private String receiverName;
-    
-    /**
-     * 联系电话
-     */
-    private String receiverPhone;
-    
-    /**
-     * 省份
-     */
-    private String province;
-    
-    /**
-     * 城市
-     */
-    private String city;
-    
-    /**
-     * 区/县
-     */
-    private String district;
-    
-    /**
-     * 详细地址
-     */
-    private String detailAddress;
+    private BigDecimal weight;
     
     /**
      * 创建时间
