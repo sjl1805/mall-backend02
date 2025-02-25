@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.Product">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="image_main" property="imageMain"/>
+        <result column="images" property="images" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="tags" property="tags" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 商品详情结果映射（包含分类信息） -->
+    <resultMap id="ProductDetailMap" type="com.example.model.entity.Product" extends="BaseResultMap">
+        <association property="category" javaType="com.example.model.entity.Category">
+            <id column="c_id" property="id"/>
+            <result column="c_name" property="name"/>
+            <result column="c_level" property="level"/>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category_id, name, description, price, stock, image_main, 
+        images, tags, status, create_time, update_time
+    </sql>
+
+    <!-- 分页多条件查询商品 -->
+    <select id="selectProductPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND name LIKE CONCAT('%', #{params.keyword}, '%')
+            </if>
+            <if test="params.categoryId != null">
+                AND category_id = #{params.categoryId}
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+            <if test="params.minPrice != null">
+                AND price &gt;= #{params.minPrice}
+            </if>
+            <if test="params.maxPrice != null">
+                AND price &lt;= #{params.maxPrice}
+            </if>
+            <if test="params.minStock != null">
+                AND stock &gt;= #{params.minStock}
+            </if>
+            <if test="params.maxStock != null">
+                AND stock &lt;= #{params.maxStock}
+            </if>
+            <if test="params.tagId != null">
+                AND JSON_CONTAINS(tags, JSON_OBJECT('tagId', #{params.tagId}))
+            </if>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="params.sortField != null and params.sortField != ''">
+                ${params.sortField} 
+                <if test="params.sortOrder != null and params.sortOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="params.sortOrder == null or params.sortOrder != 'desc'">
+                    `ASC`
+                </if>
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 查询商品详情 -->
+    <select id="selectProductDetail" resultMap="ProductDetailMap">
+        SELECT 
+            p.*,
+            c.id as c_id,
+            c.name as c_name,
+            c.level as c_level
+        FROM products p
+        LEFT JOIN category c ON p.category_id = c.id
+        WHERE p.id = #{id}
+    </select>
+
+    <!-- 根据分类ID查询商品 -->
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE category_id = #{categoryId}
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据标签ID查询商品 -->
+    <select id="selectByTagId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE JSON_CONTAINS(tags, JSON_OBJECT('tagId', #{tagId}))
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新商品库存 -->
+    <update id="updateStock">
+        UPDATE products
+        SET stock = stock + #{count}
+        WHERE id = #{productId}
+        AND stock + #{count} >= 0
+    </update>
+
+    <!-- 批量更新商品状态 -->
+    <update id="batchUpdateStatus">
+        UPDATE products
+        SET status = #{status}
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 查询热门商品 -->
+    <select id="selectHotProducts" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE status = 1
+        ORDER BY RAND() <!-- 随机排序，实际项目中可替换为基于浏览量/销量的排序 -->
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询最新商品 -->
+    <select id="selectNewProducts" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE status = 1
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询推荐商品 -->
+    <select id="selectRecommendProducts" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE category_id = #{categoryId}
+        AND id != #{productId}
+        AND status = 1
+        ORDER BY RAND()
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询价格区间内的商品 -->
+    <select id="selectByPriceRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE price BETWEEN #{minPrice} AND #{maxPrice}
+        AND status = 1
+        ORDER BY price
+    </select>
+
+    <!-- 统计各分类商品数量 -->
+    <select id="countProductByCategory" resultType="java.util.Map">
+        SELECT 
+            category_id as categoryId,
+            COUNT(*) as count
+        FROM products
+        GROUP BY category_id
+    </select>
+
+    <!-- 统计各状态商品数量 -->
+    <select id="countProductByStatus" resultType="java.util.Map">
+        SELECT 
+            status,
+            COUNT(*) as count
+        FROM products
+        GROUP BY status
+    </select>
+
+    <!-- 查询库存预警商品 -->
+    <select id="selectLowStockProducts" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE stock &lt; #{threshold}
+        AND status = 1
+        ORDER BY stock
+    </select>
+    
+    <!-- 模糊搜索商品 -->
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE (name LIKE CONCAT('%', #{keyword}, '%') 
+               OR description LIKE CONCAT('%', #{keyword}, '%'))
+        AND status = 1
+        ORDER BY 
+            CASE 
+                WHEN name LIKE CONCAT(#{keyword}, '%') THEN 1
+                WHEN name LIKE CONCAT('%', #{keyword}, '%') THEN 2
+                ELSE 3
+            END,
+            create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 更新商品标签 -->
+    <update id="updateProductTags">
+        UPDATE products
+        SET tags = #{tags}
+        WHERE id = #{productId}
+    </update>
+    
+    <!-- 根据多个分类ID查询商品 -->
+    <select id="selectByCategoryIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM products
+        WHERE category_id IN
+        <foreach collection="categoryIds" item="categoryId" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+        AND status = 1
+        ORDER BY create_time DESC
+    </select>
+</mapper> 

@@ -99,7 +99,7 @@
                     DESC
                 </if>
                 <if test="params.sortOrder == null or params.sortOrder != 'desc'">
-                    ASC
+                    `ASC`
                 </if>
             </when>
             <otherwise>

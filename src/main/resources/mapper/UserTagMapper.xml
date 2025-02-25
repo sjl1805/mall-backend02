@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mapper.ProductTagMapper">
+<mapper namespace="com.example.mapper.UserTagMapper">
 
     <!-- 基础结果映射 -->
-    <resultMap id="BaseResultMap" type="com.example.model.entity.ProductTag">
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserTag">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="type" property="type"/>
@@ -20,7 +20,7 @@
     <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM product_tag
+        FROM user_tag
         WHERE name = #{name}
     </select>
 
@@ -28,16 +28,16 @@
     <select id="selectListByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM product_tag
+        FROM user_tag
         WHERE type = #{type}
         ORDER BY create_time DESC
     </select>
 
-    <!-- 分页多条件查询标签 -->
+    <!-- 分页多条件查询用户标签 -->
     <select id="selectTagPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM product_tag
+        FROM user_tag
         <where>
             <if test="params.keyword != null and params.keyword != ''">
                 AND name LIKE CONCAT('%', #{params.keyword}, '%')
@@ -69,19 +69,19 @@
         </choose>
     </select>
 
-    <!-- 批量插入标签 -->
+    <!-- 批量插入用户标签 -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO product_tag (name, type) VALUES
+        INSERT INTO user_tag (name, type) VALUES
         <foreach collection="tagList" item="tag" separator=",">
             (#{tag.name}, #{tag.type})
         </foreach>
     </insert>
 
-    <!-- 根据关键词模糊查询标签 -->
+    <!-- 根据关键词模糊查询用户标签 -->
     <select id="searchByKeyword" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM product_tag
+        FROM user_tag
         WHERE name LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY create_time DESC
         <if test="limit != null and limit > 0">
@@ -89,47 +89,74 @@
         </if>
     </select>
 
-    <!-- 获取热门标签（根据关联数量） -->
-    <select id="selectHotTags" resultMap="BaseResultMap">
-        SELECT pt.id, pt.name, pt.type, pt.create_time, pt.update_time
-        FROM product_tag pt
-                 LEFT JOIN (SELECT id, COUNT(*) as use_count
-                            FROM product_tag
-                            GROUP BY id) ptr ON pt.id = ptr.id
-        ORDER BY ptr.use_count DESC, pt.id
+    <!-- 获取常用用户标签（根据关联用户数量） -->
+    <select id="selectPopularTags" resultMap="BaseResultMap">
+        SELECT ut.id, ut.name, ut.type, ut.create_time, ut.update_time
+        FROM user_tag ut
+                 LEFT JOIN (SELECT tag_id, COUNT(*) as use_count
+                            FROM user_tag_relation
+                            GROUP BY tag_id) utr ON ut.id = utr.tag_id
+        ORDER BY utr.use_count DESC NULLS LAST, ut.id
         LIMIT #{limit}
     </select>
 
-    <!-- 统计各类型标签数量 -->
+    <!-- 统计各类型用户标签数量 -->
     <select id="countTagByType" resultType="java.util.Map">
         SELECT 
             type,
             COUNT(*) as count
-        FROM product_tag
+        FROM user_tag
         GROUP BY type
     </select>
 
-    <!-- 查询标签是否存在 -->
+    <!-- 查询用户标签是否存在 -->
     <select id="existsByName" resultType="java.lang.Integer">
         SELECT COUNT(*)
-        FROM product_tag
+        FROM user_tag
         WHERE name = #{name}
     </select>
     
-    <!-- 根据商品ID获取关联的标签 -->
-    <select id="selectTagsByProductId" resultMap="BaseResultMap">
-        SELECT pt.id, pt.name, pt.type, pt.create_time, pt.update_time
-        FROM product_tag pt
-        INNER JOIN product_tag ptr ON pt.id = ptr.id
-        WHERE ptr.id = #{productId}
+    <!-- 根据用户ID获取关联的标签 -->
+    <select id="selectTagsByUserId" resultMap="BaseResultMap">
+        SELECT ut.id, ut.name, ut.type, ut.create_time, ut.update_time
+        FROM user_tag ut
+        INNER JOIN user_tag_relation utr ON ut.id = utr.tag_id
+        WHERE utr.user_id = #{userId}
+        ORDER BY utr.weight DESC
     </select>
     
-    <!-- 批量删除标签 -->
+    <!-- 批量删除用户标签 -->
     <delete id="batchDeleteByIds">
-        DELETE FROM product_tag 
+        DELETE FROM user_tag 
         WHERE id IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+    
+    <!-- 获取系统推荐的用户标签 -->
+    <select id="selectRecommendedTags" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM user_tag
+        WHERE type IN (1, 3) <!-- 兴趣和人口特征标签 -->
+        ORDER BY 
+            (SELECT COUNT(*) FROM user_tag_relation WHERE tag_id = user_tag.id) DESC,
+            create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 按使用频率统计标签 -->
+    <select id="countTagUsage" resultType="java.util.Map">
+        SELECT 
+            ut.id as tagId,
+            ut.name as tagName,
+            ut.type as tagType,
+            COUNT(utr.user_id) as userCount
+        FROM user_tag ut
+        LEFT JOIN user_tag_relation utr ON ut.id = utr.tag_id
+        GROUP BY ut.id, ut.name, ut.type
+        ORDER BY userCount DESC
+        LIMIT #{limit}
+    </select>
 </mapper> 

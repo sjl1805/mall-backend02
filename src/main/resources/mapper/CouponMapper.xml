@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CouponMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.Coupon">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="threshold" property="threshold"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="total" property="total"/>
+        <result column="remain" property="remain"/>
+        <result column="category_limit" property="categoryLimit" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="product_limit" property="productLimit" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, type, amount, threshold, start_time, end_time, total, remain,
+        category_limit, product_limit, status, create_time, update_time
+    </sql>
+
+    <!-- 分页多条件查询优惠券 -->
+    <select id="selectCouponPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND name LIKE CONCAT('%', #{params.keyword}, '%')
+            </if>
+            <if test="params.type != null">
+                AND type = #{params.type}
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+            <if test="params.minAmount != null">
+                AND amount &gt;= #{params.minAmount}
+            </if>
+            <if test="params.maxAmount != null">
+                AND amount &lt;= #{params.maxAmount}
+            </if>
+            <if test="params.minThreshold != null">
+                AND threshold &gt;= #{params.minThreshold}
+            </if>
+            <if test="params.maxThreshold != null">
+                AND threshold &lt;= #{params.maxThreshold}
+            </if>
+            <if test="params.startDate != null">
+                AND start_time &gt;= #{params.startDate}
+            </if>
+            <if test="params.endDate != null">
+                AND end_time &lt;= #{params.endDate}
+            </if>
+            <if test="params.hasStock != null and params.hasStock == true">
+                AND remain > 0
+            </if>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="params.sortField != null and params.sortField != ''">
+                ${params.sortField} 
+                <if test="params.sortOrder != null and params.sortOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="params.sortOrder == null or params.sortOrder != 'desc'">
+                    `ASC`
+                </if>
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据优惠券类型查询 -->
+    <select id="selectListByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE type = #{type}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询可用优惠券（未过期且有库存） -->
+    <select id="selectAvailableCoupons" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+        AND remain > 0
+        AND start_time &lt;= NOW()
+        AND end_time &gt;= NOW()
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询即将过期的优惠券 -->
+    <select id="selectExpiringCoupons" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        WHERE status = 1
+        AND remain > 0
+        AND start_time &lt;= NOW()
+        AND end_time BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL #{days} DAY)
+        ORDER BY end_time
+    </select>
+
+    <!-- 查询指定商品可用的优惠券 -->
+    <select id="selectCouponsByProduct" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon c
+        WHERE c.status = 1
+        AND c.remain > 0
+        AND c.start_time &lt;= NOW()
+        AND c.end_time &gt;= NOW()
+        AND (
+            c.threshold = 0 OR c.threshold &lt;= #{price}
+        )
+        AND (
+            c.category_limit IS NULL
+            OR JSON_CONTAINS(c.category_limit, CAST(#{categoryId} AS CHAR))
+            OR JSON_LENGTH(c.category_limit) = 0
+        )
+        AND (
+            c.product_limit IS NULL
+            OR JSON_CONTAINS(c.product_limit, CAST(#{productId} AS CHAR))
+            OR JSON_LENGTH(c.product_limit) = 0
+        )
+        ORDER BY c.threshold DESC
+    </select>
+
+    <!-- 更新优惠券剩余数量 -->
+    <update id="updateRemainCount">
+        UPDATE coupon
+        SET remain = remain + #{count}
+        WHERE id = #{couponId}
+        AND remain + #{count} >= 0
+    </update>
+
+    <!-- 批量更新优惠券状态 -->
+    <update id="batchUpdateStatus">
+        UPDATE coupon
+        SET status = #{status}
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 统计各类型优惠券数量 -->
+    <select id="countCouponByType" resultType="java.util.Map">
+        SELECT 
+            type,
+            COUNT(*) as count
+        FROM coupon
+        GROUP BY type
+    </select>
+
+    <!-- 统计优惠券使用情况 -->
+    <select id="countCouponUsage" resultType="java.util.Map">
+        SELECT 
+            c.id as couponId,
+            c.name as couponName,
+            c.type as couponType,
+            c.total as totalCount,
+            c.remain as remainCount,
+            (c.total - c.remain) as usedCount,
+            ROUND(((c.total - c.remain) / c.total) * 100, 2) as usageRate
+        FROM coupon c
+        WHERE c.total > 0
+        ORDER BY usageRate DESC
+    </select>
+
+    <!-- 查询用户可用优惠券 -->
+    <select id="selectUserAvailableCoupons" resultType="java.util.Map">
+        SELECT 
+            c.id, c.name, c.type, c.amount, c.threshold, 
+            c.start_time as startTime, c.end_time as endTime,
+            uc.id as userCouponId, uc.get_time as getTime
+        FROM coupon c
+        INNER JOIN user_coupon uc ON c.id = uc.coupon_id
+        WHERE uc.user_id = #{userId}
+        AND uc.status = 0 <!-- 未使用 -->
+        AND c.status = 1 <!-- 启用状态 -->
+        AND c.start_time &lt;= NOW()
+        AND c.end_time &gt;= NOW()
+        <if test="totalAmount != null">
+            AND (c.threshold = 0 OR c.threshold &lt;= #{totalAmount})
+        </if>
+        <if test="categoryId != null">
+            AND (
+                c.category_limit IS NULL
+                OR JSON_CONTAINS(c.category_limit, CAST(#{categoryId} AS CHAR))
+                OR JSON_LENGTH(c.category_limit) = 0
+            )
+        </if>
+        <if test="productId != null">
+            AND (
+                c.product_limit IS NULL
+                OR JSON_CONTAINS(c.product_limit, CAST(#{productId} AS CHAR))
+                OR JSON_LENGTH(c.product_limit) = 0
+            )
+        </if>
+        ORDER BY 
+            c.threshold DESC, <!-- 优先显示门槛高的 -->
+            c.amount DESC, <!-- 再按金额排序 -->
+        c.end_time <!-- 最后按过期时间排序 -->
+    </select>
+
+    <!-- 获取热门优惠券 -->
+    <select id="selectHotCoupons" resultMap="BaseResultMap">
+        SELECT c.*
+        FROM coupon c
+        WHERE c.status = 1
+        AND c.remain > 0
+        AND c.start_time &lt;= NOW()
+        AND c.end_time &gt;= NOW()
+        ORDER BY (c.total - c.remain) DESC <!-- 已领取数量排序 -->
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 更新优惠券为已过期状态 -->
+    <update id="updateExpiredCoupons">
+        UPDATE coupon
+        SET status = 0
+        WHERE status = 1
+        AND end_time &lt; NOW()
+    </update>
+    
+    <!-- 获取用户最适合的优惠券 -->
+    <select id="selectBestCoupons" resultMap="BaseResultMap">
+        SELECT c.*
+        FROM coupon c
+        INNER JOIN user_coupon uc ON c.id = uc.coupon_id
+        WHERE uc.user_id = #{userId}
+        AND uc.status = 0 <!-- 未使用 -->
+        AND c.status = 1 <!-- 启用状态 -->
+        AND c.start_time &lt;= NOW()
+        AND c.end_time &gt;= NOW()
+        AND (c.threshold = 0 OR c.threshold &lt;= #{totalAmount})
+        <!-- 检查分类限制 -->
+        AND (
+            JSON_LENGTH(c.category_limit) = 0 
+            <if test="categoryIds != null and categoryIds.size() > 0">
+                OR EXISTS (
+                    SELECT 1 FROM JSON_TABLE(
+                        c.category_limit, '$[*]' COLUMNS(
+                            category_id BIGINT PATH '$'
+                        )
+                    ) AS ct
+                    WHERE ct.category_id IN
+                    <foreach collection="categoryIds" item="catId" open="(" separator="," close=")">
+                        #{catId}
+                    </foreach>
+                )
+            </if>
+        )
+        <!-- 检查商品限制 -->
+        AND (
+            JSON_LENGTH(c.product_limit) = 0
+            <if test="productIds != null and productIds.size() > 0">
+                OR EXISTS (
+                    SELECT 1 FROM JSON_TABLE(
+                        c.product_limit, '$[*]' COLUMNS(
+                            product_id BIGINT PATH '$'
+                        )
+                    ) AS pt
+                    WHERE pt.product_id IN
+                    <foreach collection="productIds" item="prodId" open="(" separator="," close=")">
+                        #{prodId}
+                    </foreach>
+                )
+            </if>
+        )
+        ORDER BY
+            CASE c.type 
+                WHEN 1 THEN c.amount <!-- 满减券按金额排 -->
+                WHEN 2 THEN (#{totalAmount} * (1 - c.amount/10)) <!-- 折扣券按折后金额排 -->
+                WHEN 3 THEN c.amount <!-- 无门槛券按金额排 -->
+        END DESC,
+        c.end_time <!-- 相同优惠金额的情况下，优先使用即将过期的 -->
+        LIMIT 10
+    </select>
+</mapper> 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserAddressMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserAddress">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="is_default" property="isDefault"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="district" property="district"/>
+        <result column="detail_address" property="detailAddress"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, is_default, receiver_name, receiver_phone, province, city, district, detail_address, create_time, update_time
+    </sql>
+    
+    <!-- 获取用户所有收货地址 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId}
+        ORDER BY is_default DESC, update_time DESC
+    </select>
+    
+    <!-- 获取用户默认收货地址 -->
+    <select id="selectDefaultAddress" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId} AND is_default = 1
+        LIMIT 1
+    </select>
+    
+    <!-- 将指定地址设为默认地址 -->
+    <update id="setDefault">
+        UPDATE user_address
+        SET is_default = 1
+        WHERE id = #{addressId} AND user_id = #{userId}
+    </update>
+    
+    <!-- 取消该用户所有默认地址 -->
+    <update id="cancelDefault">
+        UPDATE user_address
+        SET is_default = 0
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 统计用户地址数量 -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM user_address
+        WHERE user_id = #{userId}
+    </select>
+    
+</mapper> 
