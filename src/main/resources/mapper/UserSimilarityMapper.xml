@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserSimilarityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserSimilarity">
+        <id column="user_id_a" property="userIdA"/>
+        <id column="user_id_b" property="userIdB"/>
+        <result column="similarity" property="similarity"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id_a, user_id_b, similarity, update_time
+    </sql>
+    
+    <!-- 获取与指定用户相似度最高的N个用户 -->
+    <select id="selectMostSimilarUsers" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_similarity
+        WHERE user_id_a = #{userId}
+        ORDER BY similarity DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询两个用户之间的相似度 -->
+    <select id="selectByUserIds" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_similarity
+        WHERE (user_id_a = #{userIdA} AND user_id_b = #{userIdB})
+           OR (user_id_a = #{userIdB} AND user_id_b = #{userIdA})
+        LIMIT 1
+    </select>
+    
+    <!-- 更新或插入用户相似度记录 -->
+    <insert id="insertOrUpdate">
+        INSERT INTO user_similarity(user_id_a, user_id_b, similarity, update_time)
+        VALUES (#{userIdA}, #{userIdB}, #{similarity}, #{updateTime})
+        ON DUPLICATE KEY UPDATE
+            similarity = #{similarity},
+            update_time = #{updateTime}
+    </insert>
+    
+    <!-- 批量插入用户相似度数据 -->
+    <insert id="batchInsert">
+        INSERT INTO user_similarity(user_id_a, user_id_b, similarity, update_time)
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userIdA}, #{item.userIdB}, #{item.similarity}, #{item.updateTime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            similarity = VALUES(similarity),
+            update_time = VALUES(update_time)
+    </insert>
+    
+    <!-- 根据相似度阈值查询高相似度用户对 -->
+    <select id="selectByThreshold" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_similarity
+        WHERE similarity >= #{threshold}
+        ORDER BY similarity DESC
+    </select>
+    
+    <!-- 删除指定日期之前的相似度数据 -->
+    <delete id="deleteBeforeTime">
+        DELETE FROM user_similarity
+        WHERE update_time &lt; #{beforeTime}
+    </delete>
+    
+    <!-- 查询指定用户的所有相似度记录 -->
+    <select id="selectAllByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_similarity
+        WHERE user_id_a = #{userId} OR user_id_b = #{userId}
+        ORDER BY similarity DESC
+    </select>
+    
+</mapper> 

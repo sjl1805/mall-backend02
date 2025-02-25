@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserTagRelationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserTagRelation">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="tag_id" property="tagId"/>
+        <result column="weight" property="weight"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, tag_id, weight, create_time, update_time
+    </sql>
+    
+    <!-- 查询用户的所有标签关联 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_tag_relation
+        WHERE user_id = #{userId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询与标签关联的所有用户 -->
+    <select id="selectByTagId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_tag_relation
+        WHERE tag_id = #{tagId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询用户的高权重标签 -->
+    <select id="selectHighWeightTags" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_tag_relation
+        WHERE user_id = #{userId}
+        AND weight >= #{minWeight}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询标签的高关联用户 -->
+    <select id="selectHighWeightUsers" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_tag_relation
+        WHERE tag_id = #{tagId}
+        AND weight >= #{minWeight}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 更新用户标签权重 -->
+    <update id="updateWeight">
+        UPDATE user_tag_relation
+        SET weight = #{weight}, update_time = NOW()
+        WHERE user_id = #{userId} AND tag_id = #{tagId}
+    </update>
+    
+    <!-- 批量插入用户标签关联 -->
+    <insert id="batchInsert">
+        INSERT INTO user_tag_relation(user_id, tag_id, weight) 
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.tagId}, #{item.weight})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            weight = VALUES(weight),
+            update_time = NOW()
+    </insert>
+    
+    <!-- 删除用户的所有标签关联 -->
+    <delete id="deleteByUserId">
+        DELETE FROM user_tag_relation
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <!-- 删除特定的用户标签关联 -->
+    <delete id="deleteByUserIdAndTagId">
+        DELETE FROM user_tag_relation
+        WHERE user_id = #{userId} AND tag_id = #{tagId}
+    </delete>
+    
+    <!-- 查询标签的使用统计 -->
+    <select id="selectTagUsageStats" resultType="java.util.Map">
+        SELECT 
+            tag_id,
+            COUNT(*) AS tag_count,
+            AVG(weight) AS avg_weight
+        FROM user_tag_relation
+        GROUP BY tag_id
+        ORDER BY tag_count DESC
+    </select>
+    
+    <!-- 分页查询某标签的关联用户 -->
+    <select id="selectUsersByTagIdPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_tag_relation
+        WHERE tag_id = #{tagId}
+        ORDER BY weight DESC
+    </select>
+    
+    <!-- 查询用户的标签关联数量 -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM user_tag_relation
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 增加标签权重 -->
+    <update id="incrementWeight">
+        UPDATE user_tag_relation
+        SET weight = weight + #{increment}, update_time = NOW()
+        WHERE user_id = #{userId} AND tag_id = #{tagId}
+    </update>
+    
+</mapper> 

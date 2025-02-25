@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="status" property="status"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="receiver_address" property="receiverAddress"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="discount_amount" property="discountAmount"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no, user_id, total_amount, status, receiver_name, receiver_phone, receiver_address, 
+        coupon_id, discount_amount, payment_time, create_time, update_time
+    </sql>
+    
+    <!-- 根据订单号查询订单 -->
+    <select id="selectByOrderNo" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE order_no = #{orderNo}
+    </select>
+    
+    <!-- 根据用户ID查询订单列表 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 查询用户指定状态的订单 -->
+    <select id="selectByUserIdAndStatus" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 分页查询用户订单 -->
+    <select id="selectUserOrderPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 更新订单状态 -->
+    <update id="updateStatus">
+        UPDATE orders
+        SET status = #{newStatus}, update_time = NOW()
+        WHERE order_no = #{orderNo}
+        <if test="oldStatus != null">
+            AND status = #{oldStatus}
+        </if>
+    </update>
+    
+    <!-- 更新订单支付信息 -->
+    <update id="updatePayment">
+        UPDATE orders
+        SET status = 1, 
+            payment_time = #{paymentTime},
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 0
+    </update>
+    
+    <!-- 统计用户各状态订单数量 -->
+    <select id="countByStatus" resultType="java.util.Map">
+        SELECT SUM(IF(status = 0, 1, 0)) AS waitPay,
+               SUM(IF(status = 1, 1, 0)) AS paid,
+               SUM(IF(status = 2, 1, 0)) AS shipped,
+               SUM(IF(status = 3, 1, 0)) AS completed,
+               SUM(IF(status = 4, 1, 0)) AS canceled,
+               COUNT(*)                  AS total
+        FROM orders
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 查找超时未支付订单 -->
+    <select id="selectTimeoutOrders" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE status = 0
+        AND TIMESTAMPDIFF(MINUTE, create_time, NOW()) > #{timeoutMinutes}
+    </select>
+    
+    <!-- 根据时间范围和状态查询订单 -->
+    <select id="selectByTimeRangeAndStatus" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+    
+</mapper> 
