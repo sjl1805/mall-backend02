@@ -1,9 +1,10 @@
 package com.example.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户实体类
@@ -19,7 +22,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("users")
+@TableName(value = "users", autoResultMap = true)
 public class User implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -38,7 +41,6 @@ public class User implements Serializable {
     /**
      * 密码
      */
-    @JsonIgnore
     private String password;
     
     /**
@@ -94,12 +96,14 @@ public class User implements Serializable {
     /**
      * 偏好分类JSON
      */
-    private String preferredCategories;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> preferredCategories;
     
     /**
      * 用户标签JSON
      */
-    private String tags;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Map<String, Object>> tags;
     
     /**
      * 最后活跃时间

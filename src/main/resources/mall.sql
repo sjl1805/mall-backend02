@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS mall CHARACTER SET utf8mb4;
 USE mall;
 
--- 1. 用户表（简化字段）
+-- 1. 用户表（无外键依赖）
 CREATE TABLE users (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `username` VARCHAR(64) NOT NULL COMMENT '用户名',
@@ -26,22 +26,7 @@ CREATE TABLE users (
     UNIQUE INDEX `idx_username` (`username`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';
 
--- 2. 商品分类表（简化字段和索引）
-CREATE TABLE `category` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '分类ID',
-    `parent_id` BIGINT COMMENT '父分类ID',
-    `name` VARCHAR(64) NOT NULL COMMENT '分类名称',
-    `image` VARCHAR(255) COMMENT '分类图片',
-    `level` TINYINT NOT NULL COMMENT '层级：1一级 2二级 3三级',
-    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    INDEX `idx_parent_id` (`parent_id`),
-    FOREIGN KEY (`parent_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品分类表';
-
--- 3. 商品标签表
+-- 2. 商品标签表（无外键依赖）
 CREATE TABLE `product_tag` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '标签ID',
     `name` VARCHAR(50) NOT NULL COMMENT '标签名称',
@@ -52,7 +37,58 @@ CREATE TABLE `product_tag` (
     UNIQUE INDEX `uk_name` (`name`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品标签表';
 
--- 4. 商品表（集成标签关联）
+-- 3. 用户标签表（无外键依赖）
+CREATE TABLE `user_tag` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '标签ID',
+    `name` VARCHAR(50) NOT NULL COMMENT '标签名称', 
+    `type` TINYINT DEFAULT 1 COMMENT '标签类型：1-兴趣 2-行为 3-人口特征 4-其他',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_name` (`name`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户标签表';
+
+-- 4. 优惠券表（无外键依赖）
+CREATE TABLE `coupon` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '优惠券ID',
+    `name` VARCHAR(100) NOT NULL COMMENT '优惠券名称',
+    `type` TINYINT NOT NULL COMMENT '类型：1-满减 2-折扣 3-无门槛',
+    `amount` DECIMAL(10, 2) COMMENT '优惠金额/折扣率',
+    `threshold` DECIMAL(10, 2) DEFAULT 0 COMMENT '使用门槛金额',
+    `start_time` TIMESTAMP NOT NULL COMMENT '开始时间',
+    `end_time` TIMESTAMP NOT NULL COMMENT '结束时间',
+    `total` INT NOT NULL COMMENT '总数量',
+    `remain` INT NOT NULL COMMENT '剩余数量',
+    `category_limit` JSON COMMENT '分类限制JSON',
+    `product_limit` JSON COMMENT '商品限制JSON',
+    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_status_time` (`status`, `start_time`, `end_time`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '优惠券表';
+
+-- 5. 商品分类表（自引用）
+CREATE TABLE `category` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '分类ID',
+    `parent_id` BIGINT COMMENT '父分类ID',
+    `name` VARCHAR(64) NOT NULL COMMENT '分类名称',
+    `image` VARCHAR(255) COMMENT '分类图片',
+    `level` TINYINT NOT NULL COMMENT '层级：1一级 2二级 3三级',
+    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_parent_id` (`parent_id`)
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品分类表';
+
+-- 添加分类表自引用外键
+ALTER TABLE `category` 
+ADD CONSTRAINT `fk_category_parent` 
+FOREIGN KEY (`parent_id`) REFERENCES `category` (`id`) 
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 6. 商品表
 CREATE TABLE products (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '商品ID',
     `category_id` BIGINT NOT NULL COMMENT '分类ID',
@@ -71,25 +107,7 @@ CREATE TABLE products (
     FOREIGN KEY (`category_id`) REFERENCES category (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品表';
 
--- 5. 商品SKU表
-CREATE TABLE `product_sku` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'SKU ID',
-    `product_id` BIGINT NOT NULL COMMENT '商品ID',
-    `sku_code` VARCHAR(64) NOT NULL COMMENT 'SKU编码',
-    `specifications` JSON NOT NULL COMMENT '规格JSON，如：{"颜色":"红色","尺寸":"XL"}',
-    `price` DECIMAL(10, 2) NOT NULL COMMENT 'SKU价格',
-    `stock` INT NOT NULL DEFAULT 0 COMMENT 'SKU库存',
-    `image` VARCHAR(255) COMMENT 'SKU图片',
-    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `uk_sku_code` (`sku_code`),
-    INDEX `idx_product_id` (`product_id`),
-    FOREIGN KEY (`product_id`) REFERENCES products (`id`) ON DELETE CASCADE
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品SKU表';
-
--- 6. 用户地址表（简化字段和索引）
+-- 7. 用户地址表
 CREATE TABLE user_address (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '地址ID',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -107,7 +125,134 @@ CREATE TABLE user_address (
     FOREIGN KEY (`user_id`) REFERENCES users (`id`) ON DELETE CASCADE
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户收货地址表';
 
--- 7. 用户行为与交互表（合并行为表和交互表）
+-- 8. 订单表
+CREATE TABLE orders (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '订单ID',
+    `order_no` VARCHAR(64) NOT NULL COMMENT '订单号',
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `total_amount` DECIMAL(10, 2) NOT NULL COMMENT '订单总金额',
+    `status` TINYINT COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    `receiver_name` VARCHAR(32) NOT NULL COMMENT '收货人姓名',
+    `receiver_phone` VARCHAR(11) NOT NULL COMMENT '收货人电话',
+    `receiver_address` VARCHAR(255) NOT NULL COMMENT '收货地址',
+    `coupon_id` BIGINT COMMENT '使用的优惠券ID',
+    `discount_amount` DECIMAL(10, 2) DEFAULT 0.00 COMMENT '优惠金额',
+    `payment_time` TIMESTAMP NULL COMMENT '支付时间',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_order_no` (`order_no`),
+    INDEX `idx_user_id` (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`id`) ON DELETE RESTRICT
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '订单表';
+
+-- 9. 用户相似度表
+CREATE TABLE user_similarity (
+    user_id_a BIGINT NOT NULL COMMENT '用户A ID',
+    user_id_b BIGINT NOT NULL COMMENT '用户B ID',
+    similarity DECIMAL(8,7) NOT NULL COMMENT '相似度分数（0.0-1.0，余弦相似度计算）',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '最后计算时间',
+    PRIMARY KEY (user_id_a, user_id_b),
+    FOREIGN KEY (user_id_a) REFERENCES users(id),
+    FOREIGN KEY (user_id_b) REFERENCES users(id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='用户相似度表（用于协同过滤推荐，存储用户间行为相似度）';
+
+-- 10. 用户-标签关联表
+CREATE TABLE `user_tag_relation` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '关联ID',
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `tag_id` BIGINT NOT NULL COMMENT '标签ID',
+    `weight` DECIMAL(3,2) DEFAULT 1.00 COMMENT '标签权重', 
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_user_tag` (`user_id`, `tag_id`),
+    INDEX `idx_tag_id` (`tag_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`tag_id`) REFERENCES `user_tag` (`id`) ON DELETE CASCADE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户-标签关联表';
+
+-- 11. 商品SKU表
+CREATE TABLE `product_sku` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'SKU ID',
+    `product_id` BIGINT NOT NULL COMMENT '商品ID',
+    `sku_code` VARCHAR(64) NOT NULL COMMENT 'SKU编码',
+    `specifications` JSON NOT NULL COMMENT '规格JSON，如：{"颜色":"红色","尺寸":"XL"}',
+    `price` DECIMAL(10, 2) NOT NULL COMMENT 'SKU价格',
+    `stock` INT NOT NULL DEFAULT 0 COMMENT 'SKU库存',
+    `image` VARCHAR(255) COMMENT 'SKU图片',
+    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_sku_code` (`sku_code`),
+    INDEX `idx_product_id` (`product_id`),
+    FOREIGN KEY (`product_id`) REFERENCES products (`id`) ON DELETE CASCADE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品SKU表';
+
+-- 12. 商品相似度表
+CREATE TABLE product_similarity (
+    product_id_a BIGINT NOT NULL COMMENT '商品A ID',
+    product_id_b BIGINT NOT NULL COMMENT '商品B ID',
+    similarity DECIMAL(8,7) NOT NULL COMMENT '相似度分数（0.0-1.0，基于共同购买/浏览行为计算）',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '最后计算时间',
+    PRIMARY KEY (product_id_a, product_id_b),
+    FOREIGN KEY (product_id_a) REFERENCES products(id),
+    FOREIGN KEY (product_id_b) REFERENCES products(id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='商品相似度表（用于商品协同过滤推荐，存储商品间关联度）';
+
+-- 13. 商品-标签关联表
+CREATE TABLE `product_tag_relation` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '关联ID',
+    `product_id` BIGINT NOT NULL COMMENT '商品ID',
+    `tag_id` BIGINT NOT NULL COMMENT '标签ID',
+    `weight` DECIMAL(3,2) DEFAULT 1.00 COMMENT '标签权重，用于计算相关度',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_product_tag` (`product_id`, `tag_id`),
+    INDEX `idx_tag_id` (`tag_id`),
+    FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`tag_id`) REFERENCES `product_tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '商品-标签关联表';
+
+-- 14. 用户-分类偏好关联表
+CREATE TABLE `user_category_preference` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '关联ID',
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `category_id` BIGINT NOT NULL COMMENT '分类ID',
+    `preference_level` DECIMAL(3,2) DEFAULT 1.00 COMMENT '偏好程度',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_user_category` (`user_id`, `category_id`),
+    INDEX `idx_category_id` (`category_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户分类偏好表';
+
+-- 15. 订单项表
+CREATE TABLE `order_item` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '订单商品ID',
+    `order_id` BIGINT NOT NULL COMMENT '订单ID',
+    `product_id` BIGINT NOT NULL COMMENT '商品ID',
+    `sku_id` BIGINT COMMENT 'SKU ID',
+    `product_name` VARCHAR(128) NOT NULL COMMENT '商品名称',
+    `product_image` VARCHAR(255) COMMENT '商品主图URL',
+    `specifications` JSON COMMENT '商品规格JSON',
+    `price` DECIMAL(10, 2) NOT NULL COMMENT '商品单价',
+    `quantity` INT NOT NULL COMMENT '购买数量',
+    `total_amount` DECIMAL(10, 2) NOT NULL COMMENT '商品总价',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_order_id` (`order_id`),
+    FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`product_id`) REFERENCES products (`id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`sku_id`) REFERENCES product_sku (`id`) ON DELETE SET NULL
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '订单商品表';
+
+-- 16. 用户行为与交互表
 CREATE TABLE `user_behavior` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '行为ID',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -134,7 +279,7 @@ CREATE TABLE `user_behavior` (
     FOREIGN KEY (`category_id`) REFERENCES category (`id`) ON DELETE SET NULL
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户行为与交互表';
 
--- 8. 购物车表
+-- 17. 购物车表
 CREATE TABLE `cart` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '购物车ID',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -151,69 +296,23 @@ CREATE TABLE `cart` (
     FOREIGN KEY (`sku_id`) REFERENCES product_sku (`id`) ON DELETE CASCADE
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '购物车表';
 
--- 9. 订单表
-CREATE TABLE orders (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '订单ID',
-    `order_no` VARCHAR(64) NOT NULL COMMENT '订单号',
-    `user_id` BIGINT NOT NULL COMMENT '用户ID',
-    `total_amount` DECIMAL(10, 2) NOT NULL COMMENT '订单总金额',
-    `status` TINYINT COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
-    `receiver_name` VARCHAR(32) NOT NULL COMMENT '收货人姓名',
-    `receiver_phone` VARCHAR(11) NOT NULL COMMENT '收货人电话',
-    `receiver_address` VARCHAR(255) NOT NULL COMMENT '收货地址',
-    `coupon_id` BIGINT COMMENT '使用的优惠券ID',
-    `discount_amount` DECIMAL(10, 2) DEFAULT 0.00 COMMENT '优惠金额',
-    `payment_time` TIMESTAMP NULL COMMENT '支付时间',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `uk_order_no` (`order_no`),
-    INDEX `idx_user_id` (`user_id`),
-    FOREIGN KEY (`user_id`) REFERENCES users (`id`) ON DELETE RESTRICT
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '订单表';
+-- 18. 推荐结果表
+CREATE TABLE recommendation_result (
+    id BIGINT NOT NULL AUTO_INCREMENT COMMENT '推荐记录ID',
+    user_id BIGINT NOT NULL COMMENT '被推荐用户ID',
+    product_id BIGINT NOT NULL COMMENT '推荐商品ID',
+    score DECIMAL(10,6) NOT NULL COMMENT '推荐分数（根据算法模型生成）',
+    algorithm_type TINYINT COMMENT '算法类型：1-基于用户的CF 2-基于物品的CF 3-混合CF 4-热门推荐 5-新品推荐',
+    expire_time TIMESTAMP COMMENT '推荐结果过期时间',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '生成时间',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_user_product (user_id, product_id),
+    INDEX idx_user_score (user_id, score DESC),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='推荐结果表（存储实时推荐结果，包含算法类型和有效期）';
 
--- 10. 订单项表
-CREATE TABLE `order_item` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '订单商品ID',
-    `order_id` BIGINT NOT NULL COMMENT '订单ID',
-    `product_id` BIGINT NOT NULL COMMENT '商品ID',
-    `sku_id` BIGINT COMMENT 'SKU ID',
-    `product_name` VARCHAR(128) NOT NULL COMMENT '商品名称',
-    `product_image` VARCHAR(255) COMMENT '商品主图URL',
-    `specifications` JSON COMMENT '商品规格JSON',
-    `price` DECIMAL(10, 2) NOT NULL COMMENT '商品单价',
-    `quantity` INT NOT NULL COMMENT '购买数量',
-    `total_amount` DECIMAL(10, 2) NOT NULL COMMENT '商品总价',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    INDEX `idx_order_id` (`order_id`),
-    FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`product_id`) REFERENCES products (`id`) ON DELETE RESTRICT,
-    FOREIGN KEY (`sku_id`) REFERENCES product_sku (`id`) ON DELETE SET NULL
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '订单商品表';
-
--- 11. 优惠券表
-CREATE TABLE `coupon` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '优惠券ID',
-    `name` VARCHAR(100) NOT NULL COMMENT '优惠券名称',
-    `type` TINYINT NOT NULL COMMENT '类型：1-满减 2-折扣 3-无门槛',
-    `amount` DECIMAL(10, 2) COMMENT '优惠金额/折扣率',
-    `threshold` DECIMAL(10, 2) DEFAULT 0 COMMENT '使用门槛金额',
-    `start_time` TIMESTAMP NOT NULL COMMENT '开始时间',
-    `end_time` TIMESTAMP NOT NULL COMMENT '结束时间',
-    `total` INT NOT NULL COMMENT '总数量',
-    `remain` INT NOT NULL COMMENT '剩余数量',
-    `category_limit` JSON COMMENT '分类限制JSON',
-    `product_limit` JSON COMMENT '商品限制JSON',
-    `status` TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-启用',
-    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    INDEX `idx_status_time` (`status`, `start_time`, `end_time`)
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '优惠券表';
-
--- 12. 用户优惠券表
+-- 19. 用户优惠券表
 CREATE TABLE `user_coupon` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '用户优惠券ID',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -231,41 +330,3 @@ CREATE TABLE `user_coupon` (
     FOREIGN KEY (`coupon_id`) REFERENCES coupon (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`order_id`) REFERENCES orders (`id`) ON DELETE SET NULL
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COMMENT = '用户优惠券表';
-
--- 13. 用户相似度表（添加完整字段注释）
-CREATE TABLE user_similarity (
-    user_id_a BIGINT NOT NULL COMMENT '用户A ID',
-    user_id_b BIGINT NOT NULL COMMENT '用户B ID',
-    similarity DECIMAL(8,7) NOT NULL COMMENT '相似度分数（0.0-1.0，余弦相似度计算）',
-    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '最后计算时间',
-    PRIMARY KEY (user_id_a, user_id_b),
-    FOREIGN KEY (user_id_a) REFERENCES users(id),
-    FOREIGN KEY (user_id_b) REFERENCES users(id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='用户相似度表（用于协同过滤推荐，存储用户间行为相似度）';
-
--- 14. 商品相似度表（添加完整字段注释）
-CREATE TABLE product_similarity (
-    product_id_a BIGINT NOT NULL COMMENT '商品A ID',
-    product_id_b BIGINT NOT NULL COMMENT '商品B ID',
-    similarity DECIMAL(8,7) NOT NULL COMMENT '相似度分数（0.0-1.0，基于共同购买/浏览行为计算）',
-    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '最后计算时间',
-    PRIMARY KEY (product_id_a, product_id_b),
-    FOREIGN KEY (product_id_a) REFERENCES products(id),
-    FOREIGN KEY (product_id_b) REFERENCES products(id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='商品相似度表（用于商品协同过滤推荐，存储商品间关联度）';
-
--- 15. 推荐结果表（添加完整字段注释）
-CREATE TABLE recommendation_result (
-    id BIGINT NOT NULL AUTO_INCREMENT COMMENT '推荐记录ID',
-    user_id BIGINT NOT NULL COMMENT '被推荐用户ID',
-    product_id BIGINT NOT NULL COMMENT '推荐商品ID',
-    score DECIMAL(10,6) NOT NULL COMMENT '推荐分数（根据算法模型生成）',
-    algorithm_type TINYINT COMMENT '算法类型：1-基于用户的CF 2-基于物品的CF 3-混合CF 4-热门推荐 5-新品推荐',
-    expire_time TIMESTAMP COMMENT '推荐结果过期时间',
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '生成时间',
-    PRIMARY KEY (id),
-    UNIQUE KEY uk_user_product (user_id, product_id),
-    INDEX idx_user_score (user_id, score DESC),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='推荐结果表（存储实时推荐结果，包含算法类型和有效期）';

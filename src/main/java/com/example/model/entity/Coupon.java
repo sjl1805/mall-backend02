@@ -1,8 +1,10 @@
 package com.example.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 优惠券实体类
@@ -19,7 +22,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("coupon")
+@TableName(value = "coupon", autoResultMap = true)
 public class Coupon implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -73,12 +76,14 @@ public class Coupon implements Serializable {
     /**
      * 分类限制JSON
      */
-    private String categoryLimit;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> categoryLimit;
     
     /**
      * 商品限制JSON
      */
-    private String productLimit;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> productLimit;
     
     /**
      * 状态：0-禁用 1-启用
