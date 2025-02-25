@@ -2,82 +2,87 @@ package com.example.common.exception;
 
 import com.example.common.api.CommonResult;
 import com.example.common.api.ResultCode;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
+import com.example.exception.UsernameExistsException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * 全局异常处理器
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 处理业务异常
-    @ExceptionHandler(BusinessException.class)
-    public CommonResult<?> handleBusinessException(BusinessException e, HttpServletRequest request) {
-        log.error("业务异常: {}", e.getMessage(), e);
-        return CommonResult.failed(e.getResultCode())
-                .path(request.getRequestURI());
+    /**
+     * 处理参数验证异常
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public CommonResult<String> handleValidException(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        String message = null;
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            if (fieldError != null) {
+                message = fieldError.getField() + fieldError.getDefaultMessage();
+            }
+        }
+        return CommonResult.failed(ResultCode.VALIDATE_FAILED, message);
     }
 
-    // 处理参数校验异常
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResult<?> handleValidationException(MethodArgumentNotValidException e, HttpServletRequest request) {
-        String message = e.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .findFirst()
-                .orElse("参数校验失败");
-        log.warn("参数校验异常: {}", message);
-        return CommonResult.validateFailed(message)
-                .path(request.getRequestURI());
+    /**
+     * 处理绑定异常
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = BindException.class)
+    public CommonResult<String> handleBindException(BindException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        String message = null;
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            if (fieldError != null) {
+                message = fieldError.getField() + fieldError.getDefaultMessage();
+            }
+        }
+        return CommonResult.failed(ResultCode.VALIDATE_FAILED, message);
     }
 
-    // 处理JSR303校验异常
-    @ExceptionHandler(ConstraintViolationException.class)
-    public CommonResult<?> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
-        String message = e.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                .findFirst()
-                .orElse("参数校验失败");
-        log.warn("参数校验异常: {}", message);
-        return CommonResult.validateFailed(message)
-                .path(request.getRequestURI());
+    /**
+     * 处理用户名已存在异常
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = UsernameExistsException.class)
+    public CommonResult<String> handleUsernameExistsException(UsernameExistsException e) {
+        log.error("用户名已存在异常：{}", e.getMessage());
+        return CommonResult.failed(ResultCode.USERNAME_EXISTED, e.getMessage());
     }
 
-    // 处理认证异常
-    @ExceptionHandler({BadCredentialsException.class})
-    public CommonResult<?> handleAuthenticationException(Exception e, HttpServletRequest request) {
-        log.warn("认证失败: {}", e.getMessage());
-        return CommonResult.failed(ResultCode.UNAUTHORIZED, "用户名或密码错误")
-                .path(request.getRequestURI());
+    /**
+     * 处理访问拒绝异常
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public CommonResult<String> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("没有权限：{}", e.getMessage());
+        return CommonResult.failed(ResultCode.FORBIDDEN, "没有权限执行此操作");
     }
 
-    // 处理权限不足异常
-    @ExceptionHandler(AccessDeniedException.class)
-    public CommonResult<?> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
-        log.warn("权限不足: {}", e.getMessage());
-        return CommonResult.failed(ResultCode.FORBIDDEN)
-                .path(request.getRequestURI());
-    }
-
-    // 处理JSON解析异常
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public CommonResult<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
-        log.error("请求体解析失败: {}", e.getMessage());
-        return CommonResult.validateFailed("请求体格式错误")
-                .path(request.getRequestURI());
-    }
-
-    // 处理其他未捕获异常
+    /**
+     * 处理所有其他异常
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public CommonResult<?> handleGlobalException(Exception e, HttpServletRequest request) {
-        log.error("系统异常: ", e);
-        return CommonResult.failed(ResultCode.INTERNAL_SERVER_ERROR)
-                .path(request.getRequestURI());
+    public CommonResult<String> handleException(Exception e) {
+        log.error("系统异常：", e);
+        return CommonResult.failed(ResultCode.FAILED, "系统异常，请联系管理员");
     }
 }
 

@@ -10,9 +10,13 @@ import com.example.model.dto.UserRegisterDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,43 +30,62 @@ import java.util.Map;
 @Tag(name = "Users", description = "用户注册登录及基本信息管理")
 @RestController
 @RequestMapping("/users")
+@Validated
+@Slf4j
 public class UsersController {
 
     @Autowired
     private UsersService usersService;
 
-    @Operation(summary = "用户注册")
+    @Operation(summary = "用户注册", description = "新用户注册接口，用户名不能重复")
     @PostMapping("/register")
     public CommonResult<Boolean> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO) {
+        log.info("用户注册请求: {}", userRegisterDTO.getUsername());
         boolean result = usersService.register(userRegisterDTO);
-        return result ? CommonResult.success(true) :
-                CommonResult.failed(ResultCode.USERNAME_EXISTED);
+        if (result) {
+            log.info("用户注册成功: {}", userRegisterDTO.getUsername());
+            return CommonResult.success(true);
+        } else {
+            log.warn("用户注册失败: {}", userRegisterDTO.getUsername());
+            return CommonResult.failed(ResultCode.USERNAME_EXISTED);
+        }
     }
 
-    @Operation(summary = "用户登录")
+    @Operation(summary = "用户登录", description = "用户登录接口，返回用户信息")
     @PostMapping("/login")
     public CommonResult<Users> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+        log.info("用户登录请求: {}", userLoginDTO.getUsername());
         try {
             Users user = usersService.login(userLoginDTO);
+            log.info("用户登录成功: {}", userLoginDTO.getUsername());
             return CommonResult.success(user);
         } catch (RuntimeException e) {
+            log.warn("用户登录失败: {}, 原因: {}", userLoginDTO.getUsername(), e.getMessage());
             return CommonResult.failed(ResultCode.LOGIN_FAILED, e.getMessage());
         }
     }
 
-    @Operation(summary = "获取用户信息")
+    @Operation(summary = "获取用户信息", description = "根据用户ID获取用户完整信息")
     @GetMapping("/{userId}")
-    public CommonResult<Users> getUserInfo(@PathVariable Long userId) {
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
+    public CommonResult<Users> getUserInfo(
+            @Parameter(description = "用户ID", required = true) 
+            @PathVariable Long userId) {
+        log.info("获取用户信息请求: {}", userId);
         Users user = usersService.getUserById(userId);
         return user != null ? CommonResult.success(user) :
                 CommonResult.failed(ResultCode.USER_NOT_FOUND);
     }
 
-    @Operation(summary = "用户分页列表")
+    @Operation(summary = "用户分页列表", description = "管理员查询用户列表，支持分页")
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
     public CommonResult<IPage<Users>> getUserList(
+            @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "每页数量") 
             @RequestParam(defaultValue = "10") int size) {
+        log.info("获取用户列表请求: 页码={}, 每页数量={}", page, size);
         IPage<Users> pageParam = new Page<>(page, size);
         return CommonResult.success(usersService.selectPage(pageParam));
     }
@@ -137,12 +160,19 @@ public class UsersController {
                 CommonResult.failed(ResultCode.USER_NOT_FOUND);
     }
 
-    @Operation(summary = "批量删除用户")
+    @Operation(summary = "批量删除用户", description = "管理员批量删除用户")
     @DeleteMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
     public CommonResult<Boolean> batchDeleteUsers(@RequestBody List<Long> userIds) {
+        log.info("批量删除用户请求: {}", userIds);
         boolean result = usersService.batchDeleteUsers(userIds);
-        return result ? CommonResult.success(true) :
-                CommonResult.failed(ResultCode.FAILED);
+        if (result) {
+            log.info("批量删除用户成功: {}", userIds);
+            return CommonResult.success(true);
+        } else {
+            log.warn("批量删除用户失败: {}", userIds);
+            return CommonResult.failed(ResultCode.FAILED);
+        }
     }
 
     @Operation(summary = "检查用户名是否存在")
@@ -212,15 +242,33 @@ public class UsersController {
                 CommonResult.failed(ResultCode.USER_NOT_FOUND);
     }
 
-    @Operation(summary = "更新用户手机号")
+    @Operation(summary = "更新用户手机号", description = "更新用户手机号，需要验证码")
     @PutMapping("/{userId}/phone")
+    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public CommonResult<Boolean> updateUserPhone(
             @PathVariable Long userId,
             @RequestBody Map<String, String> phoneMap) {
         String newPhone = phoneMap.get("newPhone");
         String verifyCode = phoneMap.get("verifyCode");
+        
+        log.info("更新用户手机号请求: userId={}, newPhone={}", userId, newPhone);
+        
+        // 参数验证
+        if (newPhone == null || !newPhone.matches("^1[3-9]\\d{9}$")) {
+            return CommonResult.failed(ResultCode.VALIDATE_FAILED, "手机号格式不正确");
+        }
+        
+        if (verifyCode == null || verifyCode.length() != 6) {
+            return CommonResult.failed(ResultCode.VALIDATE_FAILED, "验证码格式不正确");
+        }
+        
         boolean result = usersService.updateUserPhone(userId, newPhone, verifyCode);
-        return result ? CommonResult.success(true) :
-                CommonResult.failed(ResultCode.FAILED, "手机号更新失败，可能已被其他用户使用");
+        if (result) {
+            log.info("更新用户手机号成功: userId={}, newPhone={}", userId, newPhone);
+            return CommonResult.success(true);
+        } else {
+            log.warn("更新用户手机号失败: userId={}, newPhone={}", userId, newPhone);
+            return CommonResult.failed(ResultCode.FAILED, "手机号更新失败，可能已被其他用户使用");
+        }
     }
 } 

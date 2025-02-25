@@ -33,6 +33,15 @@ public class CommonResult<T> {
         return result;
     }
 
+    // 成功响应（带数据和消息）
+    public static <T> CommonResult<T> success(T data, String message) {
+        CommonResult<T> result = new CommonResult<>();
+        result.setCode(ResultCode.SUCCESS.getCode());
+        result.setMessage(message);
+        result.setData(data);
+        return result;
+    }
+
     // 失败响应（基础版）
     public static <T> CommonResult<T> failed(IResultCode resultCode) {
         return failed(resultCode, resultCode.getMessage());
