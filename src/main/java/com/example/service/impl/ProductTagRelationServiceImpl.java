@@ -78,7 +78,7 @@ public class ProductTagRelationServiceImpl extends ServiceImpl<ProductTagRelatio
 
     @Override
     public IPage<ProductTagRelation> getProductsByTagIdPage(Long tagId, Page<ProductTagRelation> page) {
-        return page.setRecords(baseMapper.selectProductsByTagIdPage(tagId, page));
+        return baseMapper.selectProductsByTagIdPage(page, tagId);
     }
 
     @Override

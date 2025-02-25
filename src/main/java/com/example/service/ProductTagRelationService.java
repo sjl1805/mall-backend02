@@ -87,7 +87,7 @@ public interface ProductTagRelationService extends IService<ProductTagRelation> 
      * 查询标签的使用统计
      * @return 标签统计信息
      */
-    List<Map<String, Object>> getTagUsageStats();
+    Map<Long, Map<String, Object>>  getTagUsageStats();
     
     /**
      * 分页查询某标签的关联商品
