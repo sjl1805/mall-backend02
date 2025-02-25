@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductTagMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.ProductTag">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, type, create_time, update_time
+    </sql>
+
+    <!-- 根据标签名称查询 -->
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_tag
+        WHERE name = #{name}
+    </select>
+
+    <!-- 根据标签类型查询 -->
+    <select id="selectListByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_tag
+        WHERE type = #{type}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 分页多条件查询标签 -->
+    <select id="selectTagPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_tag
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND name LIKE CONCAT('%', #{params.keyword}, '%')
+            </if>
+            <if test="params.type != null">
+                AND type = #{params.type}
+            </if>
+            <if test="params.startTime != null">
+                AND create_time &gt;= #{params.startTime}
+            </if>
+            <if test="params.endTime != null">
+                AND create_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="params.sortField != null and params.sortField != ''">
+                ${params.sortField} 
+                <if test="params.sortOrder != null and params.sortOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="params.sortOrder == null or params.sortOrder != 'desc'">
+                    `ASC`
+                </if>
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 批量插入标签 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO product_tag (name, type) VALUES
+        <foreach collection="tagList" item="tag" separator=",">
+            (#{tag.name}, #{tag.type})
+        </foreach>
+    </insert>
+
+    <!-- 根据关键词模糊查询标签 -->
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_tag
+        WHERE name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY create_time DESC
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 获取热门标签（根据关联数量） -->
+    <select id="selectHotTags" resultMap="BaseResultMap">
+        SELECT pt.id, pt.name, pt.type, pt.create_time, pt.update_time
+        FROM product_tag pt
+                 LEFT JOIN (SELECT id, COUNT(*) as use_count
+                            FROM product_tag
+                            GROUP BY id) ptr ON pt.id = ptr.id
+        ORDER BY ptr.use_count DESC, pt.id
+        LIMIT #{limit}
+    </select>
+
+    <!-- 统计各类型标签数量 -->
+    <select id="countTagByType" resultType="java.util.Map">
+        SELECT 
+            type,
+            COUNT(*) as count
+        FROM product_tag
+        GROUP BY type
+    </select>
+
+    <!-- 查询标签是否存在 -->
+    <select id="existsByName" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM product_tag
+        WHERE name = #{name}
+    </select>
+    
+    <!-- 根据商品ID获取关联的标签 -->
+    <select id="selectTagsByProductId" resultMap="BaseResultMap">
+        SELECT pt.id, pt.name, pt.type, pt.create_time, pt.update_time
+        FROM product_tag pt
+        INNER JOIN product_tag ptr ON pt.id = ptr.id
+        WHERE ptr.id = #{productId} 
+    </select>
+    
+    <!-- 批量删除标签 -->
+    <delete id="batchDeleteByIds">
+        DELETE FROM product_tag 
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper> 

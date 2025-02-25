@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="avatar" property="avatar"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <result column="age_range" property="ageRange"/>
+        <result column="gender" property="gender"/>
+        <result column="consumption_level" property="consumptionLevel"/>
+        <result column="activity_level" property="activityLevel"/>
+        <result column="preferred_categories" property="preferredCategories" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="tags" property="tags" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="last_active_time" property="lastActiveTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, nickname, phone, email, avatar, role, status, age_range, gender,
+        consumption_level, activity_level, preferred_categories, tags, last_active_time, create_time, update_time
+    </sql>
+
+    <!-- 根据用户名查询 -->
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE username = #{username}
+    </select>
+
+    <!-- 根据手机号查询 -->
+    <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+
+    <!-- 根据邮箱查询 -->
+    <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <!-- 分页多条件查询用户 -->
+    <select id="selectUserPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        <where>
+            <if test="params.keyword != null and params.keyword != ''">
+                AND (username LIKE CONCAT('%', #{params.keyword}, '%')
+                OR nickname LIKE CONCAT('%', #{params.keyword}, '%')
+                OR phone LIKE CONCAT('%', #{params.keyword}, '%')
+                OR email LIKE CONCAT('%', #{params.keyword}, '%'))
+            </if>
+            <if test="params.role != null">
+                AND role = #{params.role}
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+            <if test="params.gender != null">
+                AND gender = #{params.gender}
+            </if>
+            <if test="params.ageRange != null and params.ageRange != ''">
+                AND age_range = #{params.ageRange}
+            </if>
+            <if test="params.consumptionLevel != null">
+                AND consumption_level = #{params.consumptionLevel}
+            </if>
+            <if test="params.activityLevel != null">
+                AND activity_level = #{params.activityLevel}
+            </if>
+            <if test="params.startTime != null">
+                AND create_time &gt;= #{params.startTime}
+            </if>
+            <if test="params.endTime != null">
+                AND create_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        ORDER BY 
+        <choose>
+            <when test="params.sortField != null and params.sortField != ''">
+                ${params.sortField} 
+                <if test="params.sortOrder != null and params.sortOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="params.sortOrder == null or params.sortOrder != 'desc'">
+                    ASC
+                </if>
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 更新用户最后活跃时间 -->
+    <update id="updateLastActiveTime" parameterType="java.lang.Long">
+        UPDATE users
+        SET last_active_time = NOW()
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 更新用户状态 -->
+    <update id="updateStatus">
+        UPDATE users
+        SET status = #{status}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 更新用户密码 -->
+    <update id="updatePassword">
+        UPDATE users
+        SET password = #{newPassword}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 批量查询用户 -->
+    <select id="selectBatchByIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+
+    <!-- 更新用户标签 -->
+    <update id="updateUserTags">
+        UPDATE users
+        SET tags = #{tags}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 更新用户偏好分类 -->
+    <update id="updateUserPreferredCategories">
+        UPDATE users
+        SET preferred_categories = #{preferredCategories}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 统计不同性别的用户数量 -->
+    <select id="countUserByGender" resultType="java.util.Map">
+        SELECT 
+            gender,
+            COUNT(*) as count
+        FROM users
+        GROUP BY gender
+    </select>
+
+    <!-- 统计不同年龄段的用户数量 -->
+    <select id="countUserByAgeRange" resultType="java.util.Map">
+        SELECT 
+            age_range,
+            COUNT(*) as count
+        FROM users
+        WHERE age_range IS NOT NULL
+        GROUP BY age_range
+    </select>
+
+    <!-- 统计不同消费能力的用户数量 -->
+    <select id="countUserByConsumptionLevel" resultType="java.util.Map">
+        SELECT 
+            consumption_level,
+            COUNT(*) as count
+        FROM users
+        WHERE consumption_level IS NOT NULL
+        GROUP BY consumption_level
+    </select>
+
+    <!-- 统计用户近期增长数据 -->
+    <select id="countUserGrowth" resultType="java.util.Map">
+        SELECT 
+            DATE(create_time) as date,
+            COUNT(*) as count
+        FROM users
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        GROUP BY DATE(create_time)
+        ORDER BY date
+    </select>
+
+    <!-- 查询活跃用户列表 -->
+    <select id="selectActiveUsers" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE last_active_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        ORDER BY last_active_time DESC
+        LIMIT #{limit}
+    </select>
+</mapper> 
