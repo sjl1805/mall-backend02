@@ -29,3 +29,34 @@ This generated password is for development use only. Your security configuration
 2025-02-25T19:03:23.483+08:00  INFO 15320 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
 2025-02-25T19:03:23.517+08:00  INFO 15320 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
 2025-02-25T19:03:23.527+08:00  INFO 15320 --- [restartedMain] com.example.MallBackendApplication       : Started MallBackendApplication in 3.023 seconds (process running for 3.379)
+2025-02-25T19:56:41.766+08:00  INFO 16556 --- [restartedMain] com.example.MallBackendApplication       : Starting MallBackendApplication using Java 17.0.10 with PID 16556 (C:\Users\31815\Desktop\mall-backend\target\classes started by 31815 in C:\Users\31815\Desktop\mall-backend)
+2025-02-25T19:56:41.766+08:00 DEBUG 16556 --- [restartedMain] com.example.MallBackendApplication       : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-02-25T19:56:41.774+08:00  INFO 16556 --- [restartedMain] com.example.MallBackendApplication       : The following 1 profile is active: "dev"
+2025-02-25T19:56:41.825+08:00  INFO 16556 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-25T19:56:41.825+08:00  INFO 16556 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-25T19:56:42.532+08:00 DEBUG 16556 --- [restartedMain] c.b.m.a.MybatisPlusAutoConfiguration     : Searching for mappers annotated with @Mapper
+2025-02-25T19:56:42.533+08:00 DEBUG 16556 --- [restartedMain] c.b.m.a.MybatisPlusAutoConfiguration     : Using auto-configuration base package 'com.example'
+2025-02-25T19:56:42.658+08:00  INFO 16556 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-25T19:56:42.661+08:00  INFO 16556 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-25T19:56:42.684+08:00  INFO 16556 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2025-02-25T19:56:42.827+08:00  WARN 16556 --- [restartedMain] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.example]' package. Please check your configuration.
+2025-02-25T19:56:43.321+08:00  INFO 16556 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-02-25T19:56:43.330+08:00  INFO 16556 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-02-25T19:56:43.331+08:00  INFO 16556 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-02-25T19:56:43.386+08:00  INFO 16556 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2025-02-25T19:56:43.387+08:00  INFO 16556 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1562 ms
+2025-02-25T19:56:43.790+08:00 DEBUG 16556 --- [restartedMain] c.b.m.a.MybatisPlusAutoConfiguration     : Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.
+2025-02-25T19:56:43.878+08:00 DEBUG 16556 --- [restartedMain] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Property 'mapperLocations' was not specified.
+2025-02-25T19:56:43.952+08:00 DEBUG 16556 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get /192.168.31.178 network interface 
+2025-02-25T19:56:43.963+08:00 DEBUG 16556 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Get network interface info: name:wlan4 (Intel(R) Wi-Fi 6 AX201 160MHz)
+2025-02-25T19:56:43.972+08:00 DEBUG 16556 --- [restartedMain] c.b.mybatisplus.core.toolkit.Sequence    : Initialization Sequence datacenterId:26 workerId:13
+2025-02-25T19:56:44.335+08:00  WARN 16556 --- [restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 47e6a113-145a-4cb0-969e-147a9624a911
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-02-25T19:56:44.432+08:00  INFO 16556 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@23100cf2, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@78ea7643, org.springframework.security.web.context.SecurityContextHolderFilter@154985fc, org.springframework.security.web.header.HeaderWriterFilter@6485504e, org.springframework.web.filter.CorsFilter@3c246ba5, org.springframework.security.web.csrf.CsrfFilter@112d2ed0, org.springframework.security.web.authentication.logout.LogoutFilter@379c7ca6, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4c3119e6, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@13d2ac05, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1b6670fa, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@365daf9c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@35a2d1f8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@16a82df7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@383288f8, org.springframework.security.web.access.ExceptionTranslationFilter@4d8a03b1, org.springframework.security.web.access.intercept.AuthorizationFilter@3ccc2e8d]
+2025-02-25T19:56:44.485+08:00  INFO 16556 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-02-25T19:56:44.519+08:00  INFO 16556 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
+2025-02-25T19:56:44.530+08:00  INFO 16556 --- [restartedMain] com.example.MallBackendApplication       : Started MallBackendApplication in 3.144 seconds (process running for 3.539)
