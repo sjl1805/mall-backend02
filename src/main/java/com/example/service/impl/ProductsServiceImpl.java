@@ -10,53 +10,121 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
+ * 商品服务实现类
+ * 
+ * 该类实现了商品相关的业务逻辑，包括商品的添加、修改、删除和查询等核心功能。
+ * 商品是电商系统的核心资源，此服务提供对商品全生命周期的管理。
+ * 使用了Spring缓存机制对商品信息进行缓存，提高查询效率，减轻数据库压力。
+ * 使用MyBatis-Plus的ServiceImpl简化数据访问操作。
+ *
  * @author 31815
  * @description 针对表【products(商品表)】的数据库操作Service实现
  * @createDate 2025-02-24 12:03:56
  */
 @Service
-@CacheConfig(cacheNames = "products")
+@CacheConfig(cacheNames = "products") // 指定该服务类的缓存名称为"products"
 public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
         implements ProductsService {
 
     @Autowired
     private ProductsMapper productsMapper;
 
+    /**
+     * 根据商品名称查询商品列表
+     * 
+     * 该方法从缓存或数据库获取包含指定名称的商品列表，
+     * 支持模糊查询，用于前台商品搜索和后台商品管理
+     *
+     * @param name 商品名称关键词
+     * @return 符合条件的商品列表
+     */
     @Override
-    @Cacheable(value = "products", key = "#name")
+    @Cacheable(value = "products", key = "#name") // 缓存商品搜索结果，提高查询效率
     public List<Products> selectByName(String name) {
         return productsMapper.selectByName(name);
     }
 
+    /**
+     * 分页查询商品数据
+     * 
+     * 该方法用于前台商品列表展示和后台商品管理，
+     * 支持各种复杂的分页、排序和筛选条件
+     *
+     * @param page 分页参数
+     * @return 商品分页数据
+     */
     @Override
     public IPage<Products> selectPage(IPage<Products> page) {
         return productsMapper.selectPage(page);
     }
 
+    /**
+     * 根据ID查询商品详细信息
+     * 
+     * 该方法从缓存或数据库获取指定ID的商品详情，
+     * 用于商品详情页展示和后台商品编辑
+     *
+     * @param id 商品ID
+     * @return 商品实体对象
+     */
     @Override
-    @Cacheable(value = "products", key = "#id")
+    @Cacheable(value = "products", key = "#id") // 缓存商品详情，提高查询效率
     public Products selectById(Long id) {
         return productsMapper.selectById(id);
     }
 
+    /**
+     * 添加商品
+     * 
+     * 该方法用于后台管理系统添加新商品，
+     * 包括商品基本信息、价格、库存、图片等数据，
+     * 并清除相关缓存，确保数据一致性
+     *
+     * @param product 商品实体对象
+     * @return 添加成功返回true，失败返回false
+     */
     @Override
-    @CacheEvict(value = "products", key = "#product.id")
+    @Transactional
+    @CacheEvict(value = "products", key = "#product.id") // 清除商品缓存
     public boolean insertProduct(Products product) {
         return productsMapper.insert(product) > 0;
     }
 
+    /**
+     * 更新商品信息
+     * 
+     * 该方法用于后台管理系统更新商品信息，
+     * 如修改价格、库存、描述、状态等，
+     * 并清除相关缓存，确保数据一致性
+     *
+     * @param product 商品实体对象
+     * @return 更新成功返回true，失败返回false
+     */
     @Override
-    @CacheEvict(value = "products", key = "#product.id")
+    @Transactional
+    @CacheEvict(value = "products", key = "#product.id") // 清除商品缓存
     public boolean updateProduct(Products product) {
         return productsMapper.updateById(product) > 0;
     }
 
+    /**
+     * 删除商品
+     * 
+     * 该方法用于后台管理系统删除商品，
+     * 实际业务中通常建议使用软删除（修改状态）而非物理删除，
+     * 并清除相关缓存，确保数据一致性
+     *
+     * @param id 商品ID
+     * @return 删除成功返回true，失败返回false
+     */
     @Override
-    @CacheEvict(value = "products", key = "#id")
+    @Transactional
+    @CacheEvict(value = "products", key = "#id") // 清除被删除商品的缓存
     public boolean deleteProduct(Long id) {
         return productsMapper.deleteById(id) > 0;
     }
