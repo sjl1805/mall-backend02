@@ -318,7 +318,10 @@ public class UserSimilarityServiceImpl extends ServiceImpl<UserSimilarityMapper,
                 .collect(Collectors.toList());
         
         // 获取这些用户的基本信息
-        List<User> userInfoList = userMapper.selectBatchIds(similarUserIds);
+        List<User> userInfoList = userMapper.selectList(
+                new LambdaQueryWrapper<User>()
+                        .in(User::getId, similarUserIds)
+        );
         Map<Long, User> userInfoMap = userInfoList.stream()
                 .collect(Collectors.toMap(User::getId, user -> user));
         
@@ -335,7 +338,6 @@ public class UserSimilarityServiceImpl extends ServiceImpl<UserSimilarityMapper,
                 RecommendUserVO recommendUser = new RecommendUserVO();
                 recommendUser.setUserId(similarUserId);
                 recommendUser.setUsername(similarUser.getUsername());
-                recommendUser.setNickname(similarUser.getNickname());
                 recommendUser.setAvatar(similarUser.getAvatar());
                 recommendUser.setSimilarity(similarity.getSimilarity());
                 
@@ -374,7 +376,10 @@ public class UserSimilarityServiceImpl extends ServiceImpl<UserSimilarityMapper,
         }
         
         // 获取这些用户的基本信息
-        List<User> userInfoList = userMapper.selectBatchIds(allUserIds);
+        List<User> userInfoList = userMapper.selectList(
+                new LambdaQueryWrapper<User>()
+                        .in(User::getId, allUserIds)
+        );
         Map<Long, User> userInfoMap = userInfoList.stream()
                 .collect(Collectors.toMap(User::getId, user -> user));
         

@@ -1,14 +1,23 @@
 package com.example.model.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * 推荐用户视图对象
  */
 @Data
-public class RecommendUserVO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RecommendUserVO implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     /**
      * 用户ID
@@ -21,12 +30,7 @@ public class RecommendUserVO {
     private String username;
     
     /**
-     * 昵称
-     */
-    private String nickname;
-    
-    /**
-     * 头像
+     * 用户头像
      */
     private String avatar;
     
@@ -34,4 +38,14 @@ public class RecommendUserVO {
      * 相似度
      */
     private BigDecimal similarity;
+    
+    /**
+     * 共同兴趣数量
+     */
+    private Integer commonInterests;
+    
+    /**
+     * 推荐理由
+     */
+    private String recommendReason;
 } 

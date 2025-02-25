@@ -5,8 +5,6 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-
 /**
  * 商品详情数据传输对象
  */

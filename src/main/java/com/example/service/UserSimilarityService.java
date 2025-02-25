@@ -6,8 +6,8 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
-import com.example.vo.RecommendUserVO;
-import com.example.vo.SimilarityPairVO;
+import com.example.model.vo.RecommendUserVO;
+import com.example.model.vo.SimilarityPairVO;
 
 public interface UserSimilarityService extends IService<UserSimilarity> {
     /**

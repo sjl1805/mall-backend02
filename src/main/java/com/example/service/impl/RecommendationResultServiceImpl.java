@@ -6,11 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.RecommendationResultMapper;
 import com.example.model.entity.RecommendationResult;
+import com.example.model.vo.ProductRecommendVO;
+import com.example.model.vo.RecommendUserVO;
 import com.example.service.RecommendationResultService;
 import com.example.service.UserBehaviorService;
 import com.example.service.UserSimilarityService;
-import com.example.vo.ProductRecommendVO;
-import com.example.vo.RecommendUserVO;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

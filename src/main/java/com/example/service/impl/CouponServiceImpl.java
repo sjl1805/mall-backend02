@@ -49,8 +49,6 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         coupon.setCreateTime(now);
         coupon.setUpdateTime(now);
         
-        // 设置剩余数量等于总数量
-        coupon.setRemain(coupon.getTotal());
 
         // 保存优惠券
         boolean success = save(coupon);
@@ -75,11 +73,6 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "优惠券不存在");
         }
 
-        // 如果更新了总数量，同步更新剩余数量
-        if (coupon.getTotal() != null && !coupon.getTotal().equals(existingCoupon.getTotal())) {
-            int diff = coupon.getTotal() - existingCoupon.getTotal();
-            coupon.setRemain(existingCoupon.getRemain() + diff);
-        }
 
         // 设置更新时间
         coupon.setUpdateTime(LocalDateTime.now());
@@ -149,14 +142,6 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "优惠券不存在");
         }
 
-        // 计算新的剩余数量
-        int newRemain = coupon.getRemain() + count;
-        if (newRemain < 0) {
-            throw new BusinessException(ResultCode.VALIDATE_FAILED, "优惠券剩余数量不足");
-        }
-        if (newRemain > coupon.getTotal()) {
-            throw new BusinessException(ResultCode.VALIDATE_FAILED, "优惠券剩余数量不能超过总数量");
-        }
 
         int rows = couponMapper.updateRemainCount(couponId, count);
         return rows > 0;
@@ -225,8 +210,8 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         }
         
         // 检查是否满足使用门槛
-        if (coupon.getThreshold().compareTo(BigDecimal.ZERO) > 0 
-                && totalAmount.compareTo(coupon.getThreshold()) < 0) {
+        if (coupon.getMinAmount().compareTo(BigDecimal.ZERO) > 0 
+                && totalAmount.compareTo(coupon.getMinAmount()) < 0) {
             return BigDecimal.ZERO;
         }
         
@@ -262,7 +247,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         }
         
         // 检查剩余数量
-        if (coupon.getRemain() <= 0) {
+        if (coupon.getQuantity() <= 0) {
             return false;
         }
         
@@ -273,8 +258,8 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         }
         
         // 检查金额门槛
-        if (price != null && coupon.getThreshold().compareTo(BigDecimal.ZERO) > 0 
-                && price.compareTo(coupon.getThreshold()) < 0) {
+        if (price != null && coupon.getMinAmount().compareTo(BigDecimal.ZERO) > 0 
+                && price.compareTo(coupon.getMinAmount()) < 0) {
             return false;
         }
         
@@ -330,11 +315,11 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "折扣率不能超过10");
         }
 
-        if (coupon.getThreshold() == null) {
+        if (coupon.getMinAmount() == null) {
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "使用门槛金额不能为空");
         }
 
-        if (coupon.getTotal() == null || coupon.getTotal() <= 0) {
+        if (coupon.getQuantity() == null || coupon.getQuantity() <= 0) {
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "优惠券总数量必须大于0");
         }
 
@@ -372,7 +357,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         }
         
         // 检查剩余数量
-        if (coupon.getRemain() <= 0) {
+        if (coupon.getQuantity() <= 0) {
             return false;
         }
         
@@ -403,8 +388,8 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
         
         // 检查金额门槛
         BigDecimal amountDecimal = BigDecimal.valueOf(amount);
-        if (coupon.getThreshold().compareTo(BigDecimal.ZERO) > 0 
-                && amountDecimal.compareTo(coupon.getThreshold()) < 0) {
+        if (coupon.getMinAmount().compareTo(BigDecimal.ZERO) > 0 
+                && amountDecimal.compareTo(coupon.getMinAmount()) < 0) {
             return false;
         }
         
