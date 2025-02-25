@@ -11,6 +11,7 @@ public enum ResultCode {
     UNAUTHORIZED(401, "暂未登录或登录已过期"),
     FORBIDDEN(403, "没有相关权限"),
     NOT_FOUND(404, "资源不存在"),
+    INTERNAL_SERVER_ERROR(500, "服务器内部错误"),
     
     // 用户相关错误码
     USER_ALREADY_EXISTS(1001, "用户名已存在"),

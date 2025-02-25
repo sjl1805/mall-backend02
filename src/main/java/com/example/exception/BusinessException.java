@@ -55,4 +55,9 @@ public class BusinessException extends RuntimeException {
         super(resultCode.getMessage(), cause);
         this.resultCode = resultCode;
     }
+
+    public BusinessException(String message) {
+        super(message);
+        this.resultCode = ResultCode.INTERNAL_SERVER_ERROR;
+    }
 } 
