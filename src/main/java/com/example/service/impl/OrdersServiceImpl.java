@@ -12,7 +12,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单服务实现类
@@ -128,6 +131,245 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
     @Override
     public IPage<Orders> selectPage(IPage<Orders> page) {
         return ordersMapper.selectPage(page);
+    }
+
+    /**
+     * 根据订单号查询订单
+     * 
+     * 该方法用于通过订单编号查询订单详情，
+     * 适用于订单支付回调、物流查询等场景
+     *
+     * @param orderNo 订单号
+     * @return 订单信息
+     */
+    @Override
+    @Cacheable(key = "'no_' + #orderNo")
+    public Orders selectByOrderNo(String orderNo) {
+        return ordersMapper.selectByOrderNo(orderNo);
+    }
+    
+    /**
+     * 根据订单状态查询
+     * 
+     * 该方法用于查询特定状态的所有订单，
+     * 主要用于后台管理系统的订单处理，如查询待发货订单等
+     *
+     * @param status 订单状态
+     * @return 订单列表
+     */
+    @Override
+    public List<Orders> selectByStatus(Integer status) {
+        return ordersMapper.selectByStatus(status);
+    }
+    
+    /**
+     * 查询用户特定状态的订单
+     * 
+     * 该方法查询用户的特定状态订单，
+     * 用于前台用户订单中心按状态筛选订单
+     *
+     * @param userId 用户ID
+     * @param status 订单状态
+     * @return 订单列表
+     */
+    @Override
+    @Cacheable(key = "#userId + '_status_' + #status")
+    public List<Orders> selectByUserIdAndStatus(Long userId, Integer status) {
+        return ordersMapper.selectByUserIdAndStatus(userId, status);
+    }
+    
+    /**
+     * 根据时间范围查询订单
+     * 
+     * 该方法用于按时间段查询订单数据，
+     * 适用于订单统计分析、销售报表生成等场景
+     *
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 订单列表
+     */
+    @Override
+    public List<Orders> selectByTimeRange(Date startTime, Date endTime) {
+        return ordersMapper.selectByTimeRange(startTime, endTime);
+    }
+    
+    /**
+     * 获取订单统计数据
+     *
+     * @param userId 用户ID (可选)
+     * @return 订单统计数据
+     */
+    @Override
+    public List<Map<String, Object>> getOrderStatistics(Long userId) {
+        return ordersMapper.getOrderStatistics(userId);
+    }
+    
+    /**
+     * 查询最近创建的订单
+     *
+     * @param limit 限制数量
+     * @return 订单列表
+     */
+    @Override
+    public List<Orders> selectRecentOrders(Integer limit) {
+        return ordersMapper.selectRecentOrders(limit);
+    }
+    
+    /**
+     * 更新订单支付信息
+     * 
+     * 该方法在用户完成支付后更新订单的支付状态和支付方式，
+     * 通常由支付回调接口调用，更新后可能触发订单发货流程
+     *
+     * @param orderNo 订单号
+     * @param paymentMethod 支付方式
+     * @param paymentTime 支付时间
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean updatePaymentInfo(String orderNo, Integer paymentMethod, Date paymentTime) {
+        return ordersMapper.updatePaymentInfo(orderNo, paymentMethod, paymentTime) > 0;
+    }
+    
+    /**
+     * 更新订单物流信息
+     * 
+     * 该方法在商品发货后更新订单的物流信息，
+     * 包括物流公司和运单号，便于用户查询物流状态
+     *
+     * @param orderNo 订单号
+     * @param logisticsCompany 物流公司
+     * @param trackingNumber 物流单号
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean updateShippingInfo(String orderNo, String logisticsCompany, String trackingNumber) {
+        return ordersMapper.updateShippingInfo(orderNo, logisticsCompany, trackingNumber) > 0;
+    }
+    
+    /**
+     * 查询订单详情（包含订单项）
+     * 
+     * 该方法查询订单的完整信息，包括订单基本信息和订单项列表，
+     * 用于订单详情页展示和后台订单管理
+     *
+     * @param orderNo 订单号
+     * @return 订单详情
+     */
+    @Override
+    @Cacheable(key = "'detail_' + #orderNo")
+    public Map<String, Object> selectOrderDetail(String orderNo) {
+        return ordersMapper.selectOrderDetail(orderNo);
+    }
+    
+    /**
+     * 取消订单
+     * 
+     * 该方法用于用户取消未支付订单或后台管理员取消异常订单，
+     * 可能需要释放库存、恢复优惠券等操作，确保数据一致性
+     *
+     * @param orderNo 订单号
+     * @param cancelReason 取消原因
+     * @return 取消结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean cancelOrder(String orderNo, String cancelReason) {
+        // 这里可以添加释放库存、恢复优惠券等逻辑
+        return ordersMapper.cancelOrder(orderNo, cancelReason) > 0;
+    }
+    
+    /**
+     * 确认收货
+     * 
+     * 该方法用于用户确认已收到商品，
+     * 将订单状态更新为已完成，可能触发佣金结算、积分发放等后续流程
+     *
+     * @param orderNo 订单号
+     * @return 确认结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean confirmReceive(String orderNo) {
+        return ordersMapper.confirmReceive(orderNo) > 0;
+    }
+    
+    /**
+     * 申请退款
+     * 
+     * 该方法用于用户申请订单退款，
+     * 将订单状态更新为退款中，等待商家或平台处理
+     *
+     * @param orderNo 订单号
+     * @param refundReason 退款原因
+     * @return 申请结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean applyRefund(String orderNo, String refundReason) {
+        return ordersMapper.applyRefund(orderNo, refundReason) > 0;
+    }
+    
+    /**
+     * 完成订单
+     * 
+     * 该方法用于系统自动完成已发货一定时间的订单，
+     * 或用户确认收货后完成订单
+     *
+     * @param orderNo 订单号
+     * @return 完成结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "'no_' + #orderNo")
+    public boolean completeOrder(String orderNo) {
+        return ordersMapper.completeOrder(orderNo) > 0;
+    }
+    
+    /**
+     * 获取订单超时未支付数量
+     * 
+     * 该方法统计超过指定时间未支付的订单数量，
+     * 用于系统监控和自动取消任务
+     *
+     * @param minutes 超时分钟数
+     * @return 超时订单数量
+     */
+    @Override
+    public int countTimeoutOrders(int minutes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -minutes);
+        Date timeoutTime = calendar.getTime();
+        
+        return ordersMapper.countTimeoutOrders(timeoutTime);
+    }
+    
+    /**
+     * 自动取消超时未支付订单
+     * 
+     * 该方法自动取消超过指定时间未支付的订单，
+     * 通常由定时任务调用，释放商品库存
+     *
+     * @param minutes 超时分钟数
+     * @return 取消的订单数量
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public int autoCancelTimeoutOrders(int minutes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -minutes);
+        Date timeoutTime = calendar.getTime();
+        
+        // 这里可以先查询出所有超时订单，然后释放库存、恢复优惠券等
+        return ordersMapper.autoCancelTimeoutOrders(timeoutTime);
     }
 }
 

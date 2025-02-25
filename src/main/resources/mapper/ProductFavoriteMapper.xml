@@ -115,4 +115,36 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 查询带商品信息的收藏列表 -->
+    <select id="selectWithProductInfo" resultMap="FavoriteWithProductMap">
+        SELECT f.*, 
+               p.name as product_name, 
+               p.price as product_price,
+               p.images as product_image,
+               p.status as product_status,
+               p.stock as product_stock
+        FROM product_favorite f
+        LEFT JOIN products p ON f.product_id = p.id
+        WHERE f.user_id = #{userId}
+        ORDER BY f.create_time DESC
+    </select>
+
+    <!-- 带商品信息的收藏结果映射 -->
+    <resultMap id="FavoriteWithProductMap" type="com.example.model.entity.ProductFavorite" extends="BaseResultMap">
+        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+        <result property="productPrice" column="product_price" jdbcType="DECIMAL"/>
+        <result property="productImage" column="product_image" jdbcType="VARCHAR"/>
+        <result property="productStatus" column="product_status" jdbcType="INTEGER"/>
+        <result property="productStock" column="product_stock" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 统计用户收藏夹及各收藏夹中商品数量 -->
+    <select id="selectUserFolderStats" resultType="java.util.Map">
+        SELECT folder_id, 
+               COUNT(*) as count
+        FROM product_favorite
+        WHERE user_id = #{userId}
+        GROUP BY folder_id
+    </select>
 </mapper>

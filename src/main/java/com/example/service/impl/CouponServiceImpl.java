@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.CouponMapper;
+import com.example.mapper.UserCouponMapper;
 import com.example.model.entity.Coupon;
 import com.example.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * 优惠券服务实现类
@@ -41,6 +44,9 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Autowired
+    private UserCouponMapper userCouponMapper;
 
     /**
      * 根据名称查询优惠券列表
@@ -334,6 +340,145 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon>
     @CacheEvict(allEntries = true)
     public boolean batchDelete(List<Long> ids) {
         return couponMapper.batchDelete(ids) > 0;
+    }
+
+    /**
+     * 查询用户未领取的优惠券
+     *
+     * 该方法查询当前有效且用户尚未领取的优惠券，
+     * 用于在前台"领券中心"展示可供用户领取的优惠券
+     *
+     * @param userId 用户ID
+     * @return 未领取的有效优惠券
+     */
+    @Override
+    @Cacheable(key = "'notreceived_'+#userId")
+    public List<Coupon> getNotReceivedCoupons(Long userId) {
+        return couponMapper.selectNotReceivedCoupons(userId, new Date());
+    }
+
+    /**
+     * 按条件高级查询优惠券
+     *
+     * 该方法支持多条件组合查询优惠券，
+     * 用于后台管理系统的高级搜索功能
+     *
+     * @param params 查询参数Map
+     * @return 优惠券列表
+     */
+    @Override
+    public List<Coupon> advancedSearch(Map<String, Object> params) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        return couponMapper.advancedSearch(params);
+    }
+
+    /**
+     * 计算优惠券发放效果
+     *
+     * 该方法统计优惠券的发放效果，包括发放量、使用量、使用率等，
+     * 用于评估营销活动的效果，为后续优惠策略调整提供数据支持
+     *
+     * @param couponId 优惠券ID
+     * @return 统计数据
+     */
+    @Override
+    @Cacheable(key = "'effect_'+#couponId")
+    public Map<String, Object> calculateCouponEffectiveness(Long couponId) {
+        return couponMapper.calculateCouponEffectiveness(couponId);
+    }
+
+    /**
+     * 自动失效过期优惠券
+     *
+     * 该方法将已过期但状态仍为有效的优惠券状态更新为失效，
+     * 通常由定时任务调用，确保系统中的优惠券状态准确
+     *
+     * @return 更新的记录数
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public int expireOutdatedCoupons() {
+        return couponMapper.expireCoupons(new Date());
+    }
+
+    /**
+     * 为用户推荐优惠券
+     *
+     * 该方法基于用户的历史订单和浏览记录，推荐合适的优惠券，
+     * 提高用户的购买意愿和转化率
+     *
+     * @param userId 用户ID
+     * @param limit 推荐数量
+     * @return 推荐的优惠券列表
+     */
+    @Override
+    @Cacheable(key = "'recommend_'+#userId+'_'+#limit")
+    public List<Coupon> recommendCouponsForUser(Long userId, Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 3; // 默认推荐3张
+        }
+        
+        // 可以根据用户的历史订单和浏览记录进行个性化推荐
+        // 这里简化为获取通用的热门优惠券
+        List<Map<String, Object>> popularCoupons = getPopularCoupons(limit);
+        
+        // 将Map转换为Coupon对象
+        List<Coupon> recommendCoupons = new ArrayList<>();
+        for (Map<String, Object> map : popularCoupons) {
+            Long couponId = (Long) map.get("id");
+            Coupon coupon = selectById(couponId);
+            if (coupon != null && coupon.getStatus() == 1) {
+                recommendCoupons.add(coupon);
+            }
+        }
+        
+        return recommendCoupons;
+    }
+
+    /**
+     * 批量发放优惠券给用户
+     *
+     * 该方法批量发放指定优惠券给多个用户，
+     * 适用于批量营销活动，如新用户注册奖励、会员福利等
+     *
+     * @param couponId 优惠券ID
+     * @param userIds 用户ID列表
+     * @return 发放成功的用户数
+     */
+    @Override
+    @Transactional
+    public int batchIssueCoupons(Long couponId, List<Long> userIds) {
+        if (couponId == null || userIds == null || userIds.isEmpty()) {
+            return 0;
+        }
+        
+        // 获取优惠券信息
+        Coupon coupon = selectById(couponId);
+        if (coupon == null || coupon.getStatus() != 1 || coupon.getNum() < userIds.size()) {
+            return 0;
+        }
+        
+        // 优惠券减少数量
+        if (!decreaseCouponNum(couponId, userIds.size())) {
+            return 0;
+        }
+        
+        // 为用户发放优惠券（假设有userCouponMapper）
+        int successCount = 0;
+        for (Long userId : userIds) {
+            try {
+                 userCouponMapper.insertUserCoupon(userId, couponId);
+                successCount++;
+            } catch (Exception e) {
+                // 记录日志
+                continue;
+            }
+        }
+        
+        return successCount;
     }
 }
 

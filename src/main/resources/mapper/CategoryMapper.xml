@@ -182,4 +182,53 @@
         </foreach>
     </update>
 
+    <!-- 查询指定分类下的商品数量 -->
+    <select id="countProductsByCategoryId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM products
+        WHERE category_id = #{categoryId}
+        AND status = 1
+    </select>
+    
+    <!-- 查询指定分类是否有子分类 -->
+    <select id="countChildCategories" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM category
+        WHERE parent_id = #{categoryId}
+        AND status = 1
+    </select>
+    
+    <!-- 递归查询所有子分类ID -->
+    <select id="selectAllChildCategoryIds" resultType="java.lang.Long">
+        WITH RECURSIVE category_tree AS (
+            SELECT id FROM category WHERE id = #{categoryId}
+            UNION ALL
+            SELECT c.id FROM category c
+            JOIN category_tree ct ON c.parent_id = ct.id
+        )
+        SELECT id FROM category_tree
+    </select>
+    
+    <!-- 根据关键词搜索分类 -->
+    <select id="searchCategories" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM category
+        WHERE status = 1
+        AND name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY level ASC, sort DESC
+    </select>
+    
+    <!-- 查询热门分类 -->
+    <select id="selectHotCategories" resultType="java.util.Map">
+        SELECT c.id, c.name, c.icon, c.level, 
+               COUNT(p.id) as product_count
+        FROM category c
+        LEFT JOIN products p ON c.id = p.category_id AND p.status = 1
+        WHERE c.status = 1
+        GROUP BY c.id
+        ORDER BY product_count DESC, c.sort DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>

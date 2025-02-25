@@ -124,6 +124,47 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
      * @return 订单项商品详情列表
      */
     List<Map<String, Object>> selectOrderItemsWithProductDetails(@Param("orderId") Long orderId);
+
+    /**
+     * 获取用户购买过的商品ID列表
+     *
+     * @param userId 用户ID
+     * @param limit 限制数量
+     * @return 商品ID列表
+     */
+    List<Long> getUserPurchasedProductIds(
+            @Param("userId") Long userId, 
+            @Param("limit") Integer limit);
+
+    /**
+     * 获取订单项状态汇总
+     *
+     * @param orderId 订单ID
+     * @return 状态汇总
+     */
+    Map<String, Object> getOrderItemStatusSummary(@Param("orderId") Long orderId);
+
+    /**
+     * 更新订单项评价状态
+     *
+     * @param id 订单项ID
+     * @param reviewStatus 评价状态
+     * @return 更新结果
+     */
+    int updateReviewStatus(
+            @Param("id") Long id, 
+            @Param("reviewStatus") Integer reviewStatus);
+
+    /**
+     * 更新订单项退款状态
+     *
+     * @param id 订单项ID
+     * @param refundStatus 退款状态
+     * @return 更新结果
+     */
+    int updateRefundStatus(
+            @Param("id") Long id, 
+            @Param("refundStatus") Integer refundStatus);
 }
 
 

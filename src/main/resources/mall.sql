@@ -4,9 +4,6 @@ CREATE DATABASE
     NOT EXISTS mall CHARACTER
     SET utf8mb4;
 USE mall;
--- ===============================
--- 第一层：基础表（无外键依赖）
--- ===============================
 -- 1. 用户表
 CREATE TABLE users
 (

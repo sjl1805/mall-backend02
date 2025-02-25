@@ -130,4 +130,9 @@
         </where>
         ORDER BY create_time DESC
     </select>
+    <!-- 插入用户优惠券记录 -->
+    <insert id="insertUserCoupon">
+        INSERT INTO user_coupon (user_id, coupon_id, status, get_time, create_time, update_time)
+        VALUES (#{userId}, #{couponId}, #{status}, NOW(), NOW(), NOW())
+    </insert>
 </mapper>

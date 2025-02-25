@@ -148,4 +148,53 @@ public interface CouponService extends IService<Coupon> {
      * @return 是否成功
      */
     boolean batchDelete(List<Long> ids);
+
+    /**
+     * 查询用户未领取的优惠券
+     *
+     * @param userId 用户ID
+     * @return 未领取的有效优惠券
+     */
+    List<Coupon> getNotReceivedCoupons(Long userId);
+
+    /**
+     * 按条件高级查询优惠券
+     *
+     * @param params 查询参数Map
+     * @return 优惠券列表
+     */
+    List<Coupon> advancedSearch(Map<String, Object> params);
+
+    /**
+     * 计算优惠券发放效果
+     *
+     * @param couponId 优惠券ID
+     * @return 统计数据
+     */
+    Map<String, Object> calculateCouponEffectiveness(Long couponId);
+
+    /**
+     * 自动失效过期优惠券（定时任务调用）
+     *
+     * @return 更新的记录数
+     */
+    int expireOutdatedCoupons();
+
+    /**
+     * 为用户推荐优惠券
+     *
+     * @param userId 用户ID
+     * @param limit 推荐数量
+     * @return 推荐的优惠券列表
+     */
+    List<Coupon> recommendCouponsForUser(Long userId, Integer limit);
+
+    /**
+     * 批量发放优惠券给用户
+     *
+     * @param couponId 优惠券ID
+     * @param userIds 用户ID列表
+     * @return 发放成功的用户数
+     */
+    int batchIssueCoupons(Long couponId, List<Long> userIds);
 }

@@ -158,4 +158,41 @@
             #{id}
         </foreach>
     </update>
+
+    <!-- 获取默认收藏夹 -->
+    <select id="selectDefaultFolder" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM favorite_folder
+        WHERE user_id = #{userId}
+        AND sort = 0
+        LIMIT 1
+    </select>
+
+    <!-- 获取收藏夹简要信息（含缩略图） -->
+    <select id="selectFolderBriefs" resultType="java.util.Map">
+        SELECT f.id, f.name, f.item_count, f.is_public,
+               p.images as thumbnail
+        FROM favorite_folder f
+        LEFT JOIN (
+            SELECT pf.folder_id, p.images
+            FROM product_favorite pf
+            JOIN products p ON pf.product_id = p.id
+            WHERE pf.user_id = #{userId}
+            GROUP BY pf.folder_id
+        ) p ON f.id = p.folder_id
+        WHERE f.user_id = #{userId}
+        ORDER BY f.sort ASC, f.create_time DESC
+    </select>
+
+    <!-- 查询最热门的公开收藏夹 -->
+    <select id="selectHotPublicFolders" resultMap="BaseResultMap">
+        SELECT f.*, u.nickname as creator_name, u.avatar as creator_avatar
+        FROM favorite_folder f
+        JOIN users u ON f.user_id = u.id
+        WHERE f.is_public = 1
+        AND f.item_count > 0
+        ORDER BY f.item_count DESC
+        LIMIT #{limit}
+    </select>
 </mapper>

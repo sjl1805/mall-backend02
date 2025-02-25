@@ -116,6 +116,85 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @return 订单详情
      */
     Map<String, Object> selectOrderDetail(@Param("orderNo") String orderNo);
+
+    /**
+     * 取消订单
+     * 
+     * @param orderNo 订单号
+     * @param cancelReason 取消原因
+     * @return 更新结果
+     */
+    int cancelOrder(@Param("orderNo") String orderNo, @Param("cancelReason") String cancelReason);
+    
+    /**
+     * 确认收货
+     * 
+     * @param orderNo 订单号
+     * @return 更新结果
+     */
+    int confirmReceive(@Param("orderNo") String orderNo);
+    
+    /**
+     * 申请退款
+     * 
+     * @param orderNo 订单号
+     * @param refundReason 退款原因
+     * @return 更新结果
+     */
+    int applyRefund(
+            @Param("orderNo") String orderNo, 
+            @Param("refundReason") String refundReason);
+    
+    /**
+     * 完成订单
+     * 
+     * @param orderNo 订单号
+     * @return 更新结果
+     */
+    int completeOrder(@Param("orderNo") String orderNo);
+    
+    /**
+     * 查询超时未支付订单
+     * 
+     * @param timeoutTime 超时时间点
+     * @return 超时订单列表
+     */
+    List<Orders> selectTimeoutOrders(@Param("timeoutTime") Date timeoutTime);
+    
+    /**
+     * 统计超时未支付订单数量
+     * 
+     * @param timeoutTime 超时时间点
+     * @return 超时订单数量
+     */
+    int countTimeoutOrders(@Param("timeoutTime") Date timeoutTime);
+    
+    /**
+     * 自动取消超时未支付订单
+     * 
+     * @param timeoutTime 超时时间点
+     * @return 取消的订单数量
+     */
+    int autoCancelTimeoutOrders(@Param("timeoutTime") Date timeoutTime);
+    
+    /**
+     * 根据用户ID查询各状态订单数量
+     *
+     * @param userId 用户ID
+     * @return 各状态订单数量
+     */
+    List<Map<String, Object>> countOrdersByStatus(@Param("userId") Long userId);
+    
+    /**
+     * 查询订单销售统计（按日期）
+     *
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 按日期统计的销售数据
+     */
+    List<Map<String, Object>> getOrderSalesByDate(
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
 }
 
 

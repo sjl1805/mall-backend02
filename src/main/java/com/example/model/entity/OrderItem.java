@@ -67,4 +67,46 @@ public class OrderItem implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 商品规格信息，非数据库字段
+     */
+    @TableField(exist = false)
+    private String specifications;
+
+    /**
+     * 评价状态：0未评价 1已评价，非数据库字段
+     */
+    @TableField(exist = false)
+    private Integer reviewStatus;
+
+    /**
+     * 退款状态：0正常 1申请中 2已退款，非数据库字段
+     */
+    @TableField(exist = false)
+    private Integer refundStatus;
+
+    /**
+     * 是否可评价，非数据库字段
+     */
+    @TableField(exist = false)
+    private Boolean canReview;
+
+    /**
+     * 是否可申请退款，非数据库字段
+     */
+    @TableField(exist = false)
+    private Boolean canRefund;
+
+    /**
+     * 商品类目名称，非数据库字段
+     */
+    @TableField(exist = false)
+    private String categoryName;
+
+    /**
+     * 商品当前价格，非数据库字段
+     */
+    @TableField(exist = false)
+    private BigDecimal currentPrice;
 }

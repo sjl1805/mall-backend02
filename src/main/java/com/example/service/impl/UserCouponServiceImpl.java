@@ -103,7 +103,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
      */
     @Override
     public IPage<UserCoupon> selectPage(IPage<UserCoupon> page) {
-        return userCouponMapper.selectPage(page);
+        return userCouponMapper.selectPage(page, null);
     }
 
     /**
@@ -128,7 +128,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
      * @return 符合条件的用户优惠券列表
      */
     @Override
-    public List<UserCoupon> selectByUserIdAndStatus(Long userId, String status) {
+    public List<UserCoupon> selectByUserIdAndStatus(Long userId, Integer status) {
         return userCouponMapper.selectByUserIdAndStatus(userId, status);
     }
 }

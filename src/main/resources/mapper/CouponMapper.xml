@@ -183,4 +183,87 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 查询用户未领取的优惠券 -->
+    <select id="selectNotReceivedCoupons" resultMap="BaseResultMap">
+        SELECT c.*
+        FROM coupon c
+        WHERE c.status = 1
+        AND c.num > 0
+        AND c.start_time <= #{now}
+        AND c.end_time >= #{now}
+        AND c.id NOT IN (
+            SELECT coupon_id
+            FROM user_coupon
+            WHERE user_id = #{userId}
+        )
+        ORDER BY c.value DESC
+    </select>
+
+    <!-- 按条件高级查询优惠券 -->
+    <select id="advancedSearch" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM coupon
+        <where>
+            <if test="params.type != null">
+                AND type = #{params.type}
+            </if>
+            <if test="params.status != null">
+                AND status = #{params.status}
+            </if>
+            <if test="params.minValue != null">
+                AND value >= #{params.minValue}
+            </if>
+            <if test="params.maxValue != null">
+                AND value &lt;= #{params.maxValue}
+            </if>
+            <if test="params.startTimeBegin != null">
+                AND start_time >= #{params.startTimeBegin}
+            </if>
+            <if test="params.startTimeEnd != null">
+                AND start_time &lt;= #{params.startTimeEnd}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="params.orderBy != null">
+                ${params.orderBy}
+            </when>
+            <otherwise>
+                create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 计算优惠券发放效果 -->
+    <select id="calculateCouponEffectiveness" resultType="java.util.Map">
+        SELECT
+            c.id,
+            c.name,
+            c.type,
+            c.value,
+            COUNT(uc.id) AS total_received,
+            SUM(CASE WHEN uc.status = 1 THEN 1 ELSE 0 END) AS unused_count,
+            SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) AS used_count,
+            ROUND(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(uc.id), 2) AS usage_rate,
+            SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) AS total_order_amount,
+            SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) AS order_count,
+            ROUND(SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) / 
+                  SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 2) AS avg_order_amount
+        FROM coupon c
+        LEFT JOIN user_coupon uc ON c.id = uc.coupon_id
+        LEFT JOIN orders o ON uc.order_id = o.id
+        WHERE c.id = #{couponId}
+        GROUP BY c.id, c.name, c.type, c.value
+    </select>
+
+    <!-- 自动失效过期优惠券 -->
+    <update id="expireCoupons">
+        UPDATE coupon
+        SET status = 0,
+            update_time = NOW()
+        WHERE status = 1
+        AND end_time < #{now}
+    </update>
 </mapper>

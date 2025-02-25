@@ -174,4 +174,91 @@
         WHERE o.order_no = #{orderNo}
     </select>
 
+    <!-- 取消订单 -->
+    <update id="cancelOrder">
+        UPDATE orders
+        SET status = 4, <!-- 4表示已取消 -->
+            cancel_reason = #{cancelReason},
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 0 <!-- 0表示待支付 -->
+    </update>
+
+    <!-- 确认收货 -->
+    <update id="confirmReceive">
+        UPDATE orders
+        SET status = 3, <!-- 3表示已完成 -->
+            receive_time = NOW(),
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 2 <!-- 2表示已发货 -->
+    </update>
+
+    <!-- 申请退款 -->
+    <update id="applyRefund">
+        UPDATE orders
+        SET status = 5, <!-- 5表示退款中 -->
+            refund_reason = #{refundReason},
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND (status = 1 OR status = 2) <!-- 1表示已支付，2表示已发货 -->
+    </update>
+
+    <!-- 完成订单 -->
+    <update id="completeOrder">
+        UPDATE orders
+        SET status = 3, <!-- 3表示已完成 -->
+            update_time = NOW()
+        WHERE order_no = #{orderNo}
+        AND status = 2 <!-- 2表示已发货 -->
+    </update>
+
+    <!-- 查询超时未支付订单 -->
+    <select id="selectTimeoutOrders" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE status = 0 <!-- 0表示待支付 -->
+        AND create_time &lt; #{timeoutTime}
+    </select>
+
+    <!-- 统计超时未支付订单数量 -->
+    <select id="countTimeoutOrders" resultType="int">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE status = 0 <!-- 0表示待支付 -->
+        AND create_time &lt; #{timeoutTime}
+    </select>
+
+    <!-- 自动取消超时未支付订单 -->
+    <update id="autoCancelTimeoutOrders">
+        UPDATE orders
+        SET status = 4, <!-- 4表示已取消 -->
+            cancel_reason = '超时未支付自动取消',
+            update_time = NOW()
+        WHERE status = 0 <!-- 0表示待支付 -->
+        AND create_time &lt; #{timeoutTime}
+    </update>
+
+    <!-- 根据用户ID查询各状态订单数量 -->
+    <select id="countOrdersByStatus" resultType="java.util.Map">
+        SELECT status, COUNT(*) as count
+        FROM orders
+        WHERE user_id = #{userId}
+        GROUP BY status
+    </select>
+
+    <!-- 查询订单销售统计（按日期） -->
+    <select id="getOrderSalesByDate" resultType="java.util.Map">
+        SELECT 
+            DATE(create_time) as date,
+            COUNT(*) as order_count,
+            SUM(pay_amount) as total_sales
+        FROM orders
+        WHERE status >= 1 <!-- 已支付及后续状态 -->
+        AND create_time BETWEEN #{startDate} AND #{endDate}
+        GROUP BY DATE(create_time)
+        ORDER BY date ASC
+    </select>
+
 </mapper>

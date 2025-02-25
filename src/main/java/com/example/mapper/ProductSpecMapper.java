@@ -89,6 +89,30 @@ public interface ProductSpecMapper extends BaseMapper<ProductSpec> {
      * @return 商品规格列表
      */
     List<ProductSpec> selectBySpecValue(@Param("productId") Long productId, @Param("specValue") String specValue);
+
+    /**
+     * 查询被SKU引用的规格
+     *
+     * @param productId 商品ID
+     * @return 规格ID列表
+     */
+    List<Long> selectUsedSpecIds(@Param("productId") Long productId);
+
+    /**
+     * 统计规格关联的SKU数量
+     *
+     * @param specId 规格ID
+     * @return SKU数量
+     */
+    int countSkuBySpecId(@Param("specId") Long specId);
+
+    /**
+     * 查询商品的规格名列表
+     *
+     * @param productId 商品ID
+     * @return 规格名列表
+     */
+    List<String> selectSpecNamesByProductId(@Param("productId") Long productId);
 }
 
 

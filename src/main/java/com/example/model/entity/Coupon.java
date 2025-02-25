@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 /**
  * 优惠券表
+ * 该实体类代表商城的优惠券数据，用于促销活动和用户激励
+ * 支持满减券和折扣券两种类型，可设置使用门槛和有效期
+ * 包含优惠券的基本信息及状态
  *
  * @TableName coupon
  */
@@ -49,7 +52,6 @@ public class Coupon implements Serializable {
     /**
      * 生效时间
      */
-
     private LocalDateTime startTime;
 
     /**
@@ -73,4 +75,31 @@ public class Coupon implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * 非数据库字段，优惠券剩余有效期（天）
+     */
+    @TableField(exist = false)
+    private Integer remainDays;
+    
+    /**
+     * 非数据库字段，优惠券已领取数量
+     */
+    @TableField(exist = false)
+    private Integer receivedCount;
+    
+    /**
+     * 非数据库字段，优惠券已使用数量
+     */
+    @TableField(exist = false)
+    private Integer usedCount;
+    
+    /**
+     * 非数据库字段，领取状态（前端使用）：0-未领取 1-已领取 2-已使用
+     */
+    @TableField(exist = false)
+    private Integer receiveStatus;
 }

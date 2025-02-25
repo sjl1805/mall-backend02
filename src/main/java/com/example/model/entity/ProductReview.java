@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商品评价表
@@ -66,4 +67,64 @@ public class ProductReview implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 非数据库字段，用户昵称
+     */
+    @TableField(exist = false)
+    private String nickname;
+
+    /**
+     * 非数据库字段，用户头像
+     */
+    @TableField(exist = false)
+    private String avatar;
+
+    /**
+     * 非数据库字段，商品名称
+     */
+    @TableField(exist = false)
+    private String productName;
+
+    /**
+     * 非数据库字段，商品主图
+     */
+    @TableField(exist = false)
+    private String productImage;
+
+    /**
+     * 非数据库字段，评价图片列表（解析后）
+     */
+    @TableField(exist = false)
+    private List<String> imageList;
+
+    /**
+     * 非数据库字段，评价回复内容
+     */
+    @TableField(exist = false)
+    private String replyContent;
+
+    /**
+     * 非数据库字段，评价回复时间
+     */
+    @TableField(exist = false)
+    private LocalDateTime replyTime;
+
+    /**
+     * 非数据库字段，有用数量
+     */
+    @TableField(exist = false)
+    private Integer usefulCount;
+
+    /**
+     * 非数据库字段，购买规格信息
+     */
+    @TableField(exist = false)
+    private String specifications;
+
+    /**
+     * 非数据库字段，序列化ID
+     */
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

@@ -119,6 +119,13 @@ public interface UserCouponMapper extends BaseMapper<UserCoupon> {
             @Param("startTime") Date startTime,
             @Param("endTime") Date endTime,
             Page<UserCoupon> page);
+    /**
+     * 插入用户优惠券记录
+     *
+     * @param userCoupon 用户优惠券实体
+     * @return 插入结果
+     */
+    int insertUserCoupon(@Param("userId") Long userId, @Param("couponId") Long couponId);
 }
 
 

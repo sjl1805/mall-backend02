@@ -156,6 +156,41 @@ public interface CouponMapper extends BaseMapper<Coupon> {
      * @return 删除结果
      */
     int batchDelete(@Param("ids") List<Long> ids);
+
+    /**
+     * 查询用户未领取的优惠券
+     *
+     * @param userId 用户ID
+     * @param now 当前时间
+     * @return 未领取的有效优惠券
+     */
+    List<Coupon> selectNotReceivedCoupons(
+            @Param("userId") Long userId,
+            @Param("now") Date now);
+
+    /**
+     * 按条件高级查询优惠券
+     *
+     * @param params 查询参数Map，可包含type,status,minValue,maxValue等
+     * @return 优惠券列表
+     */
+    List<Coupon> advancedSearch(@Param("params") Map<String, Object> params);
+
+    /**
+     * 计算优惠券发放效果
+     * 
+     * @param couponId 优惠券ID
+     * @return 统计数据，包含发放量、使用量、使用率、带动销售额等
+     */
+    Map<String, Object> calculateCouponEffectiveness(@Param("couponId") Long couponId);
+
+    /**
+     * 自动失效过期优惠券
+     *
+     * @param now 当前时间
+     * @return 更新的记录数
+     */
+    int expireCoupons(@Param("now") Date now);
 }
 
 

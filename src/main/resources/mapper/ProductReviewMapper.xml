@@ -129,4 +129,37 @@
             #{id}
         </foreach>
     </update>
+
+    <!-- 查询评价详情（含用户和商品信息） -->
+    <select id="selectReviewDetail" resultMap="DetailResultMap">
+        SELECT r.*, 
+               u.nickname, u.avatar,
+               p.name as product_name, p.images as product_image
+        FROM product_review r
+        LEFT JOIN users u ON r.user_id = u.id
+        LEFT JOIN products p ON r.product_id = p.id
+        WHERE r.id = #{id}
+    </select>
+
+    <!-- 详细评价结果映射 -->
+    <resultMap id="DetailResultMap" type="com.example.model.entity.ProductReview" extends="BaseResultMap">
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+        <result property="productImage" column="product_image" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 查询待审核评价数量 -->
+    <select id="countPendingReviews" resultType="int">
+        SELECT COUNT(*)
+        FROM product_review
+        WHERE status = 0
+    </select>
+
+    <!-- 更新评价有用度 -->
+    <update id="updateUsefulCount">
+        UPDATE product_review_useful
+        SET useful_count = useful_count + #{increment}
+        WHERE review_id = #{id}
+    </update>
 </mapper>

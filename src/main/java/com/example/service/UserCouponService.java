@@ -68,5 +68,5 @@ public interface UserCouponService extends IService<UserCoupon> {
      * @param status 优惠券状态
      * @return 用户优惠券列表
      */
-    List<UserCoupon> selectByUserIdAndStatus(Long userId, String status);
+    List<UserCoupon> selectByUserIdAndStatus(Long userId, Integer status);
 }

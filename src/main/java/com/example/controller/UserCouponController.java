@@ -30,7 +30,7 @@ public class UserCouponController {
     @Operation(summary = "根据用户ID和状态查询用户优惠券")
     @GetMapping("/user/{userId}/status/{status}")
     public CommonResult<List<UserCoupon>> getCouponsByUserIdAndStatus(
-            @PathVariable Long userId, @PathVariable String status) {
+            @PathVariable Long userId, @PathVariable Integer status) {
         List<UserCoupon> coupons = userCouponService.selectByUserIdAndStatus(userId, status);
         return CommonResult.success(coupons);
     }

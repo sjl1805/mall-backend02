@@ -91,4 +91,29 @@
         WHERE product_id = #{productId}
         AND spec_values LIKE CONCAT('%', #{specValue}, '%')
     </select>
+
+    <!-- 查询被SKU引用的规格 -->
+    <select id="selectUsedSpecIds" resultType="java.lang.Long">
+        SELECT DISTINCT ps.id
+        FROM product_spec ps
+        JOIN product_sku sku ON sku.product_id = ps.product_id
+        WHERE ps.product_id = #{productId}
+        AND sku.spec_values LIKE CONCAT('%', ps.spec_name, ':%')
+    </select>
+
+    <!-- 统计规格关联的SKU数量 -->
+    <select id="countSkuBySpecId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM product_sku sku
+        JOIN product_spec ps ON sku.product_id = ps.product_id
+        WHERE ps.id = #{specId}
+        AND sku.spec_values LIKE CONCAT('%', ps.spec_name, ':%')
+    </select>
+
+    <!-- 查询商品的规格名列表 -->
+    <select id="selectSpecNamesByProductId" resultType="java.lang.String">
+        SELECT DISTINCT spec_name
+        FROM product_spec
+        WHERE product_id = #{productId}
+    </select>
 </mapper>

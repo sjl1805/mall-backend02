@@ -126,4 +126,37 @@
             update_time = NOW()
         WHERE user_id = #{userId}
     </update>
+
+    <!-- 批量删除用户收货地址 -->
+    <delete id="batchDeleteAddresses">
+        DELETE FROM user_address
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询用户收货地址数量 -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM user_address
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 查询最近创建的地址 -->
+    <select id="selectLatestAddress" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_address
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+    <!-- 查询用户在指定城市的地址数量 -->
+    <select id="countByCity" resultType="int">
+        SELECT COUNT(*)
+        FROM user_address
+        WHERE user_id = #{userId} AND city = #{city}
+    </select>
 </mapper>

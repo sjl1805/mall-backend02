@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 商品分类服务接口
+ * 
+ * 定义了商品分类模块的所有业务功能，包括基础的CRUD操作和高级查询功能
+ * 该接口继承了MyBatis-Plus的IService接口，获取通用的服务方法
+ *
  * @author 31815
  * @description 针对表【category(商品分类表)】的数据库操作Service
  * @createDate 2025-02-24 12:04:22
@@ -135,4 +140,58 @@ public interface CategoryService extends IService<Category> {
      * @return 更新结果
      */
     boolean batchUpdateStatus(List<Long> ids, Integer status);
+    
+    /**
+     * 检查分类是否可以安全删除
+     * 
+     * @param categoryId 分类ID
+     * @return 如果可以安全删除返回true，否则返回false
+     */
+    boolean checkCanDelete(Long categoryId);
+    
+    /**
+     * 批量导入分类数据
+     *
+     * @param categories 分类数据列表
+     * @return 导入成功的数量
+     */
+    int batchImport(List<Category> categories);
+    
+    /**
+     * 导出分类数据
+     *
+     * @param level 分类层级（可选）
+     * @return 分类数据列表
+     */
+    List<Category> exportCategories(Integer level);
+    
+    /**
+     * 查询热门分类
+     *
+     * @param limit 查询数量限制
+     * @return 热门分类列表
+     */
+    List<Map<String, Object>> getHotCategories(Integer limit);
+    
+    /**
+     * 统计每个层级的分类数量
+     *
+     * @return 层级-数量映射
+     */
+    Map<Integer, Integer> countCategoriesByLevel();
+    
+    /**
+     * 根据关键词搜索分类
+     *
+     * @param keyword 搜索关键词
+     * @return 匹配的分类列表
+     */
+    List<Category> searchCategories(String keyword);
+    
+    /**
+     * 获取完整的分类树（包含所有层级和商品数量）
+     *
+     * @return 完整分类树结构
+     */
+    List<Category> getFullCategoryTree();
 }

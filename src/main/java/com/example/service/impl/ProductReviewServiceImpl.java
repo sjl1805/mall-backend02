@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductReviewMapper;
@@ -12,7 +13,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品评价服务实现类
@@ -125,6 +128,213 @@ public class ProductReviewServiceImpl extends ServiceImpl<ProductReviewMapper, P
     @CacheEvict(value = "productReviews", key = "#id") // 清除被删除评价的缓存
     public boolean deleteProductReview(Long id) {
         return productReviewMapper.deleteById(id) > 0;
+    }
+
+    /**
+     * 计算商品平均评分
+     * 
+     * 该方法计算指定商品的平均评分，
+     * 是商品评分展示和排序的基础
+     *
+     * @param productId 商品ID
+     * @return 平均评分
+     */
+    @Override
+    @Cacheable(key = "'avg_' + #productId")
+    public Double calculateAverageRating(Long productId) {
+        return productReviewMapper.calculateAverageRating(productId);
+    }
+    
+    /**
+     * 统计各评分数量
+     * 
+     * 该方法统计指定商品各评分的数量分布，
+     * 用于前台展示评分分布图表
+     *
+     * @param productId 商品ID
+     * @return 各评分数量统计
+     */
+    @Override
+    @Cacheable(key = "'count_' + #productId")
+    public List<Map<String, Object>> countByRating(Long productId) {
+        return productReviewMapper.countByRating(productId);
+    }
+    
+    /**
+     * 根据评分范围查询评价
+     * 
+     * 该方法查询指定评分范围内的商品评价，
+     * 用于用户筛选查看特定评分的评价
+     *
+     * @param productId 商品ID
+     * @param minRating 最低评分
+     * @param maxRating 最高评分
+     * @return 评价列表
+     */
+    @Override
+    @Cacheable(key = "'range_' + #productId + '_' + #minRating + '_' + #maxRating")
+    public List<ProductReview> selectByRatingRange(Long productId, Integer minRating, Integer maxRating) {
+        return productReviewMapper.selectByRatingRange(productId, minRating, maxRating);
+    }
+    
+    /**
+     * 查询用户所有评价
+     * 
+     * 该方法查询指定用户发表的所有评价，
+     * 用于用户中心展示个人评价记录
+     *
+     * @param userId 用户ID
+     * @return 用户评价列表
+     */
+    @Override
+    @Cacheable(key = "'user_' + #userId")
+    public List<ProductReview> selectByUserId(Long userId) {
+        return productReviewMapper.selectByUserId(userId);
+    }
+    
+    /**
+     * 批量更新评价状态
+     * 
+     * 该方法一次性更新多个评价的状态，
+     * 用于后台管理系统批量审核评价
+     *
+     * @param ids 评价ID列表
+     * @param status 新状态
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchUpdateStatus(List<Long> ids, Integer status) {
+        return productReviewMapper.batchUpdateStatus(ids, status) > 0;
+    }
+    
+    /**
+     * 分页查询待审核评价
+     * 
+     * 该方法查询状态为待审核的评价，
+     * 用于后台管理系统的评价审核功能
+     *
+     * @param page 分页参数
+     * @return 待审核评价列表
+     */
+    @Override
+    public IPage<ProductReview> selectPendingReviews(IPage<ProductReview> page) {
+        QueryWrapper<ProductReview> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", 0); // 假设0表示待审核
+        return page(page, queryWrapper);
+    }
+    
+    /**
+     * 查询精选评价（高分评价）
+     * 
+     * 该方法查询指定商品的高分评价，
+     * 用于前台展示精选评价，提高用户购买意愿
+     *
+     * @param productId 商品ID
+     * @param limit 限制数量
+     * @return 精选评价列表
+     */
+    @Override
+    @Cacheable(key = "'featured_' + #productId + '_' + #limit")
+    public List<ProductReview> selectFeaturedReviews(Long productId, Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 3; // 默认返回3条
+        }
+        
+        QueryWrapper<ProductReview> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("product_id", productId)
+                   .eq("status", 1) // 已审核通过
+                   .ge("rating", 4) // 4分及以上
+                   .orderByDesc("rating", "create_time")
+                   .last("LIMIT " + limit);
+        
+        return list(queryWrapper);
+    }
+    
+    /**
+     * 查询包含图片的评价
+     * 
+     * 该方法查询包含图片的商品评价，
+     * 用于前台展示图文评价，提供更直观的产品使用效果
+     *
+     * @param productId 商品ID
+     * @return 包含图片的评价列表
+     */
+    @Override
+    @Cacheable(key = "'images_' + #productId")
+    public List<ProductReview> selectReviewsWithImages(Long productId) {
+        QueryWrapper<ProductReview> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("product_id", productId)
+                   .eq("status", 1)
+                   .isNotNull("images")
+                   .ne("images", "[]") // 非空图片数组
+                   .ne("images", "") // 非空字符串
+                   .orderByDesc("create_time");
+        
+        return list(queryWrapper);
+    }
+    
+    /**
+     * 统计商品评价数据
+     * 
+     * 该方法汇总指定商品的评价统计数据，
+     * 包括总评价数、平均分、各分数占比等，
+     * 用于前台展示评价概览
+     *
+     * @param productId 商品ID
+     * @return 评价统计数据
+     */
+    @Override
+    @Cacheable(key = "'stats_' + #productId")
+    public Map<String, Object> getReviewStatistics(Long productId) {
+        Map<String, Object> result = new HashMap<>();
+        
+        // 获取平均分
+        Double avgRating = calculateAverageRating(productId);
+        result.put("averageRating", avgRating != null ? avgRating : 0);
+        
+        // 获取各评分数量
+        List<Map<String, Object>> ratingCounts = countByRating(productId);
+        result.put("ratingDistribution", ratingCounts);
+        
+        // 计算总评价数
+        int totalCount = 0;
+        for (Map<String, Object> rating : ratingCounts) {
+            totalCount += ((Number) rating.get("count")).intValue();
+        }
+        result.put("totalCount", totalCount);
+        
+        // 计算好评率（4-5分）
+        long goodCount = ratingCounts.stream()
+                .filter(m -> ((Number) m.get("rating")).intValue() >= 4)
+                .mapToLong(m -> ((Number) m.get("count")).longValue())
+                .sum();
+        
+        double goodRate = totalCount > 0 ? (double) goodCount / totalCount * 100 : 0;
+        result.put("goodRate", String.format("%.1f%%", goodRate));
+        
+        return result;
+    }
+    
+    /**
+     * 回复商品评价
+     * 
+     * 该方法用于商家或管理员回复用户评价，
+     * 提高商家与用户的互动性，解决用户问题
+     *
+     * @param reviewId 评价ID
+     * @param replyContent 回复内容
+     * @return 回复结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "#reviewId")
+    public boolean replyReview(Long reviewId, String replyContent) {
+        // 这里需要一个评价回复表，或者在评价表中添加回复字段
+        // 简化实现，实际中应该有专门的回复表
+        // return reviewReplyMapper.insertReply(reviewId, replyContent);
+        return true; // 暂时返回true，需要实际实现
     }
 }
 

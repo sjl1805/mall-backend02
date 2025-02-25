@@ -5,9 +5,13 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商品分类表
+ * 该实体类代表商城的商品分类体系，支持多级分类结构（最多三级）
+ * 每个分类可以有父分类（顶级分类的父ID为0）和多个子分类
+ * 包含分类的基本信息如名称、图标、排序等属性
  *
  * @TableName category
  */
@@ -61,4 +65,19 @@ public class Category implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * 非数据库字段，用于存储子分类列表
+     */
+    @TableField(exist = false)
+    private List<Category> children;
+    
+    /**
+     * 非数据库字段，用于存储分类下的商品数量
+     */
+    @TableField(exist = false)
+    private Integer productCount;
 }

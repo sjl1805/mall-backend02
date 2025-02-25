@@ -111,6 +111,30 @@ public interface ProductReviewMapper extends BaseMapper<ProductReview> {
      * @return 更新结果
      */
     int batchUpdateStatus(@Param("ids") List<Long> ids, @Param("status") Integer status);
+
+    /**
+     * 查询评价详情（含用户和商品信息）
+     *
+     * @param id 评价ID
+     * @return 评价详情
+     */
+    ProductReview selectReviewDetail(@Param("id") Long id);
+
+    /**
+     * 查询待审核评价数量
+     *
+     * @return 待审核评价数量
+     */
+    int countPendingReviews();
+
+    /**
+     * 更新评价有用度
+     *
+     * @param id 评价ID
+     * @param increment 增量（1或-1）
+     * @return 更新结果
+     */
+    int updateUsefulCount(@Param("id") Long id, @Param("increment") int increment);
 }
 
 

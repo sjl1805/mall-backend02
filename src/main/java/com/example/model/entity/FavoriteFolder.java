@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 收藏夹表
@@ -61,4 +63,40 @@ public class FavoriteFolder implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 非数据库字段，创建者昵称
+     */
+    @TableField(exist = false)
+    private String creatorName;
+
+    /**
+     * 非数据库字段，创建者头像
+     */
+    @TableField(exist = false)
+    private String creatorAvatar;
+
+    /**
+     * 非数据库字段，收藏夹缩略图（通常是第一个收藏商品的图片）
+     */
+    @TableField(exist = false)
+    private String thumbnail;
+
+    /**
+     * 非数据库字段，近期添加的商品ID列表
+     */
+    @TableField(exist = false)
+    private List<Long> recentProductIds;
+
+    /**
+     * 非数据库字段，是否是默认收藏夹
+     */
+    @TableField(exist = false)
+    private Boolean isDefault;
+
+    /**
+     * 非数据库字段，收藏夹内商品简要信息
+     */
+    @TableField(exist = false)
+    private List<Map<String, Object>> productSnapshots;
 }

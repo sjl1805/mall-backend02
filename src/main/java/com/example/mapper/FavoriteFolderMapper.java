@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 31815
@@ -143,6 +144,30 @@ public interface FavoriteFolderMapper extends BaseMapper<FavoriteFolder> {
     int batchUpdatePublicStatus(
             @Param("ids") List<Long> ids,
             @Param("isPublic") Integer isPublic);
+
+    /**
+     * 获取默认收藏夹
+     *
+     * @param userId 用户ID
+     * @return 默认收藏夹
+     */
+    FavoriteFolder selectDefaultFolder(@Param("userId") Long userId);
+
+    /**
+     * 获取收藏夹简要信息（含缩略图）
+     *
+     * @param userId 用户ID
+     * @return 收藏夹简要信息列表
+     */
+    List<Map<String, Object>> selectFolderBriefs(@Param("userId") Long userId);
+
+    /**
+     * 查询最热门的公开收藏夹
+     *
+     * @param limit 限制数量
+     * @return 热门收藏夹列表
+     */
+    List<FavoriteFolder> selectHotPublicFolders(@Param("limit") Integer limit);
 }
 
 

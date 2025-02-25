@@ -192,4 +192,67 @@
     <delete id="deleteUserBehavior">
         DELETE FROM user_behavior WHERE id = #{id}
     </delete>
+
+    <!-- 根据用户ID和时间范围查询行为 -->
+    <select id="selectByUserIdAndTimeRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId}
+          AND behavior_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY behavior_time ASC
+    </select>
+
+    <!-- 分析用户行为转化 -->
+    <select id="analyzeBehaviorConversion" resultType="java.util.Map">
+        SELECT 
+            COUNT(DISTINCT s.user_id) as source_users,
+            COUNT(DISTINCT t.user_id) as target_users,
+            ROUND(COUNT(DISTINCT t.user_id) / COUNT(DISTINCT s.user_id) * 100, 2) as conversion_rate
+        FROM (
+            SELECT user_id
+            FROM user_behavior
+            WHERE behavior_type = #{sourceType}
+              AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+            GROUP BY user_id
+        ) s
+        LEFT JOIN (
+            SELECT user_id
+            FROM user_behavior
+            WHERE behavior_type = #{targetType}
+              AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+            GROUP BY user_id
+        ) t ON s.user_id = t.user_id
+    </select>
+
+    <!-- 查询用户行为热力图数据 -->
+    <select id="selectBehaviorHeatmapData" resultType="java.util.Map">
+        SELECT 
+            HOUR(behavior_time) as hour_of_day,
+            DAYOFWEEK(behavior_time) as day_of_week,
+            COUNT(*) as behavior_count
+        FROM user_behavior
+        WHERE user_id = #{userId}
+          <if test="behaviorType != null">
+            AND behavior_type = #{behaviorType}
+          </if>
+          AND behavior_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        GROUP BY HOUR(behavior_time), DAYOFWEEK(behavior_time)
+        ORDER BY day_of_week, hour_of_day
+    </select>
+
+    <!-- 查询用户行为轨迹 -->
+    <select id="selectUserBehaviorTrajectory" resultMap="BaseResultMap">
+        SELECT ub.*, p.name as product_name, c.name as category_name
+        FROM (
+            SELECT *
+            FROM user_behavior
+            WHERE user_id = #{userId}
+              AND behavior_time BETWEEN #{startTime} AND #{endTime}
+            ORDER BY behavior_time ASC
+            LIMIT #{limit}
+        ) ub
+        JOIN products p ON ub.product_id = p.id
+        JOIN category c ON p.category_id = c.id
+    </select>
 </mapper>

@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.model.entity.UserBehavior;
-import com.example.model.vo.ProductPopularityVO;
-import com.example.model.vo.UserInterestVO;
+import com.example.model.entity.Products;
+import com.example.model.entity.Users;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 31815
@@ -68,7 +69,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
      * @param limit 限制数量
      * @return 热门商品列表
      */
-    List<ProductPopularityVO> selectPopularProducts(
+    List<Products> selectPopularProducts(
             @Param("behaviorType") Integer behaviorType,
             @Param("startTime") Date startTime,
             @Param("endTime") Date endTime,
@@ -82,7 +83,7 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
      * @param endTime 结束时间
      * @return 用户兴趣分类
      */
-    List<UserInterestVO> selectUserInterests(
+    List<Users> selectUserInterests(
             @Param("userId") Long userId,
             @Param("startTime") Date startTime,
             @Param("endTime") Date endTime);
@@ -164,6 +165,60 @@ public interface UserBehaviorMapper extends BaseMapper<UserBehavior> {
      * @return 删除结果
      */
     int deleteUserBehavior(@Param("id") Long id);
+
+    /**
+     * 根据用户ID和时间范围查询行为
+     *
+     * @param userId 用户ID
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 用户行为列表
+     */
+    List<UserBehavior> selectByUserIdAndTimeRange(
+            @Param("userId") Long userId,
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
+
+    /**
+     * 分析用户行为转化
+     *
+     * @param sourceType 源行为类型
+     * @param targetType 目标行为类型
+     * @param days 天数
+     * @return 转化数据
+     */
+    Map<String, Object> analyzeBehaviorConversion(
+            @Param("sourceType") Integer sourceType,
+            @Param("targetType") Integer targetType,
+            @Param("days") Integer days);
+
+    /**
+     * 查询用户连续行为
+     * 查找用户短时间内的连续行为序列
+     *
+     * @param userId 用户ID
+     * @param timeInterval 时间间隔（秒）
+     * @param limit 限制数量
+     * @return 连续行为序列
+     */
+    List<List<UserBehavior>> selectUserContinuousBehaviors(
+            @Param("userId") Long userId,
+            @Param("timeInterval") Integer timeInterval,
+            @Param("limit") Integer limit);
+
+    /**
+     * 查询用户行为热力图数据
+     * 按小时和星期几统计行为频率
+     *
+     * @param userId 用户ID
+     * @param behaviorType 行为类型
+     * @param days 天数
+     * @return 热力图数据
+     */
+    List<Map<String, Object>> selectBehaviorHeatmapData(
+            @Param("userId") Long userId,
+            @Param("behaviorType") Integer behaviorType,
+            @Param("days") Integer days);
 }
 
 

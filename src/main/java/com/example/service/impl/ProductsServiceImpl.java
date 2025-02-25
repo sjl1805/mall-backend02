@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.ProductsMapper;
@@ -11,8 +12,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品服务实现类
@@ -127,6 +132,278 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products>
     @CacheEvict(value = "products", key = "#id") // 清除被删除商品的缓存
     public boolean deleteProduct(Long id) {
         return productsMapper.deleteById(id) > 0;
+    }
+
+    /**
+     * 根据分类ID查询商品
+     * 
+     * 该方法用于前台按分类浏览商品，
+     * 是电商系统中最常用的商品查询方式之一
+     *
+     * @param categoryId 分类ID
+     * @param page 分页参数
+     * @return 商品分页列表
+     */
+    @Override
+    @Cacheable(key = "'category_'+#categoryId+'_page_'+#page.current+'_'+#page.size")
+    public IPage<Products> selectByCategoryId(Long categoryId, IPage<Products> page) {
+        QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("category_id", categoryId)
+                   .eq("status", 1)
+                   .orderByDesc("create_time");
+        return page(page, queryWrapper);
+    }
+    
+    /**
+     * 按条件高级查询商品
+     * 
+     * 该方法支持多条件组合查询商品，
+     * 用于前台商品搜索和后台商品管理的高级筛选
+     *
+     * @param categoryId 分类ID
+     * @param keyword 关键词
+     * @param minPrice 最低价格
+     * @param maxPrice 最高价格
+     * @param page 分页参数
+     * @return 商品分页列表
+     */
+    @Override
+    public IPage<Products> searchProducts(
+            Long categoryId, 
+            String keyword, 
+            BigDecimal minPrice, 
+            BigDecimal maxPrice, 
+            IPage<Products> page) {
+        
+        return productsMapper.selectProductsByCondition(
+                categoryId,
+                keyword,
+                minPrice != null ? minPrice.doubleValue() : null,
+                maxPrice != null ? maxPrice.doubleValue() : null,
+                1, // 只查询上架商品
+                page);
+    }
+    
+    /**
+     * 获取热门商品
+     * 
+     * 该方法获取销量最高的商品，
+     * 用于首页推荐或热销榜单展示
+     *
+     * @param limit 限制数量
+     * @return 热门商品列表
+     */
+    @Override
+    @Cacheable(key = "'hot_products_'+#limit")
+    public List<Products> getHotProducts(Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认返回10个
+        }
+        return productsMapper.selectHotProducts(limit);
+    }
+    
+    /**
+     * 获取推荐商品
+     * 
+     * 该方法基于用户行为分析，获取推荐的商品，
+     * 提高用户购买意愿和转化率
+     *
+     * @param limit 限制数量
+     * @return 推荐商品列表
+     */
+    @Override
+    @Cacheable(key = "'recommend_products_'+#limit")
+    public List<Products> getRecommendProducts(Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认返回10个
+        }
+        return productsMapper.selectRecommendProducts(limit);
+    }
+    
+    /**
+     * 获取新品
+     * 
+     * 该方法获取最近添加的商品，
+     * 用于首页新品推荐或新品专区
+     *
+     * @param days 最近天数
+     * @param limit 限制数量
+     * @return 新品列表
+     */
+    @Override
+    @Cacheable(key = "'new_products_'+#days+'_'+#limit")
+    public List<Products> getNewProducts(Integer days, Integer limit) {
+        if (days == null || days <= 0) {
+            days = 7; // 默认最近7天
+        }
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认返回10个
+        }
+        return productsMapper.selectNewProducts(days, limit);
+    }
+    
+    /**
+     * 获取折扣商品
+     * 
+     * 该方法获取当前参与促销活动的商品，
+     * 用于促销活动页面或折扣专区
+     *
+     * @param limit 限制数量
+     * @return 折扣商品列表
+     */
+    @Override
+    @Cacheable(key = "'discount_products_'+#limit")
+    public List<Products> getDiscountProducts(Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认返回10个
+        }
+        return productsMapper.selectDiscountProducts(limit);
+    }
+    
+    /**
+     * 更新商品库存
+     * 
+     * 该方法用于增加或减少商品库存，
+     * 支持正数（增加）和负数（减少）
+     *
+     * @param id 商品ID
+     * @param quantity 变动数量
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(key = "#id")
+    public boolean updateStock(Long id, Integer quantity) {
+        if (quantity == 0) {
+            return true; // 无变化，直接返回成功
+        }
+        
+        if (quantity > 0) {
+            // 增加库存
+            return productsMapper.increaseStock(id, quantity) > 0;
+        } else {
+            // 减少库存
+            return productsMapper.decreaseStock(id, -quantity) > 0;
+        }
+    }
+    
+    /**
+     * 批量更新商品状态
+     * 
+     * 该方法一次性更新多个商品的状态，
+     * 如批量上架或下架商品，提高管理效率
+     *
+     * @param ids 商品ID列表
+     * @param status 状态值
+     * @return 更新结果
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public boolean batchUpdateStatus(List<Long> ids, Integer status) {
+        if (ids == null || ids.isEmpty()) {
+            return false;
+        }
+        return productsMapper.batchUpdateStatus(ids, status) > 0;
+    }
+    
+    /**
+     * 获取库存预警商品
+     * 
+     * 该方法获取库存低于指定阈值的商品，
+     * 用于库存管理和补货提醒
+     *
+     * @param threshold 预警阈值
+     * @return 库存预警商品列表
+     */
+    @Override
+    public List<Products> getLowStockProducts(Integer threshold) {
+        if (threshold == null || threshold < 0) {
+            threshold = 10; // 默认库存少于10个预警
+        }
+        return productsMapper.selectLowStockProducts(threshold);
+    }
+    
+    /**
+     * 统计商品销量排行
+     * 
+     * 该方法统计指定时间段内的商品销量排行，
+     * 用于销售分析和商品管理
+     *
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @param limit 限制数量
+     * @return 销量排行数据
+     */
+    @Override
+    @Cacheable(key = "'sales_ranking_'+#startDate+'_'+#endDate+'_'+#limit")
+    public List<Map<String, Object>> getProductSalesRanking(
+            Date startDate, Date endDate, Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认返回10个
+        }
+        return productsMapper.getProductSalesRanking(startDate, endDate, limit);
+    }
+    
+    /**
+     * 获取完整商品详情
+     * 
+     * 该方法获取商品的完整信息，包括分类名称、评价等，
+     * 用于商品详情页展示
+     *
+     * @param id 商品ID
+     * @return 商品详情
+     */
+    @Override
+    @Cacheable(key = "'detail_'+#id")
+    public Products getProductDetail(Long id) {
+        return productsMapper.selectProductDetail(id);
+    }
+    
+    /**
+     * 批量导入商品
+     * 
+     * 该方法批量导入商品数据，
+     * 用于初始化商品数据或批量上架新商品
+     *
+     * @param productList 商品列表
+     * @return 导入成功数量
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public int batchImportProducts(List<Products> productList) {
+        if (productList == null || productList.isEmpty()) {
+            return 0;
+        }
+        return productsMapper.batchInsertProducts(productList);
+    }
+    
+    /**
+     * 导出商品数据
+     * 
+     * 该方法导出符合条件的商品数据，
+     * 用于数据备份或报表生成
+     *
+     * @param categoryId 分类ID
+     * @param keyword 关键词
+     * @return 商品列表
+     */
+    @Override
+    public List<Products> exportProducts(Long categoryId, String keyword) {
+        QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
+        
+        if (categoryId != null && categoryId > 0) {
+            queryWrapper.eq("category_id", categoryId);
+        }
+        
+        if (StringUtils.hasText(keyword)) {
+            queryWrapper.like("name", keyword)
+                       .or()
+                       .like("description", keyword);
+        }
+        
+        return list(queryWrapper);
     }
 }
 

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商品规格表
@@ -46,4 +47,22 @@ public class ProductSpec implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 非数据库字段，规格值列表（反序列化后）
+     */
+    @TableField(exist = false)
+    private List<String> valueList;
+
+    /**
+     * 非数据库字段，关联的SKU数量
+     */
+    @TableField(exist = false)
+    private Integer skuCount;
+
+    /**
+     * 非数据库字段，是否允许删除
+     */
+    @TableField(exist = false)
+    private Boolean allowDelete;
 }

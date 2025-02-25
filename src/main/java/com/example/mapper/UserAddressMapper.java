@@ -95,6 +95,39 @@ public interface UserAddressMapper extends BaseMapper<UserAddress> {
      * @return 影响行数
      */
     int updateDefaultStatus(@Param("userId") Long userId, @Param("addressId") Long addressId);
+
+    /**
+     * 批量删除用户收货地址
+     *
+     * @param ids 地址ID列表
+     * @return 删除结果
+     */
+    int batchDeleteAddresses(@Param("ids") List<Long> ids);
+
+    /**
+     * 查询用户收货地址数量
+     *
+     * @param userId 用户ID
+     * @return 地址数量
+     */
+    int countByUserId(@Param("userId") Long userId);
+
+    /**
+     * 查询最近创建的地址
+     *
+     * @param userId 用户ID
+     * @return 最近创建的地址
+     */
+    UserAddress selectLatestAddress(@Param("userId") Long userId);
+
+    /**
+     * 查询用户在指定城市的地址数量
+     *
+     * @param userId 用户ID
+     * @param city 城市
+     * @return 地址数量
+     */
+    int countByCity(@Param("userId") Long userId, @Param("city") String city);
 }
 
 

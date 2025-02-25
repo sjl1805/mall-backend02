@@ -6,9 +6,13 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商品表
+ * 该实体类表示商城的商品信息，是系统的核心数据实体之一
+ * 包含商品的基本信息、价格、库存、图片等属性
+ * 商品与分类、规格、评价等实体有关联关系
  *
  * @TableName products
  */
@@ -67,4 +71,55 @@ public class Products implements Serializable {
      * 商品状态：0-下架 1-上架
      */
     private Integer status;
+    
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * 非数据库字段，商品分类名称
+     */
+    @TableField(exist = false)
+    private String categoryName;
+    
+    /**
+     * 非数据库字段，商品销量
+     */
+    @TableField(exist = false)
+    private Integer salesCount;
+    
+    /**
+     * 非数据库字段，商品评分（1-5星）
+     */
+    @TableField(exist = false)
+    private Double rating;
+    
+    /**
+     * 非数据库字段，评价数量
+     */
+    @TableField(exist = false)
+    private Integer reviewCount;
+    
+    /**
+     * 非数据库字段，是否为新品
+     */
+    @TableField(exist = false)
+    private Boolean isNew;
+    
+    /**
+     * 非数据库字段，是否热门
+     */
+    @TableField(exist = false)
+    private Boolean isHot;
+    
+    /**
+     * 非数据库字段，商品标签列表
+     */
+    @TableField(exist = false)
+    private List<String> tags;
+    
+    /**
+     * 非数据库字段，商品规格信息
+     */
+    @TableField(exist = false)
+    private List<ProductSpec> specs;
 }

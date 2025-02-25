@@ -142,4 +142,43 @@
         LEFT JOIN product_category c ON p.category_id = c.id
         WHERE oi.order_id = #{orderId}
     </select>
+
+    <!-- 查询用户购买过的商品ID列表 -->
+    <select id="getUserPurchasedProductIds" resultType="java.lang.Long">
+        SELECT DISTINCT oi.product_id
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND o.status >= 2  <!-- 已支付完成的订单 -->
+        ORDER BY o.create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 获取订单项状态汇总 -->
+    <select id="getOrderItemStatusSummary" resultType="java.util.Map">
+        SELECT 
+            COUNT(*) as total_items,
+            SUM(CASE WHEN pr.id IS NOT NULL THEN 1 ELSE 0 END) as reviewed_items,
+            SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) as refunded_items
+        FROM order_item oi
+        LEFT JOIN product_review pr ON oi.id = pr.order_item_id
+        LEFT JOIN refund r ON oi.id = r.order_item_id
+        WHERE oi.order_id = #{orderId}
+    </select>
+
+    <!-- 更新订单项评价状态 -->
+    <update id="updateReviewStatus">
+        UPDATE order_item
+        SET review_status = #{reviewStatus},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新订单项退款状态 -->
+    <update id="updateRefundStatus">
+        UPDATE order_item
+        SET refund_status = #{refundStatus},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper>

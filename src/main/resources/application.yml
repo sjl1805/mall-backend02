@@ -28,12 +28,9 @@ spring:
 
 jwt:
   secret: "U2fromV0S2V5Rm9ySldUMTS2NDg2NTQzMjEwOTg3NjU0MzIxMDk4NzY1NDMyCg=="
-  # noinspection SpringBootApplicationYaml
   token-validity-in-seconds: 86400
   expiration: 86400  # 24小时
-  # noinspection SpringBootApplicationYaml
   token-header: Authorization
-  # noinspection SpringBootApplicationYaml
   token-prefix: "Bearer "
 
 mybatis-plus:
@@ -54,7 +51,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-    # noinspection SpringBootApplicationYaml
     packages-to-scan: com.example.controller   # 指定扫描的包
   paths-to-match: /**
 

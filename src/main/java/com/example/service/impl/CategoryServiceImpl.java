@@ -12,9 +12,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 商品分类服务实现类
@@ -278,6 +280,193 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     @CacheEvict(allEntries = true)
     public boolean batchUpdateStatus(List<Long> ids, Integer status) {
         return categoryMapper.batchUpdateStatus(ids, status) > 0;
+    }
+
+    /**
+     * 检查分类是否可以安全删除
+     * 
+     * 在删除分类前，需要检查该分类是否有子分类和关联的商品
+     * 只有当分类没有子分类且没有关联商品时，才能安全删除
+     *
+     * @param categoryId 分类ID
+     * @return 如果可以安全删除返回true，否则返回false
+     */
+    @Override
+    public boolean checkCanDelete(Long categoryId) {
+        if (categoryId == null) {
+            return false;
+        }
+        
+        // 检查是否有子分类
+        Integer childCount = categoryMapper.countChildCategories(categoryId);
+        if (childCount > 0) {
+            return false;
+        }
+        
+        // 检查是否有关联商品
+        Integer productCount = categoryMapper.countProductsByCategoryId(categoryId);
+        return productCount == 0;
+    }
+    
+    /**
+     * 批量导入分类数据
+     * 
+     * 该方法支持批量导入分类数据，通常用于系统初始化或数据迁移
+     * 在导入前会进行数据验证，确保数据的完整性和正确性
+     *
+     * @param categories 分类数据列表
+     * @return 导入成功的数量
+     */
+    @Override
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public int batchImport(List<Category> categories) {
+        if (CollectionUtils.isEmpty(categories)) {
+            return 0;
+        }
+        
+        int successCount = 0;
+        for (Category category : categories) {
+            // 数据验证
+            if (category == null || !StringUtils.hasText(category.getName()) 
+                    || category.getLevel() == null) {
+                continue;
+            }
+            
+            // 设置默认值
+            if (category.getParentId() == null) {
+                category.setParentId(0L); // 默认为顶级分类
+            }
+            if (category.getSort() == null) {
+                category.setSort(0); // 默认排序值
+            }
+            if (category.getStatus() == null) {
+                category.setStatus(1); // 默认启用
+            }
+            
+            // 保存分类
+            if (categoryMapper.insert(category) > 0) {
+                successCount++;
+            }
+        }
+        
+        return successCount;
+    }
+    
+    /**
+     * 导出分类数据
+     * 
+     * 该方法用于导出分类数据，支持按层级筛选
+     * 导出的数据可用于备份、报表或数据分析
+     *
+     * @param level 分类层级（可选）
+     * @return 分类数据列表
+     */
+    @Override
+    @Cacheable(key = "'export_'+#level")
+    public List<Category> exportCategories(Integer level) {
+        if (level != null) {
+            return categoryMapper.selectByLevel(level);
+        } else {
+            // 导出所有分类
+            return categoryMapper.selectList(null);
+        }
+    }
+    
+    /**
+     * 查询热门分类
+     * 
+     * 该方法返回商品数量最多的分类，通常用于首页推荐或导航
+     * 结果包含分类基本信息和商品数量
+     *
+     * @param limit 查询数量限制
+     * @return 热门分类列表
+     */
+    @Override
+    @Cacheable(key = "'hot_'+#limit")
+    public List<Map<String, Object>> getHotCategories(Integer limit) {
+        if (limit == null || limit <= 0) {
+            limit = 10; // 默认查询10个
+        }
+        return categoryMapper.selectHotCategories(limit);
+    }
+    
+    /**
+     * 统计每个层级的分类数量
+     * 
+     * 该方法统计每个层级的分类数量，用于数据分析和监控
+     * 返回的Map中，key为层级，value为该层级的分类数量
+     *
+     * @return 层级-数量映射
+     */
+    @Override
+    @Cacheable(key = "'level_count'")
+    public Map<Integer, Integer> countCategoriesByLevel() {
+        List<Category> allCategories = categoryMapper.selectList(null);
+        Map<Integer, Integer> result = new HashMap<>();
+        
+        for (Category category : allCategories) {
+            Integer level = category.getLevel();
+            result.put(level, result.getOrDefault(level, 0) + 1);
+        }
+        
+        return result;
+    }
+    
+    /**
+     * 根据关键词搜索分类
+     * 
+     * 该方法根据关键词搜索匹配的分类，支持模糊匹配
+     * 通常用于后台管理系统的分类搜索功能
+     *
+     * @param keyword 搜索关键词
+     * @return 匹配的分类列表
+     */
+    @Override
+    public List<Category> searchCategories(String keyword) {
+        if (!StringUtils.hasText(keyword)) {
+            return new ArrayList<>();
+        }
+        
+        return categoryMapper.searchCategories(keyword);
+    }
+    
+    /**
+     * 获取完整的分类树（包含所有层级和商品数量）
+     * 
+     * 该方法返回完整的分类树结构，包括所有层级的分类及其子分类
+     * 同时统计每个分类下的商品数量，方便前端展示
+     * 通常用于前台导航菜单或后台分类管理
+     *
+     * @return 完整分类树结构
+     */
+    @Override
+    @Cacheable(key = "'full_tree'")
+    public List<Category> getFullCategoryTree() {
+        // 查询所有分类
+        List<Category> allCategories = categoryMapper.selectList(null);
+        
+        // 根据层级和父ID组织分类树
+        Map<Long, List<Category>> childrenMap = allCategories.stream()
+                .filter(c -> c.getParentId() != null && c.getParentId() > 0)
+                .collect(Collectors.groupingBy(Category::getParentId));
+        
+        // 设置子分类
+        for (Category category : allCategories) {
+            List<Category> children = childrenMap.get(category.getId());
+            if (!CollectionUtils.isEmpty(children)) {
+                category.setChildren(children);
+            }
+            
+            // 设置商品数量
+            Integer productCount = categoryMapper.countProductsByCategoryId(category.getId());
+            category.setProductCount(productCount);
+        }
+        
+        // 返回顶级分类
+        return allCategories.stream()
+                .filter(c -> c.getParentId() == null || c.getParentId() == 0)
+                .collect(Collectors.toList());
     }
 }
 
