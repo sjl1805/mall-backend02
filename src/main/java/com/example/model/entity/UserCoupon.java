@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户优惠券实体类
+ * 用户优惠券关系实体类
  */
 @Data
 @Builder
@@ -24,7 +24,7 @@ public class UserCoupon implements Serializable {
     private static final long serialVersionUID = 1L;
     
     /**
-     * 用户优惠券ID
+     * ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -45,22 +45,17 @@ public class UserCoupon implements Serializable {
     private Integer status;
     
     /**
-     * 使用订单ID
-     */
-    private Long orderId;
-    
-    /**
-     * 获取时间
-     */
-    private LocalDateTime getTime;
-    
-    /**
      * 使用时间
      */
     private LocalDateTime useTime;
     
     /**
-     * 创建时间
+     * 使用订单ID
+     */
+    private Long orderId;
+    
+    /**
+     * 创建时间（领取时间）
      */
     private LocalDateTime createTime;
     
