@@ -9,11 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 用户-标签关联实体类
+ * 用户标签关系实体类
  */
 @Data
 @Builder
@@ -25,7 +24,7 @@ public class UserTagRelation implements Serializable {
     private static final long serialVersionUID = 1L;
     
     /**
-     * 关联ID
+     * ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -41,9 +40,9 @@ public class UserTagRelation implements Serializable {
     private Long tagId;
     
     /**
-     * 标签权重
+     * 标签权重：1-100，数值越大表示用户与该标签的关联度越高
      */
-    private BigDecimal weight;
+    private Integer weight;
     
     /**
      * 创建时间
