@@ -106,7 +106,7 @@
         FROM order_item oi
         JOIN orders o ON oi.order_id = o.id
         WHERE oi.product_id = #{productId}
-        AND o.status >= 2  <!-- 假设状态2以上为已支付订单 -->
+        AND <![CDATA[ o.status >= 2 ]]>  <!-- 假设状态2以上为已支付订单 -->
         <if test="startTime != null">
             AND oi.create_time >= #{startTime}
         </if>
@@ -121,7 +121,7 @@
                AVG(oi.price) as avg_price
         FROM order_item oi
         JOIN orders o ON oi.order_id = o.id
-        WHERE o.status >= 2  <!-- 假设状态2以上为已支付订单 -->
+        WHERE <![CDATA[ o.status >= 2 ]]>  <!-- 假设状态2以上为已支付订单 -->
         <if test="startTime != null">
             AND oi.create_time >= #{startTime}
         </if>
@@ -149,7 +149,7 @@
         FROM order_item oi
         JOIN orders o ON oi.order_id = o.id
         WHERE o.user_id = #{userId}
-        AND o.status >= 2  <!-- 已支付完成的订单 -->
+        AND <![CDATA[ o.status >= 2 ]]>  <!-- 已支付完成的订单 -->
         ORDER BY o.create_time DESC
         LIMIT #{limit}
     </select>

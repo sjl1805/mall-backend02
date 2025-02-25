@@ -17,8 +17,11 @@ public enum ResultCode implements IResultCode {
     LOGIN_FAILED(400101, "登录失败"),
     USER_NOT_FOUND(400102, "用户不存在"),
     FAILED(400103, "操作失败"),
-    CAPTCHA_FAILED(400104, "验证码错误");
+    CAPTCHA_FAILED(400104, "验证码错误"),
+    PASSWORD_INCORRECT(400105, "密码不正确"),
+    ACCOUNT_LOCKED(400106, "账户已锁定"),
 
+    VALIDATE_FAILED(400200, "参数验证失败");
     private final int code;
     private final String message;
 

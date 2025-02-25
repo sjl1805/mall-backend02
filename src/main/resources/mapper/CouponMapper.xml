@@ -97,10 +97,10 @@
         FROM coupon
         WHERE status = 1
         AND num > 0
-        AND start_time <= #{now}
-        AND end_time >= #{now}
+        AND start_time &lt;= #{now}
+        AND end_time &gt;= #{now}  
         <if test="amount != null">
-            AND min_amount <= #{amount}
+            AND min_amount &lt;= #{amount}
         </if>
         ORDER BY value DESC
     </select>
@@ -121,7 +121,7 @@
         SET num = num - #{count},
             update_time = NOW()
         WHERE id = #{id}
-        AND num >= #{count}
+        AND num &gt;= #{count}
     </update>
 
     <!-- 检查优惠券是否可用 -->
@@ -132,9 +132,9 @@
         WHERE id = #{id}
         AND status = 1
         AND num > 0
-        AND start_time <= #{now}
-        AND end_time >= #{now}
-        AND min_amount <= #{amount}
+        AND start_time &lt;= #{now}
+        AND end_time &gt;= #{now}
+        AND min_amount &lt;= #{amount}
     </select>
 
     <!-- 统计优惠券使用情况 -->
@@ -190,8 +190,8 @@
         FROM coupon c
         WHERE c.status = 1
         AND c.num > 0
-        AND c.start_time <= #{now}
-        AND c.end_time >= #{now}
+        AND c.start_time &lt;= #{now}
+        AND c.end_time &gt;= #{now}
         AND c.id NOT IN (
             SELECT coupon_id
             FROM user_coupon
@@ -213,13 +213,13 @@
                 AND status = #{params.status}
             </if>
             <if test="params.minValue != null">
-                AND value >= #{params.minValue}
+                AND value &gt;= #{params.minValue}
             </if>
             <if test="params.maxValue != null">
                 AND value &lt;= #{params.maxValue}
             </if>
             <if test="params.startTimeBegin != null">
-                AND start_time >= #{params.startTimeBegin}
+                AND start_time &gt;= #{params.startTimeBegin}
             </if>
             <if test="params.startTimeEnd != null">
                 AND start_time &lt;= #{params.startTimeEnd}
@@ -238,6 +238,7 @@
 
     <!-- 计算优惠券发放效果 -->
     <select id="calculateCouponEffectiveness" resultType="java.util.Map">
+        <![CDATA[
         SELECT
             c.id,
             c.name,
@@ -249,13 +250,13 @@
             ROUND(SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(uc.id), 2) AS usage_rate,
             SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) AS total_order_amount,
             SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END) AS order_count,
-            ROUND(SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) / 
-                  SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 2) AS avg_order_amount
+            ROUND(SUM(CASE WHEN uc.status = 2 THEN o.total_amount ELSE 0 END) / SUM(CASE WHEN uc.status = 2 THEN 1 ELSE 0 END), 2) AS avg_order_amount
         FROM coupon c
         LEFT JOIN user_coupon uc ON c.id = uc.coupon_id
         LEFT JOIN orders o ON uc.order_id = o.id
         WHERE c.id = #{couponId}
         GROUP BY c.id, c.name, c.type, c.value
+        ]]>
     </select>
 
     <!-- 自动失效过期优惠券 -->
@@ -264,6 +265,6 @@
         SET status = 0,
             update_time = NOW()
         WHERE status = 1
-        AND end_time < #{now}
+        AND end_time &lt; #{now}
     </update>
 </mapper>
