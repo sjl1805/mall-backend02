@@ -203,4 +203,11 @@
         ORDER BY last_active_time DESC
         LIMIT #{limit}
     </select>
+
+    <select id="selectActiveUserIds" resultType="java.lang.Long">
+        SELECT DISTINCT u.id
+        FROM user u
+        JOIN order_item oi ON u.id = oi.user_id
+        WHERE oi.create_time >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+    </select>
 </mapper> 

@@ -143,4 +143,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 活跃用户列表
      */
     List<User> selectActiveUsers(@Param("days") Integer days, @Param("limit") Integer limit);
+
+    /**
+     * 获取指定天数内活跃的用户ID列表
+     * 
+     * @param days 活跃天数
+     * @return 活跃用户ID列表
+     */
+    List<Long> selectActiveUserIds(Integer days);
 } 

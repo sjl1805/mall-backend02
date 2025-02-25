@@ -1,7 +1,5 @@
 package com.example.service.impl;
 
-package com.example.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.ResultCode;
@@ -357,7 +355,7 @@ public class UserSimilarityServiceImpl extends ServiceImpl<UserSimilarityMapper,
     }
 
     @Override
-    public List<SimilarityPairVO> getHighSimilarityUserPairs(BigDecimal threshold) {
+    public List<SimilarityPairVO>  getHighSimilarityUserPairs(BigDecimal threshold) {
         if (threshold == null) {
             threshold = RecommendConstants.DEFAULT_SIMILARITY_THRESHOLD;
         }
@@ -422,5 +420,6 @@ public class UserSimilarityServiceImpl extends ServiceImpl<UserSimilarityMapper,
         
         return distribution;
     }
+}
 
     

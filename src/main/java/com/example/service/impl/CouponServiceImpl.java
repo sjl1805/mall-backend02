@@ -354,4 +354,60 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
             throw new BusinessException(ResultCode.VALIDATE_FAILED, "结束时间不能早于当前时间");
         }
     }
+
+    @Override
+    public boolean checkCouponAvailable(Long couponId) {
+        if (couponId == null) {
+            return false;
+        }
+        
+        Coupon coupon = getById(couponId);
+        if (coupon == null) {
+            return false;
+        }
+        
+        // 检查优惠券状态
+        if (coupon.getStatus() != 1) {
+            return false;
+        }
+        
+        // 检查剩余数量
+        if (coupon.getRemain() <= 0) {
+            return false;
+        }
+        
+        // 检查有效期
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(coupon.getStartTime()) || now.isAfter(coupon.getEndTime())) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
+    public boolean checkCouponAvailableForAmount(Long couponId, double amount) {
+        if (couponId == null) {
+            return false;
+        }
+        
+        Coupon coupon = getById(couponId);
+        if (coupon == null) {
+            return false;
+        }
+        
+        // 先检查基本可用性
+        if (!checkCouponAvailable(couponId)) {
+            return false;
+        }
+        
+        // 检查金额门槛
+        BigDecimal amountDecimal = BigDecimal.valueOf(amount);
+        if (coupon.getThreshold().compareTo(BigDecimal.ZERO) > 0 
+                && amountDecimal.compareTo(coupon.getThreshold()) < 0) {
+            return false;
+        }
+        
+        return true;
+    }
 } 

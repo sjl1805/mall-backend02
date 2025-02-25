@@ -170,4 +170,19 @@ public interface CouponService extends IService<Coupon> {
      * @return 是否可用
      */
     boolean isCouponAvailableForProduct(Coupon coupon, Long productId, Long categoryId, BigDecimal price);
+
+    /**
+     * 检查优惠券是否可用
+     * @param couponId 优惠券ID
+     * @return 是否可用
+     */
+    boolean checkCouponAvailable(Long couponId);
+    
+    /**
+     * 检查优惠券是否可用于指定金额
+     * @param couponId 优惠券ID
+     * @param amount 订单金额
+     * @return 是否可用
+     */
+    boolean checkCouponAvailableForAmount(Long couponId, double amount);
 } 

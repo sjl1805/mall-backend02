@@ -28,7 +28,7 @@ public class Coupon implements Serializable {
     private static final long serialVersionUID = 1L;
     
     /**
-     * 优惠券ID
+     * ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -39,19 +39,34 @@ public class Coupon implements Serializable {
     private String name;
     
     /**
-     * 类型：1-满减 2-折扣 3-无门槛
+     * 优惠券类型：1-满减券 2-折扣券 3-无门槛券
      */
     private Integer type;
     
     /**
-     * 优惠金额/折扣率
+     * 优惠金额
      */
     private BigDecimal amount;
     
     /**
      * 使用门槛金额
      */
-    private BigDecimal threshold;
+    private BigDecimal minAmount;
+    
+    /**
+     * 折扣率（折扣券专用）
+     */
+    private BigDecimal discount;
+    
+    /**
+     * 发行数量（null表示不限量）
+     */
+    private Integer quantity;
+    
+    /**
+     * 每人限领数量（null表示不限制）
+     */
+    private Integer userLimit;
     
     /**
      * 开始时间
@@ -64,29 +79,12 @@ public class Coupon implements Serializable {
     private LocalDateTime endTime;
     
     /**
-     * 总数量
+     * 使用说明
      */
-    private Integer total;
+    private String description;
     
     /**
-     * 剩余数量
-     */
-    private Integer remain;
-    
-    /**
-     * 分类限制JSON
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<Long> categoryLimit;
-    
-    /**
-     * 商品限制JSON
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<Long> productLimit;
-    
-    /**
-     * 状态：0-禁用 1-启用
+     * 状态：0-未启用 1-已启用 2-已结束
      */
     private Integer status;
     
@@ -99,4 +97,10 @@ public class Coupon implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+    
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> categoryLimit;
+    
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> productLimit;
 } 
