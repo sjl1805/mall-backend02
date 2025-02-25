@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.common.api.CommonResult;
-import com.example.common.api.ResultCode;
+import com.example.common.CommonResult;
+import com.example.common.ResultCode;
 import com.example.model.entity.ProductReview;
 import com.example.service.ProductReviewService;
 import io.swagger.v3.oas.annotations.Operation;

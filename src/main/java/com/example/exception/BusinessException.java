@@ -1,21 +1,31 @@
-package com.example.common;
+package com.example.exception;
 
-import com.example.common.IResultCode;
+import lombok.Getter;
 
-class BusinessException extends RuntimeException {
-    private final IResultCode resultCode;
-
-    public BusinessException(IResultCode resultCode) {
-        super(resultCode.getMessage());
-        this.resultCode = resultCode;
-    }
-
-    public BusinessException(IResultCode resultCode, String message) {
+/**
+ * 自定义业务异常
+ */
+@Getter
+public class BusinessException extends RuntimeException {
+    
+    private Integer code;
+    
+    /**
+     * 使用默认错误码构造业务异常
+     * @param message 错误消息
+     */
+    public BusinessException(String message) {
         super(message);
-        this.resultCode = resultCode;
+        this.code = 500;
     }
-
-    public IResultCode getResultCode() {
-        return resultCode;
+    
+    /**
+     * 使用自定义错误码构造业务异常
+     * @param message 错误消息
+     * @param code 错误码
+     */
+    public BusinessException(String message, Integer code) {
+        super(message);
+        this.code = code;
     }
 } 

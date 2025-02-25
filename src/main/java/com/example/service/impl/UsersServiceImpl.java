@@ -3,13 +3,13 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.exception.UsernameExistsException;
 import com.example.mapper.UsersMapper;
 import com.example.model.dto.UserDTO;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
 import com.example.model.entity.Users;
 import com.example.service.UsersService;
+import com.example.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -53,14 +53,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
      *
      * @param userRegisterDTO 用户注册数据传输对象，包含用户名和密码
      * @return 注册成功返回true，失败返回false
-     * @throws UsernameExistsException 用户名已存在时抛出异常
+     * @throws  BusinessException 用户名已存在时抛出异常
      */
     @Override
     @Transactional
     public boolean register(UserRegisterDTO userRegisterDTO) {
         // 检查用户是否已存在
         if (checkUsernameExists(userRegisterDTO.getUsername())) {
-            throw new UsernameExistsException("用户名已存在");
+            throw new  BusinessException("用户名已存在");
         }
 
         // 创建新用户

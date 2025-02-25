@@ -2,8 +2,8 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.common.api.CommonResult;
-import com.example.common.api.ResultCode;
+import com.example.common.Result;
+import com.example.common.ResultCode;
 import com.example.model.dto.UserDTO;
 import com.example.model.dto.UserLoginDTO;
 import com.example.model.dto.UserRegisterDTO;
@@ -39,48 +39,48 @@ public class UsersController {
 
     @Operation(summary = "用户注册", description = "新用户注册接口，用户名不能重复")
     @PostMapping("/register")
-    public CommonResult<Boolean> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO) {
+    public Result<Boolean> register(@Valid @RequestBody UserRegisterDTO userRegisterDTO) {
         log.info("用户注册请求: {}", userRegisterDTO.getUsername());
         boolean result = usersService.register(userRegisterDTO);
         if (result) {
             log.info("用户注册成功: {}", userRegisterDTO.getUsername());
-            return CommonResult.success(true);
+            return Result.success(true);
         } else {
             log.warn("用户注册失败: {}", userRegisterDTO.getUsername());
-            return CommonResult.failed(ResultCode.USERNAME_EXISTED);
+            return Result.failed(ResultCode.USERNAME_EXISTED);
         }
     }
 
     @Operation(summary = "用户登录", description = "用户登录接口，返回用户信息")
     @PostMapping("/login")
-    public CommonResult<Users> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public Result<Users> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         log.info("用户登录请求: {}", userLoginDTO.getUsername());
         try {
             Users user = usersService.login(userLoginDTO);
             log.info("用户登录成功: {}", userLoginDTO.getUsername());
-            return CommonResult.success(user);
+            return Result.success(user);
         } catch (RuntimeException e) {
             log.warn("用户登录失败: {}, 原因: {}", userLoginDTO.getUsername(), e.getMessage());
-            return CommonResult.failed(ResultCode.LOGIN_FAILED, e.getMessage());
+            return Result.failed(ResultCode.LOGIN_FAILED, e.getMessage());
         }
     }
 
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户完整信息")
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
-    public CommonResult<Users> getUserInfo(
+    public Result<Users> getUserInfo(
             @Parameter(description = "用户ID", required = true) 
             @PathVariable Long userId) {
         log.info("获取用户信息请求: {}", userId);
         Users user = usersService.getUserById(userId);
-        return user != null ? CommonResult.success(user) :
-                CommonResult.failed(ResultCode.USER_NOT_FOUND);
+        return user != null ? Result.success(user) :
+                Result.failed(ResultCode.USER_NOT_FOUND);
     }
 
     @Operation(summary = "用户分页列表", description = "管理员查询用户列表，支持分页")
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
-    public CommonResult<IPage<Users>> getUserList(
+    public Result<IPage<Users>> getUserList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "每页数量") 
