@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,6 @@ public class OrderItemController {
 
     @Operation(summary = "根据订单ID查询订单商品", description = "获取指定订单的所有商品")
     @GetMapping("/order/{orderId}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectById(#orderId)?.userId == authentication.principal.id")
     public  Result<List<OrderItem>> getItemsByOrderId(
             @Parameter(description = "订单ID", required = true) @PathVariable Long orderId) {
         log.info("根据订单ID查询订单商品请求: orderId={}", orderId);
@@ -51,7 +49,6 @@ public class OrderItemController {
 
     @Operation(summary = "分页查询订单商品", description = "管理员分页查询所有订单商品")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<OrderItem>> getOrderItemList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -66,7 +63,6 @@ public class OrderItemController {
 
     @Operation(summary = "根据ID查询订单商品", description = "获取特定订单商品的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @orderItemService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<OrderItem> getOrderItemById(
             @Parameter(description = "订单商品ID", required = true) @PathVariable Long id) {
         log.info("根据ID查询订单商品请求: id={}", id);
@@ -82,7 +78,6 @@ public class OrderItemController {
 
     @Operation(summary = "新增订单商品", description = "添加新的订单商品")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addOrderItem(@Valid @RequestBody OrderItem orderItem) {
         log.info("新增订单商品请求: orderId={}, productId={}, quantity={}", 
                 orderItem.getOrderId(), orderItem.getProductId(), orderItem.getQuantity());
@@ -107,7 +102,6 @@ public class OrderItemController {
 
     @Operation(summary = "更新订单商品", description = "更新现有订单商品信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateOrderItem(@Valid @RequestBody OrderItem orderItem) {
         log.info("更新订单商品请求: id={}", orderItem.getId());
         
@@ -134,7 +128,6 @@ public class OrderItemController {
 
     @Operation(summary = "根据ID删除订单商品", description = "删除指定的订单商品")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteOrderItem(
             @Parameter(description = "订单商品ID", required = true) @PathVariable Long id) {
         log.info("删除订单商品请求: id={}", id);
@@ -158,7 +151,6 @@ public class OrderItemController {
     
     @Operation(summary = "批量插入订单项", description = "批量添加多个订单商品")
     @PostMapping("/batch/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchInsertOrderItems(@Valid @RequestBody List<OrderItem> orderItems) {
         log.info("批量插入订单项请求: count={}", orderItems.size());
         
@@ -179,7 +171,6 @@ public class OrderItemController {
     
     @Operation(summary = "根据订单ID删除订单项", description = "删除指定订单的所有订单项")
     @DeleteMapping("/order/{orderId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteByOrderId(
             @Parameter(description = "订单ID", required = true) @PathVariable Long orderId) {
         log.info("根据订单ID删除订单项请求: orderId={}", orderId);
@@ -196,7 +187,6 @@ public class OrderItemController {
     
     @Operation(summary = "根据商品ID查询订单项", description = "获取包含指定商品的所有订单项")
     @GetMapping("/product/{productId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<OrderItem>> getItemsByProductId(
             @Parameter(description = "商品ID", required = true) @PathVariable Long productId) {
         log.info("根据商品ID查询订单项请求: productId={}", productId);
@@ -254,7 +244,6 @@ public class OrderItemController {
     
     @Operation(summary = "获取订单项详情", description = "获取订单项详情，包含商品信息")
     @GetMapping("/details/{orderId}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectById(#orderId)?.userId == authentication.principal.id")
     public  Result<List<Map<String, Object>>> getOrderItemsWithProductDetails(
             @Parameter(description = "订单ID", required = true) @PathVariable Long orderId) {
         log.info("获取订单项详情请求: orderId={}", orderId);
@@ -265,7 +254,6 @@ public class OrderItemController {
     
     @Operation(summary = "更新订单项的评价状态", description = "更新订单项的评价状态")
     @PutMapping("/{id}/review-status/{reviewStatus}")
-    @PreAuthorize("hasRole('ADMIN') or @orderItemService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> updateReviewStatus(
             @Parameter(description = "订单项ID", required = true) @PathVariable Long id,
             @Parameter(description = "评价状态: 0-未评价 1-已评价", required = true) @PathVariable Integer reviewStatus) {
@@ -296,7 +284,6 @@ public class OrderItemController {
     
     @Operation(summary = "更新订单项的退款状态", description = "更新订单项的退款状态")
     @PutMapping("/{id}/refund-status/{refundStatus}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateRefundStatus(
             @Parameter(description = "订单项ID", required = true) @PathVariable Long id,
             @Parameter(description = "退款状态: 0-未申请 1-申请中 2-已退款 3-已拒绝", required = true) @PathVariable Integer refundStatus) {
@@ -327,7 +314,6 @@ public class OrderItemController {
     
     @Operation(summary = "获取用户购买过的商品ID列表", description = "获取用户历史购买的商品ID列表")
     @GetMapping("/user/{userId}/products")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Long>> getUserPurchasedProductIds(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "限制数量") @RequestParam(defaultValue = "20") Integer limit) {
@@ -345,7 +331,6 @@ public class OrderItemController {
     
     @Operation(summary = "获取订单项状态汇总", description = "获取订单项的状态统计数据")
     @GetMapping("/status-summary/{orderId}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectById(#orderId)?.userId == authentication.principal.id")
     public  Result<Map<String, Object>> getOrderItemStatusSummary(
             @Parameter(description = "订单ID", required = true) @PathVariable Long orderId) {
         log.info("获取订单项状态汇总请求: orderId={}", orderId);

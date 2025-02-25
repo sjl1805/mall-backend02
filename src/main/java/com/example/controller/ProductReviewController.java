@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,6 @@ public class ProductReviewController {
 
     @Operation(summary = "分页查询商品评价", description = "管理员分页查询所有商品评价")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<ProductReview>> getReviewList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -77,7 +75,6 @@ public class ProductReviewController {
 
     @Operation(summary = "新增商品评价", description = "用户添加商品评价")
     @PostMapping("/add")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> addProductReview(@Valid @RequestBody ProductReview productReview) {
         log.info("新增商品评价请求: userId={}, productId={}, rating={}", 
                 productReview.getUserId(), productReview.getProductId(), productReview.getRating());
@@ -108,7 +105,6 @@ public class ProductReviewController {
 
     @Operation(summary = "更新商品评价", description = "用户修改自己的评价或管理员修改任意评价")
     @PutMapping("/update")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> updateProductReview(@Valid @RequestBody ProductReview productReview) {
         log.info("更新商品评价请求: id={}", productReview.getId());
         
@@ -149,7 +145,6 @@ public class ProductReviewController {
 
     @Operation(summary = "根据ID删除商品评价", description = "用户删除自己的评价或管理员删除任意评价")
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> deleteProductReview(
             @Parameter(description = "评价ID", required = true) @PathVariable Long id) {
         log.info("删除商品评价请求: id={}", id);
@@ -219,7 +214,6 @@ public class ProductReviewController {
     
     @Operation(summary = "查询用户所有评价", description = "获取指定用户发表的所有评价")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<ProductReview>> selectByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("查询用户所有评价请求: userId={}", userId);
@@ -230,7 +224,6 @@ public class ProductReviewController {
     
     @Operation(summary = "批量更新评价状态", description = "管理员批量更新评价状态")
     @PutMapping("/batch/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchUpdateStatus(
             @RequestBody List<Long> ids,
             @Parameter(description = "新状态: 0-待审核 1-通过 2-拒绝", required = true) @PathVariable Integer status) {
@@ -259,7 +252,6 @@ public class ProductReviewController {
     
     @Operation(summary = "分页查询待审核评价", description = "管理员分页查询待审核的评价")
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<ProductReview>> selectPendingReviews(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -305,7 +297,6 @@ public class ProductReviewController {
     
     @Operation(summary = "回复商品评价", description = "管理员回复用户评价")
     @PostMapping("/{reviewId}/reply")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> replyReview(
             @Parameter(description = "评价ID", required = true) @PathVariable Long reviewId,
             @RequestBody Map<String, String> replyMap) {

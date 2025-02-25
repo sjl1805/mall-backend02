@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +50,6 @@ public class CouponController {
 
     @Operation(summary = "分页查询优惠券", description = "管理员分页查询所有优惠券")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<Coupon>> getCouponList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -81,7 +79,6 @@ public class CouponController {
 
     @Operation(summary = "新增优惠券", description = "创建新的优惠券")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addCoupon(@Valid @RequestBody Coupon coupon) {
         log.info("新增优惠券请求: name={}, type={}, value={}", 
                 coupon.getName(), coupon.getType(), coupon.getValue());
@@ -109,7 +106,6 @@ public class CouponController {
 
     @Operation(summary = "更新优惠券", description = "更新现有优惠券信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateCoupon(@Valid @RequestBody Coupon coupon) {
         log.info("更新优惠券请求: id={}", coupon.getId());
         
@@ -136,7 +132,6 @@ public class CouponController {
 
     @Operation(summary = "根据ID删除优惠券", description = "删除指定的优惠券")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteCoupon(
             @Parameter(description = "优惠券ID", required = true) @PathVariable Long id) {
         log.info("删除优惠券请求: id={}", id);
@@ -160,7 +155,6 @@ public class CouponController {
 
     @Operation(summary = "设置优惠券有效期", description = "设置优惠券的开始和结束时间")
     @PutMapping("/setValidity/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> setCouponValidity(
             @Parameter(description = "优惠券ID", required = true) @PathVariable Long id,
             @Parameter(description = "开始时间，格式：yyyy-MM-dd HH:mm:ss", required = true) 
@@ -193,7 +187,6 @@ public class CouponController {
 
     @Operation(summary = "设置使用条件", description = "设置优惠券的最低使用金额")
     @PutMapping("/setConditions/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> setCouponConditions(
             @Parameter(description = "优惠券ID", required = true) @PathVariable Long id,
             @Parameter(description = "最低使用金额", required = true) 
@@ -320,7 +313,6 @@ public class CouponController {
     
     @Operation(summary = "获取优惠券使用统计", description = "统计指定时间段内的优惠券使用情况")
     @GetMapping("/statistics")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Map<String, Object>>> getCouponStatistics(
             @Parameter(description = "开始日期") 
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -341,7 +333,6 @@ public class CouponController {
     
     @Operation(summary = "获取热门优惠券排行", description = "获取领取量最多的优惠券排行榜")
     @GetMapping("/popular")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Map<String, Object>>> getPopularCoupons(
             @Parameter(description = "限制数量") 
             @RequestParam(defaultValue = "10") Integer limit) {
@@ -360,7 +351,6 @@ public class CouponController {
     
     @Operation(summary = "批量更新优惠券状态", description = "批量修改多个优惠券的状态")
     @PutMapping("/batch/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchUpdateStatus(
             @RequestBody List<Long> ids,
             @Parameter(description = "状态: 0-无效 1-有效", required = true) 
@@ -390,7 +380,6 @@ public class CouponController {
     
     @Operation(summary = "批量删除优惠券", description = "批量删除多个优惠券")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDelete(@RequestBody List<Long> ids) {
         log.info("批量删除优惠券请求: ids={}", ids);
         
@@ -422,7 +411,6 @@ public class CouponController {
     
     @Operation(summary = "按条件高级查询优惠券", description = "根据多条件组合查询优惠券")
     @PostMapping("/advancedSearch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Coupon>> advancedSearch(@RequestBody Map<String, Object> params) {
         log.info("按条件高级查询优惠券请求: params={}", params);
         List<Coupon> coupons = couponService.advancedSearch(params);
@@ -432,7 +420,6 @@ public class CouponController {
     
     @Operation(summary = "计算优惠券发放效果", description = "统计优惠券的发放量、使用量、使用率等")
     @GetMapping("/effectiveness/{couponId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Map<String, Object>> calculateCouponEffectiveness(
             @Parameter(description = "优惠券ID", required = true) @PathVariable Long couponId) {
         log.info("计算优惠券发放效果请求: couponId={}", couponId);
@@ -451,7 +438,6 @@ public class CouponController {
     
     @Operation(summary = "自动失效过期优惠券", description = "将已过期但状态仍为有效的优惠券状态更新为失效")
     @PostMapping("/expireOutdated")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Integer> expireOutdatedCoupons() {
         log.info("自动失效过期优惠券请求");
         int count = couponService.expireOutdatedCoupons();
@@ -479,7 +465,6 @@ public class CouponController {
     
     @Operation(summary = "批量发放优惠券给用户", description = "将指定优惠券批量发放给多个用户")
     @PostMapping("/batchIssue")
-    @PreAuthorize("hasRole('ADMIN')")
     public Result<Integer> batchIssueCoupons(@RequestBody Map<String, Object> params) {
         Long couponId = Long.valueOf(params.get("couponId").toString());
         

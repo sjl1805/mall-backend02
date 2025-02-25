@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +76,6 @@ public class ProductsController {
 
     @Operation(summary = "新增商品", description = "添加新的商品")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addProduct(@Valid @RequestBody Products product) {
         log.info("新增商品请求: name={}, categoryId={}", product.getName(), product.getCategoryId());
         boolean result = productsService.insertProduct(product);
@@ -92,7 +90,6 @@ public class ProductsController {
 
     @Operation(summary = "更新商品", description = "更新现有商品信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateProduct(@Valid @RequestBody Products product) {
         log.info("更新商品请求: id={}", product.getId());
         boolean result = productsService.updateProduct(product);
@@ -107,7 +104,6 @@ public class ProductsController {
 
     @Operation(summary = "根据ID删除商品", description = "删除指定的商品")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteProduct(
             @Parameter(description = "商品ID", required = true) @PathVariable Long id) {
         log.info("删除商品请求: id={}", id);
@@ -169,7 +165,6 @@ public class ProductsController {
     
     @Operation(summary = "更新商品库存", description = "增加或减少商品库存")
     @PutMapping("/{id}/stock/{quantity}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateStock(
             @Parameter(description = "商品ID", required = true) @PathVariable Long id,
             @Parameter(description = "变动数量（正数增加，负数减少）", required = true) @PathVariable Integer quantity) {
@@ -186,7 +181,6 @@ public class ProductsController {
     
     @Operation(summary = "批量更新商品状态", description = "批量更新商品的上架、下架状态")
     @PutMapping("/batch/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchUpdateStatus(
             @Parameter(description = "商品ID列表", required = true) @RequestBody List<Long> ids,
             @Parameter(description = "状态值: 0-下架 1-上架", required = true) @PathVariable Integer status) {
@@ -251,7 +245,6 @@ public class ProductsController {
     
     @Operation(summary = "批量导入商品", description = "批量导入商品数据")
     @PostMapping("/batch/import")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Integer> batchImportProducts(@Valid @RequestBody List<Products> productList) {
         log.info("批量导入商品请求: count={}", productList.size());
         
@@ -267,7 +260,6 @@ public class ProductsController {
     
     @Operation(summary = "导出商品数据", description = "导出符合条件的商品数据")
     @GetMapping("/export")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Products>> exportProducts(
             @Parameter(description = "分类ID") @RequestParam(required = false) Long categoryId,
             @Parameter(description = "关键词") @RequestParam(required = false) String keyword) {

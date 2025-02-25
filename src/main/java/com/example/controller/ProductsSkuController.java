@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +45,6 @@ public class ProductsSkuController {
 
     @Operation(summary = "分页查询SKU", description = "管理员分页查询所有SKU信息")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<ProductSku>> getSkuList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -76,7 +74,6 @@ public class ProductsSkuController {
 
     @Operation(summary = "新增SKU", description = "添加新的商品SKU")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addProductSku(@Valid @RequestBody ProductSku productSku) {
         log.info("新增SKU请求: productId={}", productSku.getProductId());
         
@@ -105,7 +102,6 @@ public class ProductsSkuController {
 
     @Operation(summary = "更新SKU", description = "更新现有SKU信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateProductSku(@Valid @RequestBody ProductSku productSku) {
         log.info("更新SKU请求: id={}", productSku.getId());
         
@@ -137,7 +133,6 @@ public class ProductsSkuController {
 
     @Operation(summary = "根据ID删除SKU", description = "删除指定的SKU")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteProductSku(
             @Parameter(description = "SKU ID", required = true) @PathVariable Long id) {
         log.info("删除SKU请求: id={}", id);
@@ -161,7 +156,6 @@ public class ProductsSkuController {
     
     @Operation(summary = "批量添加SKU", description = "批量添加多个SKU记录")
     @PostMapping("/batch/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchAddProductSkus(@Valid @RequestBody List<ProductSku> skuList) {
         log.info("批量添加SKU请求: count={}", skuList.size());
         
@@ -190,7 +184,6 @@ public class ProductsSkuController {
     
     @Operation(summary = "更新SKU库存", description = "增加或减少SKU的库存")
     @PutMapping("/{id}/stock/{quantity}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateSkuStock(
             @Parameter(description = "SKU ID", required = true) @PathVariable Long id,
             @Parameter(description = "变动数量（正数增加，负数减少）", required = true) @PathVariable Integer quantity) {
@@ -224,7 +217,6 @@ public class ProductsSkuController {
     
     @Operation(summary = "批量删除SKU", description = "批量删除多个SKU记录")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDeleteProductSkus(@RequestBody List<Long> ids) {
         log.info("批量删除SKU请求: ids={}", ids);
         

@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,6 @@ public class UserAddressController {
 
     @Operation(summary = "根据用户ID查询收货地址", description = "获取指定用户的所有收货地址")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<UserAddress>> getAddressesByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户收货地址列表请求: userId={}", userId);
@@ -47,7 +45,6 @@ public class UserAddressController {
 
     @Operation(summary = "分页查询收货地址", description = "管理员分页查询所有用户收货地址")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<UserAddress>> getAddressList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -62,7 +59,6 @@ public class UserAddressController {
 
     @Operation(summary = "根据ID查询收货地址", description = "获取特定收货地址的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userAddressService.checkAddressOwnership(authentication.principal.id, #id)")
     public  Result<UserAddress> getAddressById(
             @Parameter(description = "收货地址ID", required = true) @PathVariable Long id) {
         log.info("查询收货地址详情请求: id={}", id);
@@ -78,7 +74,6 @@ public class UserAddressController {
 
     @Operation(summary = "新增收货地址", description = "添加新的收货地址")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userAddress.userId")
     public  Result<Boolean> addUserAddress(@Valid @RequestBody UserAddress userAddress) {
         log.info("新增收货地址请求: userId={}, receiverName={}", userAddress.getUserId(), userAddress.getReceiverName());
         
@@ -100,7 +95,6 @@ public class UserAddressController {
 
     @Operation(summary = "更新收货地址", description = "修改现有收货地址信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN') or @userAddressService.checkAddressOwnership(authentication.principal.id, #userAddress.id)")
     public  Result<Boolean> updateUserAddress(@Valid @RequestBody UserAddress userAddress) {
         log.info("更新收货地址请求: id={}", userAddress.getId());
         
@@ -122,7 +116,6 @@ public class UserAddressController {
 
     @Operation(summary = "根据ID删除收货地址", description = "删除指定的收货地址")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userAddressService.checkAddressOwnership(authentication.principal.id, #id)")
     public  Result<Boolean> deleteUserAddress(
             @Parameter(description = "收货地址ID", required = true) @PathVariable Long id) {
         log.info("删除收货地址请求: id={}", id);
@@ -138,7 +131,6 @@ public class UserAddressController {
     
     @Operation(summary = "获取用户默认收货地址", description = "获取用户设置的默认收货地址")
     @GetMapping("/default/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<UserAddress> getDefaultAddress(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户默认收货地址请求: userId={}", userId);
@@ -154,7 +146,6 @@ public class UserAddressController {
     
     @Operation(summary = "设置默认收货地址", description = "将指定地址设置为用户的默认收货地址")
     @PutMapping("/{userId}/default/{addressId}")
-    @PreAuthorize("hasRole('ADMIN') or (authentication.principal.id == #userId and @userAddressService.checkAddressOwnership(#userId, #addressId))")
     public  Result<Boolean> setDefaultAddress(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "地址ID", required = true) @PathVariable Long addressId) {
@@ -178,7 +169,6 @@ public class UserAddressController {
     
     @Operation(summary = "按地区查询收货地址", description = "根据省份和城市查询用户收货地址")
     @GetMapping("/region/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<UserAddress>> getAddressesByRegion(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "省份") @RequestParam String province,
@@ -192,7 +182,6 @@ public class UserAddressController {
     
     @Operation(summary = "获取用户常用地址", description = "获取用户使用频率最高的几个地址")
     @GetMapping("/frequent/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<UserAddress>> getFrequentlyUsedAddresses(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "限制数量") @RequestParam(required = false) Integer limit) {
@@ -204,7 +193,6 @@ public class UserAddressController {
     
     @Operation(summary = "获取用户最近使用的地址", description = "获取用户最近一次使用的收货地址")
     @GetMapping("/recent/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<UserAddress> getRecentlyUsedAddress(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户最近使用的地址请求: userId={}", userId);
@@ -220,7 +208,6 @@ public class UserAddressController {
     
     @Operation(summary = "批量删除收货地址", description = "批量删除指定的收货地址")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDeleteAddresses(@RequestBody List<Long> ids) {
         log.info("批量删除收货地址请求: ids={}", ids);
         
@@ -241,7 +228,6 @@ public class UserAddressController {
     
     @Operation(summary = "检查地址是否属于用户", description = "验证指定地址是否属于该用户")
     @GetMapping("/check/{userId}/{addressId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> checkAddressOwnership(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "地址ID", required = true) @PathVariable Long addressId) {
@@ -253,7 +239,6 @@ public class UserAddressController {
     
     @Operation(summary = "复制地址", description = "复制现有地址为新地址，便于快速创建相似地址")
     @PostMapping("/copy")
-    @PreAuthorize("hasRole('ADMIN') or @userAddressService.checkAddressOwnership(authentication.principal.id, #params.get('addressId'))")
     public  Result<UserAddress> copyAddress(@RequestBody Map<String, Object> params) {
         Long addressId = Long.valueOf(params.get("addressId").toString());
         String newAddressName = params.get("newAddressName").toString();

@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class CartController {
 
     @Operation(summary = "根据用户ID查询购物车", description = "获取指定用户的所有购物车商品")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public Result<List<Cart>> getCartsByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("根据用户ID查询购物车请求: userId={}", userId);
@@ -49,7 +47,6 @@ public class CartController {
 
     @Operation(summary = "分页查询购物车", description = "管理员分页查询特定用户的购物车")
     @GetMapping("/list/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<IPage<Cart>> getCartList(
             @Parameter(description = "页码")
             @RequestParam(defaultValue = "1") int page,
@@ -65,7 +62,6 @@ public class CartController {
 
     @Operation(summary = "根据ID查询购物车", description = "获取特定购物车记录的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @cartService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Cart> getCartById(
             @Parameter(description = "购物车ID", required = true) @PathVariable Long id) {
         log.info("根据ID查询购物车请求: id={}", id);
@@ -81,7 +77,6 @@ public class CartController {
 
     @Operation(summary = "新增购物车", description = "添加商品到购物车")
     @PostMapping("/add")
-    @PreAuthorize("isAuthenticated() and authentication.principal.id == #cart.userId")
     public  Result<Boolean> addCart(@Valid @RequestBody Cart cart) {
         log.info("新增购物车请求: userId={}, productId={}, quantity={}",
                 cart.getUserId(), cart.getProductId(), cart.getQuantity());
@@ -111,7 +106,6 @@ public class CartController {
 
     @Operation(summary = "更新购物车", description = "更新购物车商品信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #cart.userId")
     public  Result<Boolean> updateCart(@Valid @RequestBody Cart cart) {
         log.info("更新购物车请求: id={}", cart.getId());
 
@@ -145,7 +139,6 @@ public class CartController {
 
     @Operation(summary = "根据ID删除购物车", description = "从购物车中移除指定商品")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @cartService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> deleteCart(
             @Parameter(description = "购物车ID", required = true) @PathVariable Long id) {
         log.info("删除购物车请求: id={}", id);
@@ -169,7 +162,6 @@ public class CartController {
 
     @Operation(summary = "根据用户ID和商品ID查询购物车商品", description = "检查用户购物车中是否已有特定商品")
     @GetMapping("/check/{userId}/{productId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Cart> getCartByUserIdAndProductId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "商品ID", required = true) @PathVariable Long productId) {
@@ -186,7 +178,6 @@ public class CartController {
 
     @Operation(summary = "获取购物车商品详情", description = "获取购物车商品详情，包含商品信息")
     @GetMapping("/detail/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Map<String, Object>>> getCartDetail(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取购物车商品详情请求: userId={}", userId);
@@ -197,7 +188,6 @@ public class CartController {
 
     @Operation(summary = "更新购物车商品数量", description = "修改购物车中商品的数量")
     @PutMapping("/{id}/quantity/{quantity}")
-    @PreAuthorize("hasRole('ADMIN') or @cartService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> updateQuantity(
             @Parameter(description = "购物车ID", required = true) @PathVariable Long id,
             @Parameter(description = "商品数量", required = true) @PathVariable Integer quantity) {
@@ -228,7 +218,6 @@ public class CartController {
 
     @Operation(summary = "更新购物车商品选中状态", description = "更新购物车中商品的选中状态")
     @PutMapping("/{id}/checked/{checked}")
-    @PreAuthorize("hasRole('ADMIN') or @cartService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> updateChecked(
             @Parameter(description = "购物车ID", required = true) @PathVariable Long id,
             @Parameter(description = "选中状态: 0-未选中 1-已选中", required = true) @PathVariable Integer checked) {
@@ -259,7 +248,6 @@ public class CartController {
 
     @Operation(summary = "全选/取消全选购物车商品", description = "全选或取消全选用户购物车中的所有商品")
     @PutMapping("/all-checked/{userId}/{checked}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> updateAllChecked(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "选中状态: 0-未选中 1-已选中", required = true) @PathVariable Integer checked) {
@@ -283,7 +271,6 @@ public class CartController {
 
     @Operation(summary = "查询用户选中的购物车商品", description = "获取用户购物车中已勾选的商品")
     @GetMapping("/checked/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Cart>> getCheckedCartsByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("查询用户选中的购物车商品请求: userId={}", userId);
@@ -294,7 +281,6 @@ public class CartController {
 
     @Operation(summary = "获取选中商品详情", description = "获取已选中商品的详细信息，用于订单确认")
     @GetMapping("/checked-detail/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Map<String, Object>>> getCheckedCartDetail(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取选中商品详情请求: userId={}", userId);
@@ -305,7 +291,6 @@ public class CartController {
 
     @Operation(summary = "清空用户购物车", description = "清空用户的整个购物车")
     @DeleteMapping("/clear/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> clearCart(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("清空用户购物车请求: userId={}", userId);
@@ -321,7 +306,6 @@ public class CartController {
 
     @Operation(summary = "删除选中的购物车商品", description = "删除用户购物车中已勾选的商品")
     @DeleteMapping("/delete-checked/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> deleteChecked(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("删除选中的购物车商品请求: userId={}", userId);
@@ -337,7 +321,6 @@ public class CartController {
 
     @Operation(summary = "批量删除购物车商品", description = "批量删除多个购物车商品")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN') or isCurrentUserOwnAllCarts(#ids)")
     public  Result<Boolean> batchDelete(@RequestBody List<Long> ids) {
         log.info("批量删除购物车商品请求: ids={}", ids);
 
@@ -359,7 +342,6 @@ public class CartController {
 
     @Operation(summary = "统计用户购物车商品数量", description = "获取用户购物车中的商品总数")
     @GetMapping("/count/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Integer> countByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("统计用户购物车商品数量请求: userId={}", userId);
@@ -370,7 +352,6 @@ public class CartController {
 
     @Operation(summary = "添加或更新购物车", description = "添加商品到购物车或更新已有商品的数量")
     @PostMapping("/add-or-update")
-    @PreAuthorize("isAuthenticated() and authentication.principal.id == #userId")
     public  Result<Boolean> addOrUpdateCart(
             @Parameter(description = "用户ID", required = true) @RequestParam Long userId,
             @Parameter(description = "商品ID", required = true) @RequestParam Long productId,
@@ -395,7 +376,6 @@ public class CartController {
 
     @Operation(summary = "计算购物车选中商品价格", description = "计算用户购物车中已勾选商品的总价")
     @GetMapping("/calculate/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<BigDecimal> calculateCheckedAmount(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("计算购物车选中商品价格请求: userId={}", userId);

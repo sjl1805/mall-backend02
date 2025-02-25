@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +34,6 @@ public class RecommendProductController {
 
     @Operation(summary = "根据用户ID查询推荐商品", description = "获取特定用户的个性化推荐商品")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<RecommendProduct>> getProductsByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户推荐商品请求: userId={}", userId);
@@ -46,7 +44,6 @@ public class RecommendProductController {
 
     @Operation(summary = "分页查询推荐商品", description = "管理员分页查询所有推荐商品")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<RecommendProduct>> getRecommendProductList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -76,7 +73,6 @@ public class RecommendProductController {
 
     @Operation(summary = "新增推荐商品", description = "添加新的推荐商品")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addRecommendProduct(@Valid @RequestBody RecommendProduct recommendProduct) {
         log.info("新增推荐商品请求: productId={}, type={}", recommendProduct.getProductId(), recommendProduct.getType());
         boolean result = recommendProductService.insertRecommendProduct(recommendProduct);
@@ -91,7 +87,6 @@ public class RecommendProductController {
 
     @Operation(summary = "更新推荐商品", description = "更新现有推荐商品信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateRecommendProduct(@Valid @RequestBody RecommendProduct recommendProduct) {
         log.info("更新推荐商品请求: id={}", recommendProduct.getId());
         boolean result = recommendProductService.updateRecommendProduct(recommendProduct);
@@ -106,7 +101,6 @@ public class RecommendProductController {
 
     @Operation(summary = "根据ID删除推荐商品", description = "删除指定的推荐商品")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteRecommendProduct(
             @Parameter(description = "推荐商品ID", required = true) @PathVariable Long id) {
         log.info("删除推荐商品请求: id={}", id);
@@ -153,7 +147,6 @@ public class RecommendProductController {
     
     @Operation(summary = "更新推荐商品状态", description = "启用或禁用推荐商品")
     @PutMapping("/{id}/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateRecommendStatus(
             @Parameter(description = "推荐商品ID", required = true) @PathVariable Long id,
             @Parameter(description = "新状态: 0-禁用 1-启用", required = true) @PathVariable Integer status) {
@@ -177,7 +170,6 @@ public class RecommendProductController {
     
     @Operation(summary = "生成个性化推荐", description = "基于用户行为生成个性化商品推荐")
     @GetMapping("/personalized/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<RecommendProduct>> generatePersonalizedRecommends(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "推荐数量") @RequestParam(defaultValue = "10") Integer limit) {
@@ -200,7 +192,6 @@ public class RecommendProductController {
     
     @Operation(summary = "生成猜你喜欢推荐", description = "根据用户历史行为生成猜你喜欢推荐")
     @GetMapping("/youmaylike/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<RecommendProduct>> generateYouMayLikeRecommends(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "推荐数量") @RequestParam(defaultValue = "10") Integer limit) {
@@ -223,7 +214,6 @@ public class RecommendProductController {
     
     @Operation(summary = "批量更新推荐商品状态", description = "批量启用或禁用推荐商品")
     @PutMapping("/batch/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchUpdateStatus(
             @RequestBody List<Long> ids,
             @Parameter(description = "新状态: 0-禁用 1-启用", required = true) @PathVariable Integer status) {

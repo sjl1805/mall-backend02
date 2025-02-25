@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +38,6 @@ public class OrdersController {
 
     @Operation(summary = "根据用户ID查询订单", description = "获取指定用户的所有订单")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Orders>> getOrdersByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("根据用户ID查询订单请求: userId={}", userId);
@@ -50,7 +48,6 @@ public class OrdersController {
 
     @Operation(summary = "分页查询订单", description = "管理员分页查询所有订单")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<Orders>> getOrderList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -65,7 +62,6 @@ public class OrdersController {
 
     @Operation(summary = "根据ID查询订单", description = "获取特定订单的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Orders> getOrderById(
             @Parameter(description = "订单ID", required = true) @PathVariable Long id) {
         log.info("根据ID查询订单请求: id={}", id);
@@ -81,7 +77,6 @@ public class OrdersController {
 
     @Operation(summary = "新增订单", description = "创建新的订单")
     @PostMapping("/add")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> addOrder(@Valid @RequestBody Orders order) {
         log.info("新增订单请求: userId={}, totalAmount={}", order.getUserId(), order.getTotalAmount());
         
@@ -103,7 +98,6 @@ public class OrdersController {
 
     @Operation(summary = "更新订单", description = "更新现有订单信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateOrder(@Valid @RequestBody Orders order) {
         log.info("更新订单请求: id={}", order.getId());
         
@@ -125,7 +119,6 @@ public class OrdersController {
 
     @Operation(summary = "根据ID删除订单", description = "删除指定的订单（通常为软删除）")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteOrder(
             @Parameter(description = "订单ID", required = true) @PathVariable Long id) {
         log.info("删除订单请求: id={}", id);
@@ -149,7 +142,6 @@ public class OrdersController {
     
     @Operation(summary = "根据订单号查询订单", description = "通过订单编号获取订单详情")
     @GetMapping("/no/{orderNo}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectByOrderNo(#orderNo)?.userId == authentication.principal.id")
     public  Result<Orders> getOrderByOrderNo(
             @Parameter(description = "订单号", required = true) @PathVariable String orderNo) {
         log.info("根据订单号查询订单请求: orderNo={}", orderNo);
@@ -165,7 +157,6 @@ public class OrdersController {
     
     @Operation(summary = "根据订单状态查询", description = "查询特定状态的所有订单")
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Orders>> getOrdersByStatus(
             @Parameter(description = "订单状态", required = true) @PathVariable Integer status) {
         log.info("根据订单状态查询请求: status={}", status);
@@ -176,7 +167,6 @@ public class OrdersController {
     
     @Operation(summary = "查询用户特定状态的订单", description = "获取用户的特定状态订单")
     @GetMapping("/user/{userId}/status/{status}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Orders>> getOrdersByUserIdAndStatus(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "订单状态", required = true) @PathVariable Integer status) {
@@ -188,7 +178,6 @@ public class OrdersController {
     
     @Operation(summary = "根据时间范围查询订单", description = "按时间段查询订单数据")
     @GetMapping("/time")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Orders>> getOrdersByTimeRange(
             @Parameter(description = "开始时间") 
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
@@ -209,7 +198,6 @@ public class OrdersController {
     
     @Operation(summary = "获取订单统计数据", description = "获取订单统计数据，管理员可查看所有用户，普通用户只能查看自己的")
     @GetMapping("/statistics")
-    @PreAuthorize("isAuthenticated()")
     public  Result<List<Map<String, Object>>> getOrderStatistics(
             @Parameter(description = "用户ID（可选，管理员可不传）") @RequestParam(required = false) Long userId) {
         log.info("获取订单统计数据请求: userId={}", userId);
@@ -227,7 +215,6 @@ public class OrdersController {
     
     @Operation(summary = "查询最近创建的订单", description = "获取系统中最近创建的订单")
     @GetMapping("/recent")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Orders>> getRecentOrders(
             @Parameter(description = "限制数量") @RequestParam(defaultValue = "10") Integer limit) {
         log.info("查询最近创建的订单请求: limit={}", limit);
@@ -238,7 +225,6 @@ public class OrdersController {
     
     @Operation(summary = "更新订单支付信息", description = "更新订单的支付状态和支付方式")
     @PutMapping("/payment")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updatePaymentInfo(
             @RequestBody Map<String, Object> params) {
         String orderNo = (String) params.get("orderNo");
@@ -277,7 +263,6 @@ public class OrdersController {
     
     @Operation(summary = "更新订单物流信息", description = "更新订单的物流公司和运单号")
     @PutMapping("/shipping")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateShippingInfo(
             @RequestBody Map<String, String> params) {
         String orderNo = params.get("orderNo");
@@ -322,7 +307,6 @@ public class OrdersController {
     
     @Operation(summary = "查询订单详情", description = "获取订单的完整信息，包括订单项")
     @GetMapping("/detail/{orderNo}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectByOrderNo(#orderNo)?.userId == authentication.principal.id")
     public  Result<Map<String, Object>> getOrderDetail(
             @Parameter(description = "订单号", required = true) @PathVariable String orderNo) {
         log.info("查询订单详情请求: orderNo={}", orderNo);
@@ -338,7 +322,6 @@ public class OrdersController {
     
     @Operation(summary = "取消订单", description = "取消未支付订单")
     @PostMapping("/cancel")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectByOrderNo(#params.get('orderNo'))?.userId == authentication.principal.id")
     public  Result<Boolean> cancelOrder(
             @RequestBody Map<String, String> params) {
         String orderNo = params.get("orderNo");
@@ -377,7 +360,6 @@ public class OrdersController {
     
     @Operation(summary = "确认收货", description = "用户确认已收到商品")
     @PostMapping("/receive/{orderNo}")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectByOrderNo(#orderNo)?.userId == authentication.principal.id")
     public  Result<Boolean> confirmReceive(
             @Parameter(description = "订单号", required = true) @PathVariable String orderNo) {
         log.info("确认收货请求: orderNo={}", orderNo);
@@ -407,7 +389,6 @@ public class OrdersController {
     
     @Operation(summary = "申请退款", description = "用户申请订单退款")
     @PostMapping("/refund")
-    @PreAuthorize("hasRole('ADMIN') or @ordersService.selectByOrderNo(#params.get('orderNo'))?.userId == authentication.principal.id")
     public  Result<Boolean> applyRefund(
             @RequestBody Map<String, String> params) {
         String orderNo = params.get("orderNo");
@@ -446,7 +427,6 @@ public class OrdersController {
     
     @Operation(summary = "完成订单", description = "管理员手动完成订单")
     @PostMapping("/complete/{orderNo}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> completeOrder(
             @Parameter(description = "订单号", required = true) @PathVariable String orderNo) {
         log.info("完成订单请求: orderNo={}", orderNo);
@@ -470,7 +450,6 @@ public class OrdersController {
     
     @Operation(summary = "获取订单超时未支付数量", description = "统计超过指定时间未支付的订单数量")
     @GetMapping("/timeout/count")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Integer> countTimeoutOrders(
             @Parameter(description = "超时分钟数") @RequestParam(defaultValue = "30") int minutes) {
         log.info("获取订单超时未支付数量请求: minutes={}", minutes);
@@ -487,7 +466,6 @@ public class OrdersController {
     
     @Operation(summary = "自动取消超时未支付订单", description = "取消超过指定时间未支付的订单")
     @PostMapping("/timeout/cancel")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Integer> autoCancelTimeoutOrders(
             @Parameter(description = "超时分钟数") @RequestParam(defaultValue = "30") int minutes) {
         log.info("自动取消超时未支付订单请求: minutes={}", minutes);

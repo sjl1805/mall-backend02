@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "根据用户ID查询商品收藏", description = "获取指定用户的所有收藏商品")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<ProductFavorite>> getFavoritesByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("根据用户ID查询商品收藏请求: userId={}", userId);
@@ -48,7 +46,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "分页查询商品收藏", description = "管理员分页查询所有商品收藏")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<ProductFavorite>> getFavoriteList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -63,7 +60,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "根据ID查询商品收藏", description = "获取特定收藏的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @productFavoriteService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<ProductFavorite> getFavoriteById(
             @Parameter(description = "收藏ID", required = true) @PathVariable Long id) {
         log.info("根据ID查询商品收藏请求: id={}", id);
@@ -79,7 +75,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "新增商品收藏", description = "用户收藏商品")
     @PostMapping("/add")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> addProductFavorite(@Valid @RequestBody ProductFavorite productFavorite) {
         log.info("新增商品收藏请求: userId={}, productId={}", 
                 productFavorite.getUserId(), productFavorite.getProductId());
@@ -113,7 +108,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "更新商品收藏", description = "更新收藏信息（如分组、备注等）")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN') or @productFavoriteService.selectById(#productFavorite.id)?.userId == authentication.principal.id")
     public  Result<Boolean> updateProductFavorite(@Valid @RequestBody ProductFavorite productFavorite) {
         log.info("更新商品收藏请求: id={}", productFavorite.getId());
         
@@ -135,7 +129,6 @@ public class ProductFavoriteController {
 
     @Operation(summary = "根据ID删除商品收藏", description = "取消收藏商品")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @productFavoriteService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> deleteProductFavorite(
             @Parameter(description = "收藏ID", required = true) @PathVariable Long id) {
         log.info("删除商品收藏请求: id={}", id);
@@ -159,7 +152,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "检查用户是否已收藏商品", description = "验证用户是否已收藏特定商品")
     @GetMapping("/check")
-    @PreAuthorize("isAuthenticated()")
     public  Result<ProductFavorite> checkFavorite(
             @Parameter(description = "用户ID") @RequestParam Long userId,
             @Parameter(description = "商品ID") @RequestParam Long productId) {
@@ -178,7 +170,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "切换收藏状态", description = "收藏或取消收藏商品")
     @PostMapping("/toggle")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> toggleFavorite(@RequestBody Map<String, Long> params) {
         Long userId = params.get("userId");
         Long productId = params.get("productId");
@@ -204,7 +195,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "根据收藏夹查询收藏商品", description = "获取用户指定收藏夹中的商品")
     @GetMapping("/folder")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<ProductFavorite>> selectByFolder(
             @Parameter(description = "用户ID") @RequestParam Long userId,
             @Parameter(description = "收藏夹ID") @RequestParam(required = false) Long folderId) {
@@ -216,7 +206,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "获取用户的收藏夹列表", description = "获取用户创建的所有收藏夹")
     @GetMapping("/folders/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<Map<String, Object>>> getUserFolders(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户的收藏夹列表请求: userId={}", userId);
@@ -227,7 +216,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "创建收藏夹", description = "创建新的收藏夹")
     @PostMapping("/folder/create")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> createFolder(@RequestBody Map<String, Object> params) {
         Long userId = Long.valueOf(params.get("userId").toString());
         String folderName = params.get("folderName").toString();
@@ -258,7 +246,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "移动商品到指定收藏夹", description = "将收藏的商品移动到指定的收藏夹")
     @PutMapping("/move")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> moveToFolder(@RequestBody Map<String, Long> params) {
         Long id = params.get("id");
         Long folderId = params.get("folderId");
@@ -300,7 +287,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "获取带商品信息的收藏列表", description = "获取用户收藏的商品详细信息")
     @GetMapping("/withInfo/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<ProductFavorite>> selectWithProductInfo(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取带商品信息的收藏列表请求: userId={}", userId);
@@ -311,7 +297,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "批量删除收藏", description = "批量删除多个收藏记录")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN') or isCurrentUserOwnFavorites(#ids)")
     public  Result<Boolean> batchDelete(@RequestBody List<Long> ids) {
         log.info("批量删除收藏请求: ids={}", ids);
         
@@ -319,8 +304,6 @@ public class ProductFavoriteController {
             log.warn("批量删除收藏失败: 参数无效, ids为空");
             return  Result.failed(ResultCode.VALIDATE_FAILED, "收藏ID列表不能为空");
         }
-        
-        // 权限验证在PreAuthorize中进行
         
         boolean result = productFavoriteService.batchDelete(ids);
         if (result) {
@@ -334,7 +317,6 @@ public class ProductFavoriteController {
     
     @Operation(summary = "统计用户收藏商品数量", description = "获取用户收藏的商品总数")
     @GetMapping("/count/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Integer> countUserFavorites(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("统计用户收藏商品数量请求: userId={}", userId);

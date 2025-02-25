@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,6 @@ public class UserCouponController {
 
     @Operation(summary = "根据用户ID查询用户优惠券", description = "获取指定用户的所有优惠券")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<UserCoupon>> getCouponsByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户优惠券列表请求: userId={}", userId);
@@ -48,7 +46,6 @@ public class UserCouponController {
 
     @Operation(summary = "根据用户ID和状态查询用户优惠券", description = "获取指定用户特定状态的优惠券")
     @GetMapping("/user/{userId}/status/{status}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<UserCoupon>> getCouponsByUserIdAndStatus(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "优惠券状态：0-未使用 1-已使用 2-已过期", required = true) @PathVariable Integer status) {
@@ -67,7 +64,6 @@ public class UserCouponController {
 
     @Operation(summary = "分页查询用户优惠券", description = "管理员分页查询所有用户优惠券")
     @GetMapping("/page")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<UserCoupon>> getUserCouponsByPage(
             @Parameter(description = "当前页码") 
             @RequestParam(defaultValue = "1") Integer current,
@@ -82,7 +78,6 @@ public class UserCouponController {
 
     @Operation(summary = "根据ID查询用户优惠券详情", description = "获取特定优惠券的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userCouponService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<UserCoupon> getUserCouponById(
             @Parameter(description = "用户优惠券ID", required = true) @PathVariable Long id) {
         log.info("查询优惠券详情请求: id={}", id);
@@ -98,7 +93,6 @@ public class UserCouponController {
 
     @Operation(summary = "新增用户优惠券（领取优惠券）", description = "管理员添加用户优惠券记录")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addUserCoupon(@Valid @RequestBody UserCoupon userCoupon) {
         log.info("新增用户优惠券请求: userId={}, couponId={}", userCoupon.getUserId(), userCoupon.getCouponId());
         boolean result = userCouponService.insertUserCoupon(userCoupon);
@@ -113,7 +107,6 @@ public class UserCouponController {
 
     @Operation(summary = "用户领取指定优惠券", description = "用户自主领取优惠券")
     @PostMapping("/receive")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #params.get('userId')")
     public  Result<Boolean> receiveCoupon(
             @RequestBody Map<String, Long> params) {
         Long userId = params.get("userId");
@@ -143,7 +136,6 @@ public class UserCouponController {
 
     @Operation(summary = "更新用户优惠券", description = "管理员更新优惠券信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateUserCoupon(@Valid @RequestBody UserCoupon userCoupon) {
         log.info("更新用户优惠券请求: id={}", userCoupon.getId());
         boolean result = userCouponService.updateUserCoupon(userCoupon);
@@ -158,7 +150,6 @@ public class UserCouponController {
 
     @Operation(summary = "使用优惠券", description = "用户使用优惠券")
     @PutMapping("/{id}/use")
-    @PreAuthorize("hasRole('ADMIN') or @userCouponService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> useCoupon(
             @PathVariable Long id,
             @RequestParam(required = false) Long orderId) {
@@ -190,7 +181,6 @@ public class UserCouponController {
 
     @Operation(summary = "根据ID删除用户优惠券", description = "管理员删除优惠券记录")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteUserCoupon(
             @Parameter(description = "用户优惠券ID", required = true) @PathVariable Long id) {
         log.info("删除用户优惠券请求: id={}", id);
@@ -206,7 +196,6 @@ public class UserCouponController {
 
     @Operation(summary = "批量删除用户优惠券", description = "管理员批量删除优惠券记录")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDeleteUserCoupons(@RequestBody List<Long> ids) {
         log.info("批量删除用户优惠券请求: ids={}", ids);
         boolean result = true;
@@ -224,7 +213,6 @@ public class UserCouponController {
 
     @Operation(summary = "查询用户可用优惠券数量", description = "获取用户未使用的优惠券数量")
     @GetMapping("/count/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Integer> countUserAvailableCoupons(@PathVariable Long userId) {
         log.info("查询用户可用优惠券数量请求: userId={}", userId);
         List<UserCoupon> availableCoupons = userCouponService.selectByUserIdAndStatus(userId, 0);
@@ -234,7 +222,6 @@ public class UserCouponController {
 
     @Operation(summary = "检查优惠券是否可用", description = "验证优惠券是否可用于下单")
     @GetMapping("/{id}/check")
-    @PreAuthorize("hasRole('ADMIN') or @userCouponService.selectById(#id)?.userId == authentication.principal.id")
     public  Result<Boolean> checkCouponAvailability(@PathVariable Long id) {
         log.info("检查优惠券可用性请求: id={}", id);
         UserCoupon userCoupon = userCouponService.selectById(id);

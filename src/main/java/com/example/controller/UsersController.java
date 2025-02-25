@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,7 +66,6 @@ public class UsersController {
 
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户完整信息")
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public Result<Users> getUserInfo(
             @Parameter(description = "用户ID", required = true) 
             @PathVariable Long userId) {
@@ -79,7 +77,6 @@ public class UsersController {
 
     @Operation(summary = "用户分页列表", description = "管理员查询用户列表，支持分页")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public Result<IPage<Users>> getUserList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -162,7 +159,6 @@ public class UsersController {
 
     @Operation(summary = "批量删除用户", description = "管理员批量删除用户")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDeleteUsers(@RequestBody List<Long> userIds) {
         log.info("批量删除用户请求: {}", userIds);
         boolean result = usersService.batchDeleteUsers(userIds);
@@ -244,7 +240,6 @@ public class UsersController {
 
     @Operation(summary = "更新用户手机号", description = "更新用户手机号，需要验证码")
     @PutMapping("/{userId}/phone")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> updateUserPhone(
             @PathVariable Long userId,
             @RequestBody Map<String, String> phoneMap) {

@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "根据用户ID查询收藏夹", description = "获取指定用户的所有收藏夹")
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<FavoriteFolder>> getFoldersByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("根据用户ID查询收藏夹请求: userId={}", userId);
@@ -49,7 +47,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "分页查询收藏夹", description = "管理员分页查询所有收藏夹")
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<IPage<FavoriteFolder>> getFavoriteFolderList(
             @Parameter(description = "页码") 
             @RequestParam(defaultValue = "1") int page,
@@ -64,7 +61,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "根据ID查询收藏夹", description = "获取特定收藏夹的详细信息")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#id, authentication.principal.id)")
     public  Result<FavoriteFolder> getFavoriteFolderById(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long id) {
         log.info("根据ID查询收藏夹请求: id={}", id);
@@ -80,7 +76,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "新增收藏夹", description = "创建新的收藏夹")
     @PostMapping("/add")
-    @PreAuthorize("isAuthenticated()")
     public  Result<Boolean> addFavoriteFolder(@Valid @RequestBody FavoriteFolder favoriteFolder) {
         log.info("新增收藏夹请求: userId={}, name={}", favoriteFolder.getUserId(), favoriteFolder.getName());
         
@@ -110,7 +105,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "更新收藏夹", description = "更新现有收藏夹信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#favoriteFolder.id, authentication.principal.id)")
     public  Result<Boolean> updateFavoriteFolder(@Valid @RequestBody FavoriteFolder favoriteFolder) {
         log.info("更新收藏夹请求: id={}", favoriteFolder.getId());
         
@@ -137,7 +131,6 @@ public class FavoriteFolderController {
 
     @Operation(summary = "根据ID删除收藏夹", description = "删除指定的收藏夹")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#id, authentication.principal.id)")
     public  Result<Boolean> deleteFavoriteFolder(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long id) {
         log.info("删除收藏夹请求: id={}", id);
@@ -161,7 +154,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "更新收藏夹商品数量", description = "增加或减少收藏夹的商品计数")
     @PutMapping("/{id}/count/{count}")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#id, authentication.principal.id)")
     public  Result<Boolean> updateItemCount(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long id,
             @Parameter(description = "变动数量（正数增加，负数减少）", required = true) @PathVariable Integer count) {
@@ -186,7 +178,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "刷新收藏夹商品数量", description = "根据实际收藏商品数量刷新计数")
     @PutMapping("/{id}/refresh-count")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#id, authentication.principal.id)")
     public  Result<Boolean> refreshItemCount(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long id) {
         log.info("刷新收藏夹商品数量请求: id={}", id);
@@ -210,7 +201,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "更新收藏夹排序", description = "调整收藏夹在列表中的显示顺序")
     @PutMapping("/{id}/sort/{sort}")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#id, authentication.principal.id)")
     public  Result<Boolean> updateSort(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long id,
             @Parameter(description = "排序值", required = true) @PathVariable Integer sort) {
@@ -235,7 +225,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "获取用户收藏夹（按排序）", description = "获取用户的收藏夹列表，按排序值排序")
     @GetMapping("/user/{userId}/sorted")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<FavoriteFolder>> getOrderedFoldersByUserId(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("获取用户收藏夹（按排序）请求: userId={}", userId);
@@ -266,7 +255,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "按名称查询收藏夹", description = "根据名称搜索用户的收藏夹")
     @GetMapping("/user/{userId}/search")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<List<FavoriteFolder>> searchFoldersByName(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId,
             @Parameter(description = "收藏夹名称（模糊匹配）", required = true) @RequestParam String name) {
@@ -284,7 +272,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "批量删除收藏夹", description = "批量删除多个收藏夹")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN') or isCurrentUserOwnAllFolders(#ids)")
     public  Result<Boolean> batchDelete(@RequestBody List<Long> ids) {
         log.info("批量删除收藏夹请求: ids={}", ids);
         
@@ -307,7 +294,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "批量更新收藏夹公开状态", description = "批量修改多个收藏夹的公开/私密状态")
     @PutMapping("/batch/public/{isPublic}")
-    @PreAuthorize("hasRole('ADMIN') or isCurrentUserOwnAllFolders(#ids)")
     public  Result<Boolean> batchUpdatePublicStatus(
             @RequestBody List<Long> ids,
             @Parameter(description = "公开状态: 0-私密 1-公开", required = true) @PathVariable Integer isPublic) {
@@ -335,7 +321,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "创建默认收藏夹", description = "为用户创建一个默认收藏夹")
     @PostMapping("/default/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<FavoriteFolder> createDefaultFolder(
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
         log.info("创建默认收藏夹请求: userId={}", userId);
@@ -359,7 +344,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "检查收藏夹归属权", description = "验证收藏夹是否属于指定用户")
     @GetMapping("/{folderId}/check-ownership/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userId")
     public  Result<Boolean> checkFolderOwnership(
             @Parameter(description = "收藏夹ID", required = true) @PathVariable Long folderId,
             @Parameter(description = "用户ID", required = true) @PathVariable Long userId) {
@@ -371,7 +355,6 @@ public class FavoriteFolderController {
     
     @Operation(summary = "移动商品到新收藏夹", description = "将一组收藏商品移动到指定的收藏夹")
     @PostMapping("/move")
-    @PreAuthorize("hasRole('ADMIN') or @favoriteFolderService.checkOwnership(#params.get('targetFolderId'), authentication.principal.id)")
     public Result<Boolean> moveFavorites(@RequestBody Map<String, Object> params) {
         // 安全地转换 favoriteIds
         Object favoriteIdsObj = params.get("favoriteIds");

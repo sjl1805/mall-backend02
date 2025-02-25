@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +75,6 @@ public class CategoryController {
 
     @Operation(summary = "新增分类", description = "创建新的商品分类")
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> addCategory(@Valid @RequestBody Category category) {
         log.info("新增分类请求: name={}, level={}, parentId={}", 
                 category.getName(), category.getLevel(), category.getParentId());
@@ -104,7 +102,6 @@ public class CategoryController {
 
     @Operation(summary = "更新分类", description = "更新现有分类信息")
     @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateCategory(@Valid @RequestBody Category category) {
         log.info("更新分类请求: id={}", category.getId());
         
@@ -131,7 +128,6 @@ public class CategoryController {
 
     @Operation(summary = "根据ID删除分类", description = "删除指定的分类")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> deleteCategory(
             @Parameter(description = "分类ID", required = true) @PathVariable Long id) {
         log.info("删除分类请求: id={}", id);
@@ -209,7 +205,6 @@ public class CategoryController {
     
     @Operation(summary = "更新分类排序", description = "修改分类的排序值")
     @PutMapping("/{id}/sort/{sort}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateCategorySort(
             @Parameter(description = "分类ID", required = true) @PathVariable Long id,
             @Parameter(description = "排序值，值越小越靠前", required = true) @PathVariable Integer sort) {
@@ -234,7 +229,6 @@ public class CategoryController {
     
     @Operation(summary = "更新分类状态", description = "启用或禁用分类")
     @PutMapping("/{id}/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> updateCategoryStatus(
             @Parameter(description = "分类ID", required = true) @PathVariable Long id,
             @Parameter(description = "状态: 0-禁用 1-启用", required = true) @PathVariable Integer status) {
@@ -275,7 +269,6 @@ public class CategoryController {
     
     @Operation(summary = "批量删除分类", description = "批量删除多个分类")
     @DeleteMapping("/batch")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchDeleteCategories(@RequestBody List<Long> ids) {
         log.info("批量删除分类请求: ids={}", ids);
         
@@ -305,7 +298,6 @@ public class CategoryController {
     
     @Operation(summary = "批量更新分类状态", description = "批量启用或禁用多个分类")
     @PutMapping("/batch/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> batchUpdateStatus(
             @RequestBody List<Long> ids,
             @Parameter(description = "状态: 0-禁用 1-启用", required = true) 
@@ -335,7 +327,6 @@ public class CategoryController {
     
     @Operation(summary = "检查分类是否可以安全删除", description = "检查分类是否有子分类和关联的商品")
     @GetMapping("/check-delete/{categoryId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Boolean> checkCategoryCanDelete(
             @Parameter(description = "分类ID", required = true) @PathVariable Long categoryId) {
         log.info("检查分类是否可以安全删除请求: categoryId={}", categoryId);
@@ -346,7 +337,6 @@ public class CategoryController {
     
     @Operation(summary = "批量导入分类数据", description = "批量导入分类数据，通常用于系统初始化或数据迁移")
     @PostMapping("/batch/import")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Integer> batchImportCategories(@Valid @RequestBody List<Category> categories) {
         log.info("批量导入分类数据请求: count={}", categories.size());
         
@@ -362,7 +352,6 @@ public class CategoryController {
     
     @Operation(summary = "导出分类数据", description = "导出分类数据，支持按层级筛选")
     @GetMapping("/export")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<List<Category>> exportCategories(
             @Parameter(description = "分类层级（可选）") @RequestParam(required = false) Integer level) {
         log.info("导出分类数据请求: level={}", level);
@@ -395,7 +384,6 @@ public class CategoryController {
     
     @Operation(summary = "统计每个层级的分类数量", description = "统计每个层级的分类数量，用于数据分析和监控")
     @GetMapping("/count-by-level")
-    @PreAuthorize("hasRole('ADMIN')")
     public  Result<Map<Integer, Integer>> countCategoriesByLevel() {
         log.info("统计每个层级的分类数量请求");
         Map<Integer, Integer> countMap = categoryService.countCategoriesByLevel();
