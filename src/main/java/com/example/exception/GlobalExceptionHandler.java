@@ -1,7 +1,7 @@
-package com.example.common.exception;
+package com.example.common;
 
-import com.example.common.api.CommonResult;
-import com.example.common.api.ResultCode;
+import com.example.common.CommonResult;
+import com.example.common.ResultCode;
 import com.example.exception.UsernameExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

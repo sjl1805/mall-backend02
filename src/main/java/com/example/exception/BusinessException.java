@@ -1,6 +1,6 @@
-package com.example.common.exception;
+package com.example.common;
 
-import com.example.common.api.IResultCode;
+import com.example.common.IResultCode;
 
 class BusinessException extends RuntimeException {
     private final IResultCode resultCode;
