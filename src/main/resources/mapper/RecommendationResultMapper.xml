@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RecommendationResultMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.RecommendationResult">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="score" property="score"/>
+        <result column="algorithm_type" property="algorithmType"/>
+        <result column="expire_time" property="expireTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, product_id, score, algorithm_type, expire_time, create_time
+    </sql>
+    
+    <!-- 查询用户的推荐商品列表 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        ORDER BY score DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 根据用户ID和算法类型查询推荐结果 -->
+    <select id="selectByUserIdAndAlgorithmType" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        AND algorithm_type = #{algorithmType}
+        ORDER BY score DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询未过期的推荐结果 -->
+    <select id="selectValidRecommendations" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        AND (expire_time IS NULL OR expire_time > #{currentTime})
+        ORDER BY score DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询特定商品是否推荐给用户 -->
+    <select id="selectByUserIdAndProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+        LIMIT 1
+    </select>
+    
+    <!-- 插入或更新推荐结果 -->
+    <insert id="insertOrUpdate">
+        INSERT INTO recommendation_result(
+            user_id, product_id, score, algorithm_type, expire_time
+        )
+        VALUES (
+            #{userId}, #{productId}, #{score}, #{algorithmType}, #{expireTime}
+        )
+        ON DUPLICATE KEY UPDATE
+            score = #{score},
+            algorithm_type = #{algorithmType},
+            expire_time = #{expireTime},
+            create_time = NOW()
+    </insert>
+    
+    <!-- 批量插入推荐结果 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommendation_result(
+            user_id, product_id, score, algorithm_type, expire_time
+        )
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.userId},
+                #{item.productId},
+                #{item.score},
+                #{item.algorithmType},
+                #{item.expireTime}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            score = VALUES(score),
+            algorithm_type = VALUES(algorithm_type),
+            expire_time = VALUES(expire_time),
+            create_time = NOW()
+    </insert>
+    
+    <!-- 删除过期的推荐结果 -->
+    <delete id="deleteExpiredRecommendations">
+        DELETE FROM recommendation_result
+        WHERE expire_time IS NOT NULL
+        AND expire_time &lt; #{currentTime}
+    </delete>
+    
+    <!-- 删除指定用户的所有推荐结果 -->
+    <delete id="deleteByUserId">
+        DELETE FROM recommendation_result
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <!-- 删除指定算法类型的推荐结果 -->
+    <delete id="deleteByAlgorithmType">
+        DELETE FROM recommendation_result
+        WHERE algorithm_type = #{algorithmType}
+    </delete>
+    
+    <!-- 查询推荐分数高于特定值的商品 -->
+    <select id="selectHighScoreRecommendations" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        AND score >= #{minScore}
+        ORDER BY score DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 根据用户最近浏览商品生成的相似商品推荐 -->
+    <select id="selectSimilarProductRecommendations" resultType="java.util.Map">
+        SELECT 
+            rr.product_id,
+            p.name AS product_name,
+            p.price,
+            p.image,
+            AVG(rr.score) AS avg_score
+        FROM recommendation_result rr
+        JOIN products p ON rr.product_id = p.id
+        JOIN product_similarity ps ON (
+            (ps.product_id_a IN 
+                <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+                    #{productId}
+                </foreach>
+            AND ps.product_id_b = rr.product_id)
+            OR
+            (ps.product_id_b IN 
+                <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+                    #{productId}
+                </foreach>
+            AND ps.product_id_a = rr.product_id)
+        )
+        WHERE p.status = 1
+        GROUP BY rr.product_id, p.name, p.price, p.image
+        ORDER BY avg_score DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 分页查询用户的推荐商品 -->
+    <select id="selectPageByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM recommendation_result
+        WHERE user_id = #{userId}
+        ORDER BY score DESC
+    </select>
+    
+    <!-- 查询算法类型分布统计 -->
+    <select id="selectAlgorithmTypeStats" resultType="java.util.Map">
+        SELECT 
+            algorithm_type,
+            COUNT(*) AS count,
+            AVG(score) AS avg_score
+        FROM recommendation_result
+        GROUP BY algorithm_type
+        ORDER BY count DESC
+    </select>
+    
+</mapper> 

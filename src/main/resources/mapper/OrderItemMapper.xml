@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrderItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.OrderItem">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="product_id" property="productId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_image" property="productImage"/>
+        <result column="specifications" property="specifications" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="price" property="price"/>
+        <result column="quantity" property="quantity"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_id, product_id, sku_id, product_name, product_image, specifications, price, quantity, total_amount, create_time, update_time
+    </sql>
+    
+    <!-- 根据订单ID查询所有订单项 -->
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE order_id = #{orderId}
+        ORDER BY id
+    </select>
+    
+    <!-- 根据订单ID列表批量查询订单项 -->
+    <select id="selectByOrderIds" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE order_id IN
+        <foreach collection="orderIds" item="orderId" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+        ORDER BY order_id, id
+    </select>
+    
+    <!-- 根据商品ID查询订单项 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE product_id = #{productId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据SKU ID查询订单项 -->
+    <select id="selectBySkuId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE sku_id = #{skuId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 批量插入订单项 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item(
+            order_id, product_id, sku_id, product_name, product_image, 
+            specifications, price, quantity, total_amount
+        ) VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.orderId}, 
+                #{item.productId}, 
+                #{item.skuId}, 
+                #{item.productName}, 
+                #{item.productImage}, 
+                #{item.specifications, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler}, 
+                #{item.price}, 
+                #{item.quantity}, 
+                #{item.totalAmount}
+            )
+        </foreach>
+    </insert>
+    
+    <!-- 统计商品销售数量 -->
+    <select id="countSalesByProductId" resultType="java.lang.Integer">
+        SELECT COALESCE(SUM(quantity), 0)
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE oi.product_id = #{productId}
+        AND o.status != 'CANCELLED'
+    </select>
+    
+    <!-- 统计商品销售金额 -->
+    <select id="sumAmountByProductId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(oi.total_amount), 0)
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE oi.product_id = #{productId}
+        AND o.status != 'CANCELLED'
+    </select>
+    
+    <!-- 查询热销商品 -->
+    <select id="selectHotProducts" resultType="java.util.Map">
+        SELECT 
+            oi.product_id,
+            SUM(oi.quantity) AS total_quantity,
+            SUM(oi.total_amount) AS total_amount,
+            MAX(oi.product_name) AS product_name
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.status != 'CANCELLED'
+        GROUP BY oi.product_id
+        ORDER BY total_quantity DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询指定时间段内的商品销售情况 -->
+    <select id="selectProductSalesByDateRange" resultType="java.util.Map">
+        SELECT 
+            oi.product_id,
+            MAX(oi.product_name) AS product_name,
+            SUM(oi.quantity) AS total_quantity,
+            SUM(oi.total_amount) AS total_amount
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.create_time BETWEEN #{startTime} AND #{endTime}
+        AND o.status != 'CANCELLED'
+        GROUP BY oi.product_id
+        ORDER BY total_quantity DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 分页查询商品的订单项 -->
+    <select id="selectPageByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM order_item
+        WHERE product_id = #{productId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 统计用户购买的商品种类数 -->
+    <select id="countProductTypesByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT oi.product_id)
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND o.status = 'COMPLETED'
+    </select>
+    
+    <!-- 查询用户最近购买的商品 -->
+    <select id="selectRecentPurchasesByUserId" resultMap="BaseResultMap">
+        SELECT 
+            oi.*
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND o.status = 'COMPLETED'
+        ORDER BY o.create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询用户购买某商品的次数 -->
+    <select id="countUserProductPurchases" resultType="java.lang.Integer">
+        SELECT COUNT(oi.id)
+        FROM order_item oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND oi.product_id = #{productId}
+        AND o.status = 'COMPLETED'
+    </select>
+    
+</mapper> 

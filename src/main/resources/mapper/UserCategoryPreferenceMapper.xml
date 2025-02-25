@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserCategoryPreferenceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserCategoryPreference">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="preference_level" property="preferenceLevel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, category_id, preference_level, create_time, update_time
+    </sql>
+    
+    <!-- 根据用户ID查询所有分类偏好 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE user_id = #{userId}
+        ORDER BY preference_level DESC
+    </select>
+    
+    <!-- 根据分类ID查询所有用户偏好 -->
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE category_id = #{categoryId}
+        ORDER BY preference_level DESC
+    </select>
+    
+    <!-- 查询用户的高偏好分类 -->
+    <select id="selectHighPreferenceCategories" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE user_id = #{userId}
+        AND preference_level >= #{minPreference}
+        ORDER BY preference_level DESC
+    </select>
+    
+    <!-- 查询分类的高偏好用户 -->
+    <select id="selectHighPreferenceUsers" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE category_id = #{categoryId}
+        AND preference_level >= #{minPreference}
+        ORDER BY preference_level DESC
+    </select>
+    
+    <!-- 更新用户分类偏好程度 -->
+    <update id="updatePreferenceLevel">
+        UPDATE user_category_preference
+        SET preference_level = #{preferenceLevel}, update_time = NOW()
+        WHERE user_id = #{userId} AND category_id = #{categoryId}
+    </update>
+    
+    <!-- 批量插入用户分类偏好 -->
+    <insert id="batchInsert">
+        INSERT INTO user_category_preference(user_id, category_id, preference_level) 
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.categoryId}, #{item.preferenceLevel})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            preference_level = VALUES(preference_level),
+            update_time = NOW()
+    </insert>
+    
+    <!-- 删除用户的所有分类偏好 -->
+    <delete id="deleteByUserId">
+        DELETE FROM user_category_preference
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <!-- 删除特定的用户分类偏好 -->
+    <delete id="deleteByUserIdAndCategoryId">
+        DELETE FROM user_category_preference
+        WHERE user_id = #{userId} AND category_id = #{categoryId}
+    </delete>
+    
+    <!-- 查询分类的用户偏好统计 -->
+    <select id="selectCategoryPreferenceStats" resultType="java.util.Map">
+        SELECT 
+            category_id,
+            COUNT(*) AS user_count,
+            AVG(preference_level) AS avg_preference
+        FROM user_category_preference
+        GROUP BY category_id
+        ORDER BY user_count DESC
+    </select>
+    
+    <!-- 分页查询某分类的用户偏好 -->
+    <select id="selectUsersByCategoryIdPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE category_id = #{categoryId}
+        ORDER BY preference_level DESC
+    </select>
+    
+    <!-- 查询用户的分类偏好数量 -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM user_category_preference
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 增加分类偏好程度 -->
+    <update id="incrementPreferenceLevel">
+        UPDATE user_category_preference
+        SET preference_level = preference_level + #{increment}, update_time = NOW()
+        WHERE user_id = #{userId} AND category_id = #{categoryId}
+    </update>
+    
+    <!-- 查询用户最喜欢的前N个分类 -->
+    <select id="selectTopPreferredCategories" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE user_id = #{userId}
+        ORDER BY preference_level DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询分类最受欢迎的前N个用户 -->
+    <select id="selectTopInterestedUsers" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_category_preference
+        WHERE category_id = #{categoryId}
+        ORDER BY preference_level DESC
+        LIMIT #{limit}
+    </select>
+    
+</mapper> 

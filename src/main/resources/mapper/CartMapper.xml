@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.Cart">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="checked" property="checked"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, product_id, sku_id, quantity, checked, create_time, update_time
+    </sql>
+    
+    <!-- 根据用户ID查询购物车列表 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM cart
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据用户ID和商品ID查询购物车项 -->
+    <select id="selectByUserIdAndProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM cart
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+        <if test="skuId != null">
+            AND sku_id = #{skuId}
+        </if>
+        <if test="skuId == null">
+            AND sku_id IS NULL
+        </if>
+        LIMIT 1
+    </select>
+    
+    <!-- 更新购物车商品数量 -->
+    <update id="updateQuantity">
+        UPDATE cart
+        SET quantity = #{quantity}, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新购物车项选中状态 -->
+    <update id="updateCheckedStatus">
+        UPDATE cart
+        SET checked = #{checked}, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 批量更新购物车项选中状态 -->
+    <update id="updateAllCheckedStatus">
+        UPDATE cart
+        SET checked = #{checked}, update_time = NOW()
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 删除购物车项 -->
+    <delete id="deleteById">
+        DELETE FROM cart
+        WHERE id = #{id}
+    </delete>
+    
+    <!-- 清空用户购物车 -->
+    <delete id="clearCart">
+        DELETE FROM cart
+        WHERE user_id = #{userId}
+    </delete>
+    
+    <!-- 查询用户购物车商品总数 -->
+    <select id="countItems" resultType="int">
+        SELECT COALESCE(SUM(quantity), 0)
+        FROM cart
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 查询用户购物车已选中的商品项 -->
+    <select id="selectCheckedItems" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM cart
+        WHERE user_id = #{userId}
+        AND checked = 1
+        ORDER BY create_time
+    </select>
+    
+    <!-- 批量插入购物车项 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cart(user_id, product_id, sku_id, quantity, checked)
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.userId},
+                #{item.productId},
+                #{item.skuId},
+                #{item.quantity},
+                #{item.checked}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            quantity = VALUES(quantity) + quantity,
+            checked = VALUES(checked),
+            update_time = NOW()
+    </insert>
+    
+    <!-- 从购物车查询用户选中的商品总价 -->
+    <select id="selectCartAmount" resultType="java.util.Map">
+        SELECT 
+            COUNT(*) AS item_count,
+            SUM(c.quantity) AS product_count,
+            SUM(c.quantity * p.price) AS total_amount
+        FROM cart c
+        LEFT JOIN products p ON c.product_id = p.id
+        LEFT JOIN product_sku ps ON c.sku_id = ps.id
+        WHERE c.user_id = #{userId}
+        AND c.checked = 1
+    </select>
+    
+    <!-- 查询购物车项是否存在 -->
+    <select id="existsCartItem" resultType="int">
+        SELECT COUNT(*)
+        FROM cart
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+        <if test="skuId != null">
+            AND sku_id = #{skuId}
+        </if>
+        <if test="skuId == null">
+            AND sku_id IS NULL
+        </if>
+    </select>
+    
+    <!-- 删除已选中的购物车项 -->
+    <delete id="deleteCheckedItems">
+        DELETE FROM cart
+        WHERE user_id = #{userId}
+        AND checked = 1
+    </delete>
+    
+    <!-- 合并购物车 -->
+    <insert id="mergeCart">
+        INSERT INTO cart(user_id, product_id, sku_id, quantity, checked)
+        SELECT 
+            #{toUserId}, product_id, sku_id, quantity, checked
+        FROM cart
+        WHERE user_id = #{fromUserId}
+        ON DUPLICATE KEY UPDATE
+            quantity = VALUES(quantity) + quantity,
+            checked = VALUES(checked),
+            update_time = NOW()
+    </insert>
+    
+</mapper> 

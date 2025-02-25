@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserBehaviorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.model.entity.UserBehavior">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="behavior_type" property="behaviorType"/>
+        <result column="search_keyword" property="searchKeyword"/>
+        <result column="stay_time" property="stayTime"/>
+        <result column="rating" property="rating"/>
+        <result column="review_content" property="reviewContent"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="cart_count" property="cartCount"/>
+        <result column="buy_count" property="buyCount"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="user_agent" property="userAgent"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, product_id, category_id, behavior_type, search_keyword, stay_time, rating, review_content, 
+        view_count, cart_count, buy_count, ip_address, user_agent, create_time, update_time
+    </sql>
+    
+    <!-- 根据用户ID查询行为记录 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 根据商品ID查询行为记录 -->
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE product_id = #{productId}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 根据行为类型查询记录 -->
+    <select id="selectByBehaviorType" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE behavior_type = #{behaviorType}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询用户对特定商品的行为记录 -->
+    <select id="selectByUserIdAndProductId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 查询用户在特定分类下的行为记录 -->
+    <select id="selectByUserIdAndCategoryId" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND category_id = #{categoryId}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询热门搜索关键词 -->
+    <select id="selectHotSearchKeywords" resultType="java.util.Map">
+        SELECT 
+            search_keyword AS keyword,
+            COUNT(*) AS search_count
+        FROM user_behavior
+        WHERE behavior_type = 5 /* 搜索行为 */
+        AND search_keyword IS NOT NULL
+        AND search_keyword != ''
+        GROUP BY search_keyword
+        ORDER BY search_count DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询商品的平均评分 -->
+    <select id="selectAvgRatingByProductId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(AVG(rating), 0)
+        FROM user_behavior
+        WHERE product_id = #{productId}
+        AND behavior_type = 6 /* 评分行为 */
+        AND rating IS NOT NULL
+    </select>
+    
+    <!-- 查询商品的评价数量 -->
+    <select id="countReviewsByProductId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM user_behavior
+        WHERE product_id = #{productId}
+        AND behavior_type = 7 /* 评价行为 */
+        AND review_content IS NOT NULL
+    </select>
+    
+    <!-- 查询某分类下的热门商品 -->
+    <select id="selectHotProductsByCategory" resultType="java.util.Map">
+        SELECT 
+            product_id,
+            SUM(view_count) AS total_views,
+            SUM(cart_count) AS total_cart_adds,
+            SUM(buy_count) AS total_purchases
+        FROM user_behavior
+        WHERE category_id = #{categoryId}
+        GROUP BY product_id
+        ORDER BY total_views DESC, total_cart_adds DESC, total_purchases DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询指定时间段内的用户行为统计 -->
+    <select id="selectBehaviorStatsByDateRange" resultType="java.util.Map">
+        SELECT 
+            behavior_type,
+            COUNT(*) AS behavior_count,
+            COUNT(DISTINCT user_id) AS user_count
+        FROM user_behavior
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY behavior_type
+        ORDER BY behavior_type
+    </select>
+    
+    <!-- 更新用户行为记录 -->
+    <update id="updateBehaviorCount">
+        UPDATE user_behavior
+        <set>
+            <if test="behaviorType == 1">view_count = view_count + 1,</if>
+            <if test="behaviorType == 3">cart_count = cart_count + 1,</if>
+            <if test="behaviorType == 8">buy_count = buy_count + 1,</if>
+            update_time = NOW()
+        </set>
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+    </update>
+    
+    <!-- 分页查询用户评价 -->
+    <select id="selectReviewsByProductIdPage" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM user_behavior
+        WHERE product_id = #{productId}
+        AND behavior_type = 7 /* 评价行为 */
+        AND review_content IS NOT NULL
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 查询用户最近浏览的商品 -->
+    <select id="selectRecentViewedProducts" resultType="java.lang.Long">
+        SELECT product_id
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND behavior_type = 1 /* 浏览行为 */
+        AND product_id IS NOT NULL
+        GROUP BY product_id
+        ORDER BY MAX(create_time) DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询用户收藏的商品 -->
+    <select id="selectFavoriteProducts" resultType="java.lang.Long">
+        SELECT product_id
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND behavior_type = 4 /* 收藏行为 */
+        AND product_id IS NOT NULL
+        GROUP BY product_id
+        ORDER BY MAX(create_time) DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 统计商品的收藏人数 -->
+    <select id="countFavoriteUsers" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT user_id)
+        FROM user_behavior
+        WHERE product_id = #{productId}
+        AND behavior_type = 4 /* 收藏行为 */
+    </select>
+    
+    <!-- 查询用户的搜索历史 -->
+    <select id="selectUserSearchHistory" resultType="java.lang.String">
+        SELECT search_keyword
+        FROM user_behavior
+        WHERE user_id = #{userId}
+        AND behavior_type = 5 /* 搜索行为 */
+        AND search_keyword IS NOT NULL
+        AND search_keyword != ''
+        GROUP BY search_keyword
+        ORDER BY MAX(create_time) DESC
+        LIMIT #{limit}
+    </select>
+    
+</mapper> 
